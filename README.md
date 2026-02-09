@@ -1,4 +1,12 @@
-# Getting Started with Create React App
+# pranavbalakri.github.io
+
+This is a React-based personal website hosted on GitHub Pages at [https://pranavbalakri.github.io](https://pranavbalakri.github.io).
+
+## GitHub Pages Deployment
+
+This project is automatically deployed to GitHub Pages using GitHub Actions. When changes are pushed to the `main` branch, the app is built and deployed automatically.
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
