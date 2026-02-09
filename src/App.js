@@ -1,23 +1,26 @@
-import logo from './logo.svg';
 import './App.css';
+// Component ported and enhanced from https://codepen.io/JuanFuentes/pen/eYEeoyE
+  
+import ASCIIText from './ASCIIText';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="app-layout">
+        <div className="ascii-pane">
+          <ASCIIText
+            asciiFontSize={8}
+            enableWaves
+            text="PB"
+          />
+        </div>
+        <div className="text-pane">
+          <h1>Pranav Balakrishnan</h1>
+          <p>
+            I'm a <span className="accent-red">Cornell</span> CS student interested in ML, AI safety, and algorithms. 
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
