@@ -1,4 +1,6 @@
-## Welcome to my Github. I'm a student at <span style="color:blue">Cornell</span>.
+## Welcome to my Github! 
+
+I'm a student at Cornell studying computer science, interested in machine learning, algorithms, and AI safety.
 
 <!--
 **pranavbalakri/pranavbalakri** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
