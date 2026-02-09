@@ -51,7 +51,7 @@ Math.map = function (n, start, stop, start2, stop2) {
 const PX_RATIO = typeof window !== 'undefined' ? window.devicePixelRatio : 1;
 
 class AsciiFilter {
-  constructor(renderer, { fontSize, fontFamily, charset, invert } = {}) {
+  constructor(renderer, { fontSize, fontFamily, charset, invert, enableMouseInteraction } = {}) {
     this.renderer = renderer;
     this.domElement = document.createElement('div');
     this.domElement.style.position = 'absolute';
@@ -78,8 +78,12 @@ class AsciiFilter {
     this.context.msImageSmoothingEnabled = false;
     this.context.imageSmoothingEnabled = false;
 
+    this.enableMouseInteraction = enableMouseInteraction ?? true;
+
     this.onMouseMove = this.onMouseMove.bind(this);
-    document.addEventListener('mousemove', this.onMouseMove);
+    if (this.enableMouseInteraction) {
+      document.addEventListener('mousemove', this.onMouseMove);
+    }
   }
 
   setSize(width, height) {
@@ -141,6 +145,10 @@ class AsciiFilter {
   }
 
   hue() {
+    if (!this.enableMouseInteraction) {
+      this.domElement.style.filter = 'none';
+      return;
+    }
     const deg = (Math.atan2(this.dy, this.dx) * 180) / Math.PI;
     this.deg += (deg - this.deg) * 0.075;
     this.domElement.style.filter = `hue-rotate(${this.deg.toFixed(1)}deg)`;
@@ -172,7 +180,9 @@ class AsciiFilter {
   }
 
   dispose() {
-    document.removeEventListener('mousemove', this.onMouseMove);
+    if (this.enableMouseInteraction) {
+      document.removeEventListener('mousemove', this.onMouseMove);
+    }
   }
 }
 
@@ -225,7 +235,7 @@ class CanvasTxt {
 
 class CanvAscii {
   constructor(
-    { text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves },
+    { text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves, enableMouseInteraction },
     containerElem,
     width,
     height
@@ -239,6 +249,7 @@ class CanvAscii {
     this.width = width;
     this.height = height;
     this.enableWaves = enableWaves;
+    this.enableMouseInteraction = enableMouseInteraction ?? true;
 
     this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
     this.camera.position.z = 30;
@@ -304,14 +315,17 @@ class CanvAscii {
     this.filter = new AsciiFilter(this.renderer, {
       fontFamily: 'IBM Plex Mono',
       fontSize: this.asciiFontSize,
-      invert: true
+      invert: true,
+      enableMouseInteraction: this.enableMouseInteraction
     });
 
     this.container.appendChild(this.filter.domElement);
     this.setSize(this.width, this.height);
 
-    this.container.addEventListener('mousemove', this.onMouseMove);
-    this.container.addEventListener('touchmove', this.onMouseMove);
+    if (this.enableMouseInteraction) {
+      this.container.addEventListener('mousemove', this.onMouseMove);
+      this.container.addEventListener('touchmove', this.onMouseMove);
+    }
   }
 
   setSize(w, h) {
@@ -359,6 +373,11 @@ class CanvAscii {
   }
 
   updateRotation() {
+    if (!this.enableMouseInteraction) {
+      this.mesh.rotation.x += (0 - this.mesh.rotation.x) * 0.08;
+      this.mesh.rotation.y += (0 - this.mesh.rotation.y) * 0.08;
+      return;
+    }
     const x = Math.map(this.mouse.y, 0, this.height, 0.5, -0.5);
     const y = Math.map(this.mouse.x, 0, this.width, -0.5, 0.5);
 
@@ -405,7 +424,8 @@ export default function ASCIIText({
   textFontSize = 200,
   textColor = '#fdf9f3',
   planeBaseHeight = 8,
-  enableWaves = true
+  enableWaves = true,
+  enableMouseInteraction = true
 }) {
   const containerRef = useRef(null);
   const asciiRef = useRef(null);
@@ -419,7 +439,7 @@ export default function ASCIIText({
 
     const createAndInit = async (container, w, h) => {
       const instance = new CanvAscii(
-        { text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves },
+        { text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves, enableMouseInteraction },
         container,
         w,
         h
@@ -480,7 +500,7 @@ export default function ASCIIText({
         asciiRef.current = null;
       }
     };
-  }, [text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves]);
+  }, [text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves, enableMouseInteraction]);
 
   return (
     <div

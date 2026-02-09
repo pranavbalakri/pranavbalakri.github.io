@@ -1,43 +1,106 @@
 .App {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   color: #fff;
   text-align: left;
+  position: relative;
+}
+
+.full-screen-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .app-layout {
   width: 100%;
   max-width: 1200px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 48px;
+  justify-content: center;
+  gap: 0px;
   padding: 64px clamp(24px, 6vw, 80px);
+  position: relative;
+  z-index: 1;
 }
 
-.ascii-pane {
+.button-row {
+  width: 100%;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  padding: 0 clamp(24px, 6vw, 80px) 64px;
+  margin-top: 8px;
   position: relative;
-  flex: 1 1 50%;
-  min-height: 320px;
-  height: 60vh;
-  max-height: 520px;
+  z-index: 1;
+}
+
+.button-surface {
+  width: 100%;
+}
+
+.primary-btn {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  padding: 14px 18px;
+  font-size: 14px;
+  font-family: inherit;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.primary-btn:hover {
+  color: rgba(255, 255, 255, 0.85);
+  transform: translateY(-2px);
+}
+
+.primary-btn:focus-visible {
+  outline: 2px solid rgba(223, 30, 18, 0.8);
+  outline-offset: 2px;
 }
 
 .text-pane {
-  flex: 1 1 50%;
-  max-width: 520px;
+  width: min(90vw, 960px);
+  max-width: 960px;
+  text-align: center;
 }
 
-.text-pane h1 {
-  margin: 0 0 16px;
-  font-size: clamp(28px, 3.5vw, 56px);
-  letter-spacing: 0.02em;
+.ascii-title {
+  position: relative;
+  width: 100%;
+  height: clamp(160px, 22vw, 320px);
+  padding: 0;
+  margin: 0 0 -24px;
+  overflow: visible;
+}
+
+.ascii-title .ascii-text-container pre {
+  width: 100%;
+  text-align: center;
+  left: 0;
+  transform: none;
+  background-image: none;
+  -webkit-text-fill-color: #fff;
+  color: #fff;
+  mix-blend-mode: normal;
 }
 
 .text-pane p {
-  margin: 0 0 12px;
+  margin: -12px auto 8px;
   font-size: clamp(14px, 1.4vw, 18px);
   line-height: 1.6;
   color: #d6d6d6;
@@ -91,16 +154,15 @@
 
 @media (max-width: 900px) {
   .app-layout {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .ascii-pane {
-    width: 100%;
-    height: 45vh;
+    align-items: center;
   }
 
   .text-pane {
     max-width: none;
+  }
+
+  .button-row {
+    grid-template-columns: 1fr;
+    padding-bottom: 48px;
   }
 }
