@@ -1,15 +1,18 @@
 import './App.css';
 import ClickSpark from './ClickSpark';
 import { useEffect, useRef, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Projects from './Projects';
 
-function App() {
+function Home() {
   const tableContainerRef = useRef(null);
   const [rowPositions, setRowPositions] = useState([]);
 
   const links = [
-    { label: "Linkedin", value: "linkedin.com/in/pranavbalakri", href: "https://linkedin.com/in/pranavbalakri" },
-    { label: "Github", value: "github.com/pranavbalakri", href: "https://github.com/pranavbalakri" },
-    { label: "Email", value: "pb629@cornell.edu", href: "mailto:pb629@cornell.edu" },
+    { label: "Linkedin", value: "linkedin.com/in/pranavbalakri", href: "https://linkedin.com/in/pranavbalakri", external: true },
+    { label: "Github", value: "github.com/pranavbalakri", href: "https://github.com/pranavbalakri", external: true },
+    { label: "Email", value: "pb629@cornell.edu", href: "mailto:pb629@cornell.edu", external: true },
+    { label: "Projects", value: "~/projects", href: "/projects", external: false }
   ];
 
   useEffect(() => {
@@ -117,14 +120,20 @@ function App() {
                   <tr key={index} className="table-row">
                     <td className="table-cell label-cell">{link.label}</td>
                     <td className="table-cell value-cell">
-                      <a
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="table-link"
-                      >
-                        {link.value}
-                      </a>
+                      {link.external ? (
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="table-link"
+                        >
+                          {link.value}
+                        </a>
+                      ) : (
+                        <Link to={link.href} className="table-link">
+                          {link.value}
+                        </Link>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -134,6 +143,17 @@ function App() {
         </main>
       </div>
     </ClickSpark>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/projects" element={<Projects />} />
+      </Routes>
+    </Router>
   );
 }
 
