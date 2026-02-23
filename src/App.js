@@ -97,7 +97,7 @@ function App() {
               Pranav Balakrishnan : <span className="accent-red">Cornell CS</span>
             </h1>
             <p className="subtitle">
-              I'm interested in financial technology, ML, and AI safety. I loved high school debate and robotics, and am now an aspiring engineer!
+              In high school, I found policy debate and fell in love with answering hard questions. Now, I'm interested in ML, AI safety, and financial technology.
             </p>
           </div>
 
