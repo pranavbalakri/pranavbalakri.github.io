@@ -624,7 +624,13 @@ async function triggerVortexTransition() {
   if (vortexActive) return;
   vortexActive = true;
 
-  // 1. Snapshot before showing anything
+  // 1. Hide any open bubbles so they don't get captured mid-reflow or appear
+  //    in the snapshot at a reflow-shifted position.
+  hideStatueBubble();
+  statueHovered = false;
+  for (const r of robots) { hideBubble(r); r.hovered = false; }
+
+  // 2. Snapshot before showing anything
   const imgUrl = await captureViewport();
 
   const overlay    = document.getElementById('vortex-overlay');
