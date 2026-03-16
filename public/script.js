@@ -13,12 +13,27 @@ const SPRITE_SCALE = 2;      // display scale
 const SW = FRAME_W * SPRITE_SCALE;   // 64px on canvas
 const SH = FRAME_H * SPRITE_SCALE;   // 64px on canvas
 
-// Lower sidewalk path — slight perspective curve (center recedes ~1.5% higher)
-function getGroundY(x) {
-  const t = (x / canvas.width - 0.5) * 2;
-  return canvas.height * 0.905 - canvas.height * 0.015 * (1 - t * t);
+// Background image dimensions — used to anchor ground to the actual sidewalk
+// regardless of viewport size (background-size: cover; background-position: center top)
+const BG_W = 1536, BG_H = 1024;
+
+function bgCanvasScale() {
+  // Returns the CSS scale factor applied to background.png by 'cover'
+  return (canvas.width / canvas.height > BG_W / BG_H)
+    ? canvas.width  / BG_W   // wider viewport: scale to fill width
+    : canvas.height / BG_H;  // taller viewport: scale to fill height
 }
-const GROUND_RATIO = 0.905;
+
+// Sidewalk path with slight perspective arch (center appears marginally higher).
+// Ground level is anchored to image y ≈ 76%, which is where the Goldwin Smith
+// sidewalk sits — this keeps robots on the path at every viewport aspect ratio.
+function getGroundY(x) {
+  const scale = bgCanvasScale();
+  const baseY  = BG_H * 0.760 * scale;          // sidewalk in image coords
+  const archPx = BG_H * 0.0075 * scale;         // arch height, proportional to image
+  const t = (x / canvas.width - 0.5) * 2;       // -1 … 1
+  return baseY - archPx * (1 - t * t);
+}
 
 // ─── Sprite Loading ───────────────────────────────────────────────────────────
 const SPRITES = {};
@@ -70,7 +85,7 @@ const ROBOT_DEFS = [
     sprite: 'Pink_Monster_Walk_6',
     hue: 195,    // blue-shifted Pink
     speed: 0.3,
-    html: `Check out my <a href="https://github.com/pranavbalakri" target="_blank">GitHub!</a>`,
+    html: `Check out my projects on <a href="https://github.com/pranavbalakri" target="_blank">GitHub,</a> or by clicking this monster!`,
   },
 ];
 
@@ -240,7 +255,7 @@ const particles = [];
 
 function initParticles() {
   particles.length = 0;
-  const groundY = canvas.height * GROUND_RATIO;
+  const groundY = getGroundY(canvas.width / 2);
   for (let i = 0; i < NUM_PARTICLES; i++) {
     particles.push({
       x: Math.random() * canvas.width,
@@ -257,7 +272,7 @@ function initParticles() {
 }
 
 function updateParticles() {
-  const groundY = canvas.height * GROUND_RATIO;
+  const groundY = getGroundY(canvas.width / 2);
   for (const p of particles) {
     p.x += p.vx;
     p.y += p.vy;
@@ -286,60 +301,6 @@ function drawParticles() {
   }
 }
 
-// ─── Clouds ───────────────────────────────────────────────────────────────────
-const CLOUD_SHAPES = [
-  [
-    [0, 1, 3, 2], [1, 0, 5, 3], [5, 1, 4, 2], [8, 0, 3, 3], [10, 1, 2, 2],
-  ],
-  [
-    [0, 2, 2, 2], [1, 0, 4, 3], [4, 1, 5, 2], [8, 0, 4, 3],
-  ],
-  [
-    [0, 1, 4, 2], [2, 0, 6, 3], [7, 1, 3, 2],
-  ],
-];
-
-const CLOUD_SCALE = 5;
-const clouds = [];
-
-function initClouds() {
-  clouds.length = 0;
-  for (let i = 0; i < 3; i++) {
-    clouds.push({
-      x: Math.random() * canvas.width,
-      y: canvas.height * (0.04 + Math.random() * 0.1),
-      speed: 0.12 + Math.random() * 0.15,
-      shapeIdx: i % CLOUD_SHAPES.length,
-      alpha: 0.18 + Math.random() * 0.12,
-    });
-  }
-}
-
-function updateClouds() {
-  for (const c of clouds) {
-    c.x -= c.speed;
-    const cloudW = 12 * CLOUD_SCALE;
-    if (c.x + cloudW < 0) c.x = canvas.width + 20;
-  }
-}
-
-function drawClouds() {
-  for (const c of clouds) {
-    ctx.save();
-    ctx.globalAlpha = c.alpha;
-    ctx.fillStyle = '#ffffff';
-    const shape = CLOUD_SHAPES[c.shapeIdx];
-    for (const [lx, ly, lw, lh] of shape) {
-      ctx.fillRect(
-        Math.round(c.x + lx * CLOUD_SCALE),
-        Math.round(c.y + ly * CLOUD_SCALE),
-        lw * CLOUD_SCALE,
-        lh * CLOUD_SCALE
-      );
-    }
-    ctx.restore();
-  }
-}
 
 // ─── Robots ───────────────────────────────────────────────────────────────────
 let robots = [];
@@ -427,7 +388,6 @@ function resize() {
   canvas.height = window.innerHeight;
   ctx.imageSmoothingEnabled = false;
   initParticles();
-  initClouds();
   initRobots();
 }
 
@@ -436,9 +396,6 @@ window.addEventListener('resize', resize);
 // ─── Game Loop ────────────────────────────────────────────────────────────────
 function loop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  updateClouds();
-  drawClouds();
 
   updateParticles();
   drawParticles();
@@ -452,6 +409,44 @@ function loop() {
 
   requestAnimationFrame(loop);
 }
+
+// ─── Inventory ────────────────────────────────────────────────────────────────
+const inventoryOverlay = document.getElementById('inventory-overlay');
+const inventoryPanel   = document.getElementById('inventory-panel');
+
+function openInventory() {
+  // Pause and unhover all robots
+  for (const r of robots) {
+    r.hovered = false;
+    r.bubbleHovered = false;
+    hideBubble(r);
+  }
+  inventoryOverlay.classList.remove('hidden');
+}
+
+function closeInventory() {
+  inventoryOverlay.classList.add('hidden');
+}
+
+// Click backdrop (but not the panel itself) → close
+inventoryOverlay.addEventListener('click', e => {
+  if (e.target === inventoryOverlay) closeInventory();
+});
+
+// ESC → close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeInventory();
+});
+
+// Click on the GitHub robot (index 4) → open inventory
+canvas.addEventListener('click', e => {
+  const { x, y } = getCanvasPos(e);
+  for (const robot of robots) {
+    if (robot.index === 4 && robot.contains(x, y)) {
+      openInventory();
+    }
+  }
+});
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 resize();
