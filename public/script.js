@@ -124,7 +124,7 @@ class Robot {
     this.index = index;
     this.frame = index % FRAME_COUNT;
     this.frameTick = 0;
-    this.frameDuration = Math.round((7 + index * 1.5) * (5 / 3));
+    this.frameDuration = Math.round((7 + index * 1.5) * (5 / 6));
     this.speed = def.speed;
     this.dir = index % 2 === 0 ? 1 : -1;
     this.paused = false;
