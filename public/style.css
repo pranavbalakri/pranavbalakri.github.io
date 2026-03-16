@@ -126,6 +126,26 @@ html, body {
   100% { transform: translateX(-50%) scale(1);   opacity: 1; }
 }
 
+/* ── Inventory title ─────────────────────────────────────────────────────── */
+#inventory-title {
+  position: absolute;
+  top: 5.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(8px, 1.4vw, 18px);
+  color: #3d1a00;
+  text-shadow:
+    1px  1px 0 #6f4e37,
+   -1px -1px 0 #6f4e37,
+    1px -1px 0 #6f4e37,
+   -1px  1px 0 #6f4e37;
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: 2px;
+  z-index: 1;
+}
+
 /* ── Inventory overlay ───────────────────────────────────────────────────── */
 #inventory-overlay {
   position: fixed;
@@ -143,7 +163,7 @@ html, body {
 #inventory-panel {
   position: relative;
   /* Maintain 1501:1072 aspect ratio, fit within viewport with padding */
-  width: min(61.6vw, calc(56vh * (1501 / 1072)));
+  width: min(73.92vw, calc(67.2vh * (1501 / 1072)));
   aspect-ratio: 1501 / 1072;
   background: url('inventory.png') center / 100% 100% no-repeat;
   image-rendering: pixelated;
