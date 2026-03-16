@@ -309,3 +309,231 @@ html, body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* ── Vortex transition overlay ───────────────────────────────────────────── */
+#vortex-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+}
+
+/* Captured screenshot layer — spins & collapses via WAAPI */
+#vortex-snapshot {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform-origin: 50% 50%;
+}
+
+/* Large soft radial glow ring */
+#vortex-ring-outer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 26vmax;
+  height: 26vmax;
+  border-radius: 50%;
+  filter: blur(8px);
+  background: radial-gradient(circle,
+    rgba(214,248,255,.95) 0%,
+    rgba(108,212,255,.48) 34%,
+    rgba(6,33,74,.16)    62%,
+    transparent          75%);
+  pointer-events: none;
+}
+
+/* Thin outer border ring */
+#vortex-ring-border {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18vmax;
+  height: 18vmax;
+  border-radius: 50%;
+  border: 1px solid rgba(212,241,255,.6);
+  pointer-events: none;
+}
+
+/* Container for JS-spawned debris particles */
+#vortex-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Subtle dot-grid overlay */
+#vortex-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(214,236,255,.86) .9px, transparent .9px);
+  background-size: 6px 6px;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* Dark radial vignette that builds up as the vortex closes */
+#vortex-dark {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%,
+    rgba(30,88,140,.04)  0%,
+    rgba(6,18,34,.22)   48%,
+    rgba(2,8,18,.42)   100%);
+  pointer-events: none;
+}
+
+/* Bottom caption text */
+#vortex-caption {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(6px, 0.9vw, 10px);
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  color: rgba(186,230,255,.9);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ── New destination page ────────────────────────────────────────────────── */
+#new-page {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  background: #000;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  overflow-y: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Blog listing ────────────────────────────────────────────────────────── */
+#blog-listing {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 96px 24px 80px;
+}
+
+.blog-heading {
+  font-size: 36px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.025em;
+  margin: 0 0 24px;
+}
+
+.article-item {
+  padding: 28px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer;
+  transition: opacity .15s;
+}
+
+.article-item:first-child { border-top: 1px solid rgba(255,255,255,0.08); }
+.article-item:hover { opacity: .7; }
+
+.article-item-title {
+  font-size: 19px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -.01em;
+  margin-bottom: 6px;
+}
+
+.article-item-meta {
+  font-size: 13px;
+  color: rgba(255,255,255,.38);
+  margin-bottom: 10px;
+}
+
+.article-item-excerpt {
+  font-size: 15px;
+  color: rgba(255,255,255,.52);
+  line-height: 1.6;
+}
+
+/* ── Article detail ──────────────────────────────────────────────────────── */
+#article-view {
+  display: none;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 96px 24px 80px;
+}
+
+#article-back {
+  display: inline-block;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 40px;
+  font-family: inherit;
+  font-size: 14px;
+  color: rgba(255,255,255,.4);
+  cursor: pointer;
+  transition: color .15s;
+  letter-spacing: .01em;
+}
+#article-back:hover { color: rgba(255,255,255,.9); }
+
+#article-title {
+  font-size: 34px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+  margin: 0 0 14px;
+}
+
+#article-meta {
+  font-size: 13px;
+  color: rgba(255,255,255,.38);
+  margin-bottom: 36px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+#article-body {
+  font-size: 17px;
+  line-height: 1.8;
+  color: rgba(255,255,255,.78);
+}
+#article-body p  { margin: 0 0 24px; }
+#article-body h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -.01em;
+  margin: 44px 0 16px;
+}
+
+#back-btn {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  width: 45px;
+  height: 45px;
+  padding: 0;
+  /* Sprite sheet: 4 frames × 32px source, rendered at ~1.4× = 179×45px */
+  background: url('Owlet_Monster_Idle_4.png') 0 0 no-repeat;
+  background-size: 179px 45px;
+  image-rendering: pixelated;
+  border: 1.5px solid #555;
+  border-radius: 6px;
+  cursor: pointer;
+  animation: owlet-idle 1.4s steps(4) infinite;
+  transition: border-color .2s;
+}
+
+@keyframes owlet-idle {
+  from { background-position:    0 0; }
+  to   { background-position: -179px 0; }
+}
+
+#back-btn:hover {
+  border-color: #aaa;
+}

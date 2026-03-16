@@ -2,6 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <script>
+      // Restore the real path that 404.html encoded into ?p=
+      // e.g. /?p=%2Fblog  →  history becomes /blog, no reload.
+      (function () {
+        var search = window.location.search;
+        if (search[1] === 'p') {
+          var path = decodeURIComponent(search.slice(3)); // strip "?p="
+          window.history.replaceState(null, null, path || '/');
+        }
+      })();
+    </script>
     <link rel="icon" href="%PUBLIC_URL%/Owlet_Monster.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#1a0a00" />
@@ -125,7 +136,38 @@
       </div>
     </div>
 
+    <!-- ── Vortex transition overlay (z-index 100) ──────────────────────── -->
+    <div id="vortex-overlay">
+      <div id="vortex-snapshot"></div>
+      <div id="vortex-ring-outer"></div>
+      <div id="vortex-ring-border"></div>
+      <div id="vortex-particles"></div>
+      <div id="vortex-grid"></div>
+      <div id="vortex-dark"></div>
+      <p id="vortex-caption">Entering Blog...</p>
+    </div>
+
+    <!-- ── New destination page (z-index 200) ───────────────────────────── -->
+    <div id="new-page">
+      <button id="back-btn" aria-label="Back to home"></button>
+
+      <!-- Blog listing -->
+      <div id="blog-listing">
+        <h1 class="blog-heading">Blog</h1>
+        <div id="article-list"></div>
+      </div>
+
+      <!-- Article detail (populated + shown by JS) -->
+      <div id="article-view">
+        <button id="article-back">← Articles</button>
+        <h1 id="article-title"></h1>
+        <div id="article-meta"></div>
+        <div id="article-body"></div>
+      </div>
+    </div>
+
     <div id="root"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="%PUBLIC_URL%/script.js"></script>
   </body>
 </html>

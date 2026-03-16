@@ -257,6 +257,36 @@ function scheduleBubbleHide(robot) {
   }, 120);
 }
 
+// ─── Statue Bubble ────────────────────────────────────────────────────────────
+let statueHovered     = false;
+let statueBubbleEl    = null;
+let statueBubbleTimer = null;
+
+function showStatueBubble() {
+  if (statueBubbleEl) return;
+  clearTimeout(statueBubbleTimer);
+  const { cx, topY } = getStatueBounds();
+  const el = document.createElement('div');
+  el.className = 'speech-bubble';
+  el.textContent = 'Click to transition to blog!';
+  el.style.left = cx + 'px';
+  el.style.top  = '0px';
+  bubblesContainer.appendChild(el);
+  const h = el.offsetHeight;
+  el.style.top = (topY - h - 16) + 'px';
+  statueBubbleEl = el;
+}
+
+function hideStatueBubble() {
+  clearTimeout(statueBubbleTimer);
+  if (statueBubbleEl) { statueBubbleEl.remove(); statueBubbleEl = null; }
+}
+
+function scheduleStatueBubbleHide() {
+  clearTimeout(statueBubbleTimer);
+  statueBubbleTimer = setTimeout(hideStatueBubble, 120);
+}
+
 // ─── Particles (fireflies) ────────────────────────────────────────────────────
 const NUM_PARTICLES = 22;
 const particles = [];
@@ -322,6 +352,21 @@ function initRobots() {
   });
 }
 
+// ─── Statue Hit-Test ──────────────────────────────────────────────────────────
+// Single source of truth for hitbox geometry — edit values here only.
+function getStatueBounds() {
+  const cx      = canvas.width / 2;
+  const groundY = canvas.height * 0.73;
+  const halfW   = canvas.width  * 0.02;
+  const topY    = groundY - canvas.height * 0.10;
+  return { cx, groundY, halfW, topY };
+}
+
+function isOverStatue(mx, my) {
+  const { cx, groundY, halfW, topY } = getStatueBounds();
+  return mx >= cx - halfW && mx <= cx + halfW && my >= topY && my <= groundY;
+}
+
 // ─── Mouse Handling ───────────────────────────────────────────────────────────
 function getCanvasPos(e) {
   const rect = canvas.getBoundingClientRect();
@@ -349,7 +394,15 @@ canvas.addEventListener('mousemove', e => {
     }
     if (hit) anyHit = true;
   }
-  canvas.style.cursor = anyHit ? 'pointer' : 'default';
+  const statueHit = isOverStatue(x, y);
+  if (statueHit && !statueHovered) {
+    statueHovered = true;
+    showStatueBubble();
+  } else if (!statueHit && statueHovered) {
+    statueHovered = false;
+    scheduleStatueBubbleHide();
+  }
+  canvas.style.cursor = (anyHit || statueHit) ? 'pointer' : 'default';
 });
 
 canvas.addEventListener('mouseleave', () => {
@@ -358,6 +411,10 @@ canvas.addEventListener('mouseleave', () => {
       robot.hovered = false;
       scheduleBubbleHide(robot);
     }
+  }
+  if (statueHovered) {
+    statueHovered = false;
+    scheduleStatueBubbleHide();
   }
   canvas.style.cursor = 'default';
 });
@@ -387,6 +444,12 @@ function updateBubblePositions() {
       const h = robot.bubbleEl.offsetHeight;
       robot.bubbleEl.style.top = (anchor.y - h - 16) + 'px';
     }
+  }
+  if (statueBubbleEl) {
+    const { cx, topY } = getStatueBounds();
+    statueBubbleEl.style.left = cx + 'px';
+    const h = statueBubbleEl.offsetHeight;
+    statueBubbleEl.style.top = (topY - h - 16) + 'px';
   }
 }
 
@@ -464,9 +527,17 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeInventory(); closeExperience(); }
 });
 
-// Click on robots by index
+// Click on robots by index; statue click triggers the vortex transition.
 canvas.addEventListener('click', e => {
   const { x, y } = getCanvasPos(e);
+
+  // Statue takes priority — robot hitboxes won't overlap the center column
+  // in normal gameplay, but return early just in case.
+  if (isOverStatue(x, y)) {
+    triggerVortexTransition();
+    return;
+  }
+
   for (const robot of robots) {
     if (robot.index === 4 && robot.contains(x, y)) openInventory();
     if (robot.index === 5 && robot.contains(x, y)) openExperience();
@@ -476,3 +547,273 @@ canvas.addEventListener('click', e => {
 // ─── Init ─────────────────────────────────────────────────────────────────────
 resize();
 loop();
+
+// ─── Vortex Transition ────────────────────────────────────────────────────────
+// Animation constants — mirror the framer-motion reference implementation.
+const VORTEX_DURATION_MS = 2400;
+const VORTEX_EASE        = 'cubic-bezier(0.18, 1, 0.22, 1)';
+
+let vortexActive = false;
+
+// Capture the current viewport to a data URL using html2canvas (loaded via CDN).
+async function captureViewport() {
+  try {
+    const c = await html2canvas(document.body, {
+      useCORS:       true,
+      backgroundColor: '#000',
+      logging:       false,
+      scale:         1,
+      x:             0,
+      y:             window.scrollY,
+      width:         window.innerWidth,
+      height:        window.innerHeight,
+      scrollX:       0,
+      scrollY:       -window.scrollY,
+      windowWidth:   document.documentElement.clientWidth,
+      windowHeight:  window.innerHeight,
+      removeContainer: true,
+    });
+    return c.toDataURL('image/png');
+  } catch (err) {
+    console.error('[vortex] captureViewport:', err);
+    return null;
+  }
+}
+
+// Spawn 20 debris particles arranged in a ring and animate each one spiralling
+// inward — equivalent to the VortexScreen particle system in the reference code.
+function spawnParticles(container) {
+  container.innerHTML = '';
+  const COUNT = 20;
+  for (let i = 0; i < COUNT; i++) {
+    const angle = (i / COUNT) * Math.PI * 2;
+    const dist  = 140 + (i % 5) * 34;
+    const ox    = Math.cos(angle) * dist;
+    const oy    = Math.sin(angle) * dist;
+    const spin  = i % 2 === 0 ? 160 : -160;
+    const size  = i % 3 === 0 ? 10 : 7;
+    const delay = i * 30; // ms stagger
+
+    const el = document.createElement('span');
+    el.style.cssText = [
+      'position:absolute',
+      `left:calc(50% - ${size / 2}px)`,
+      `top:calc(50% - ${size / 2}px)`,
+      `width:${size}px`,
+      `height:${size}px`,
+      'border-radius:50%',
+      'background:rgba(147,210,255,0.8)',
+      'box-shadow:0 0 8px rgba(147,210,255,0.6)',
+    ].join(';');
+    container.appendChild(el);
+
+    el.animate(
+      [
+        { opacity: 0,    transform: `translate(${ox}px,${oy}px) scale(.75) rotate(0deg)` },
+        { opacity: 0.9,  transform: `translate(${ox}px,${oy}px) scale(1) rotate(${spin * .3}deg)`, offset: 0.20 },
+        { opacity: 0.34, transform: `translate(${ox * .38}px,${oy * .26}px) scale(1) rotate(${spin * .6}deg)`, offset: 0.60 },
+        { opacity: 0,    transform: `translate(0,0) scale(.24) rotate(${spin}deg)` },
+      ],
+      { duration: VORTEX_DURATION_MS, delay, easing: VORTEX_EASE, fill: 'forwards' }
+    );
+  }
+}
+
+// Full transition: capture → overlay → vortex animation → new page.
+async function triggerVortexTransition() {
+  if (vortexActive) return;
+  vortexActive = true;
+
+  // 1. Snapshot before showing anything
+  const imgUrl = await captureViewport();
+
+  const overlay    = document.getElementById('vortex-overlay');
+  const snapshot   = document.getElementById('vortex-snapshot');
+  const ringOuter  = document.getElementById('vortex-ring-outer');
+  const ringBorder = document.getElementById('vortex-ring-border');
+  const particles  = document.getElementById('vortex-particles');
+  const gridEl     = document.getElementById('vortex-grid');
+  const darkEl     = document.getElementById('vortex-dark');
+  const captionEl  = document.getElementById('vortex-caption');
+
+  // 2. Swap pages immediately so the new page is visible behind the overlay
+  //    while the vortex clip-path shrinks.
+  document.getElementById('scene').style.display = 'none';
+  document.getElementById('new-page').style.display = 'block';
+
+  // 3. Load snapshot into background layer
+  snapshot.style.backgroundImage = imgUrl ? `url(${imgUrl})` : 'none';
+
+  // 4. Show overlay at opacity 0, then fade it in quickly
+  overlay.style.display = 'block';
+  overlay.animate([{ opacity: 0 }, { opacity: 1 }], {
+    duration: 220,
+    easing: 'linear',
+    fill: 'forwards',
+  });
+
+  // 4. Snapshot layer: spin + clip-path collapse (mirrors HomeShell snapshot animation)
+  if (imgUrl) {
+    snapshot.animate(
+      [
+        { offset: 0,    opacity: 1,    transform: 'rotate(0deg)  scale(1)',    clipPath: 'circle(165% at 50% 50%)', filter: 'brightness(1.02) saturate(1.02) contrast(1.02) blur(0px)'   },
+        { offset: 0.58, opacity: 1,    transform: 'rotate(7deg)  scale(1.05)', clipPath: 'circle(118% at 50% 50%)', filter: 'brightness(1.08) saturate(0.94) contrast(1.08) blur(0.8px)' },
+        { offset: 0.86, opacity: 0.86, transform: 'rotate(26deg) scale(1.12)', clipPath: 'circle(46%  at 50% 50%)', filter: 'brightness(1.16) saturate(0.72) contrast(1.16) blur(2.2px)' },
+        { offset: 1,    opacity: 0.22, transform: 'rotate(92deg) scale(1.32)', clipPath: 'circle(2%   at 50% 50%)', filter: 'brightness(1.24) saturate(0.42) contrast(1.24) blur(4.8px)' },
+      ],
+      { duration: VORTEX_DURATION_MS, easing: 'ease-in-out', fill: 'forwards' }
+    );
+  }
+
+  // 5. Glow ring: expand then implode
+  ringOuter.animate(
+    [
+      { transform: 'translate(-50%,-50%) scale(.2)',   opacity: 0    },
+      { transform: 'translate(-50%,-50%) scale(1.16)', opacity: 0.98, offset: 0.5 },
+      { transform: 'translate(-50%,-50%) scale(.26)',  opacity: 0    },
+    ],
+    { duration: VORTEX_DURATION_MS, easing: VORTEX_EASE, fill: 'forwards' }
+  );
+
+  // 6. Border ring: same expand/implode pattern
+  ringBorder.animate(
+    [
+      { transform: 'translate(-50%,-50%) scale(.35)',  opacity: 0    },
+      { transform: 'translate(-50%,-50%) scale(1.34)', opacity: 0.84, offset: 0.5 },
+      { transform: 'translate(-50%,-50%) scale(.08)',  opacity: 0    },
+    ],
+    { duration: VORTEX_DURATION_MS, easing: VORTEX_EASE, fill: 'forwards' }
+  );
+
+  // 7. Debris particles spiralling to center
+  spawnParticles(particles);
+
+  // 8. Dot-grid overlay: flash then vanish
+  gridEl.animate(
+    [
+      { opacity: 0.06 },
+      { opacity: 0.22, offset: 0.56 },
+      { opacity: 0.08, offset: 0.86 },
+      { opacity: 0    },
+    ],
+    { duration: VORTEX_DURATION_MS, easing: 'ease-in-out', fill: 'forwards' }
+  );
+
+  // 9. Dark radial vignette: slowly builds
+  darkEl.animate(
+    [
+      { opacity: 0    },
+      { opacity: 0.10, offset: 0.56 },
+      { opacity: 0.18, offset: 0.86 },
+      { opacity: 0.24 },
+    ],
+    { duration: VORTEX_DURATION_MS, easing: 'ease-in-out', fill: 'forwards' }
+  );
+
+  // 10. Caption: fade in then fade out
+  captionEl.animate(
+    [
+      { opacity: 0    },
+      { opacity: 0.7,  offset: 0.30 },
+      { opacity: 0.08 },
+    ],
+    { duration: VORTEX_DURATION_MS, easing: 'ease-in-out', fill: 'forwards' }
+  );
+
+  // 11. After transition completes, dismiss the overlay — new page is already visible.
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    history.pushState({ page: 'blog' }, '', '/blog');
+    vortexActive = false;
+  }, VORTEX_DURATION_MS);
+}
+
+// ─── Blog ↔ Home navigation ───────────────────────────────────────────────────
+function showHome() {
+  document.getElementById('new-page').style.display = 'none';
+  document.getElementById('scene').style.display = '';
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+function showBlog() {
+  document.getElementById('scene').style.display = 'none';
+  document.getElementById('new-page').style.display = 'block';
+}
+
+document.getElementById('back-btn').addEventListener('click', () => {
+  history.pushState({ page: 'home' }, '', '/');
+  showHome();
+});
+
+// Keep the browser back/forward buttons in sync.
+window.addEventListener('popstate', e => {
+  if (e.state && e.state.page === 'blog') {
+    showBlog();
+  } else {
+    showHome();
+  }
+});
+
+// Handle direct navigation to /blog (restored from 404.html redirect).
+if (window.location.pathname === '/blog') {
+  showBlog();
+}
+
+// ─── Blog Articles ────────────────────────────────────────────────────────────
+const ARTICLES = [
+  {
+    id: 1,
+    title: 'Coming soon!',
+    date: 'March 2026',
+    author: 'Pranav Balakrishnan',
+    readTime: '0 min read',
+    excerpt: 'I will be posting some thoughts on here in the future.',
+    body: `<p>I will be posting some thoughts on here in the future.</p>`,
+  },
+];
+
+// Render the article listing inside #article-list
+function renderArticleListing() {
+  const container = document.getElementById('article-list');
+  container.innerHTML = '';
+  ARTICLES.forEach(article => {
+    const el = document.createElement('div');
+    el.className = 'article-item';
+    el.innerHTML = `
+      <div class="article-item-title">${article.title}</div>
+      <div class="article-item-meta">${[article.author, article.date].filter(Boolean).join(' · ')}</div>
+      <div class="article-item-excerpt">${article.excerpt}</div>
+    `;
+    el.addEventListener('click', () => openArticle(article.id));
+    container.appendChild(el);
+  });
+}
+
+function openArticle(id) {
+  const article = ARTICLES.find(a => a.id === id);
+  if (!article) return;
+  document.getElementById('article-title').textContent = article.title;
+  const metaParts = [article.author, article.date].filter(Boolean);
+  document.getElementById('article-meta').textContent  = metaParts.join(' · ');
+  document.getElementById('article-body').innerHTML    = article.body;
+  document.getElementById('blog-listing').style.display  = 'none';
+  document.getElementById('article-view').style.display  = 'block';
+  document.getElementById('new-page').scrollTop = 0;
+}
+
+function closeArticle() {
+  document.getElementById('article-view').style.display  = 'none';
+  document.getElementById('blog-listing').style.display  = 'block';
+  document.getElementById('new-page').scrollTop = 0;
+}
+
+document.getElementById('article-back').addEventListener('click', closeArticle);
+
+// Reset blog to listing view whenever the home→blog transition runs
+const _origShowBlog = showBlog;
+showBlog = function () {
+  _origShowBlog();
+  closeArticle();
+};
+
+renderArticleListing();

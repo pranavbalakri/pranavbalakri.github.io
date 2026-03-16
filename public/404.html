@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Pranav's Website</title>
+    <script>
+      // GitHub Pages SPA deep-link redirect.
+      // When GH Pages 404s on a path like /blog, this file catches it,
+      // encodes the path as ?p=/blog, and bounces to the root index.html.
+      // segmentCount = 0 because the site is served at the root domain
+      // (pranavbalakri.github.io), not a /repo-name sub-path.
+      (function () {
+        var l = window.location;
+        l.replace(
+          l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+          '/?p=' + encodeURIComponent(l.pathname + l.search) + l.hash
+        );
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
