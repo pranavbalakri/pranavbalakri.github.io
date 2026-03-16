@@ -110,6 +110,27 @@ html, body {
   z-index: 1;
 }
 
+/* tail pointing up (bubble displayed below the character) */
+.speech-bubble.bubble-below {
+  max-width: 110px;
+}
+
+.speech-bubble.bubble-below::after {
+  bottom: auto;
+  top: -11px;
+  left: var(--tail-x, 50%);
+  border-top: none;
+  border-bottom: 11px solid #2a1200;
+}
+
+.speech-bubble.bubble-below::before {
+  bottom: auto;
+  top: -7px;
+  left: var(--tail-x, 50%);
+  border-top: none;
+  border-bottom: 9px solid #fdf3d0;
+}
+
 .speech-bubble a {
   color: #1a44cc;
   text-decoration: underline;

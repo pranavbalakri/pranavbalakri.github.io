@@ -636,21 +636,15 @@ async function triggerVortexTransition() {
   const darkEl     = document.getElementById('vortex-dark');
   const captionEl  = document.getElementById('vortex-caption');
 
-  // 2. Swap pages immediately so the new page is visible behind the overlay
-  //    while the vortex clip-path shrinks.
+  // 2. Load snapshot and show overlay immediately at full opacity —
+  //    this must happen before the page swap so the blog never flashes.
+  snapshot.style.backgroundImage = imgUrl ? `url(${imgUrl})` : 'none';
+  overlay.style.display  = 'block';
+  overlay.style.opacity  = '1';
+
+  // 3. Swap pages now that the overlay is covering the scene.
   document.getElementById('scene').style.display = 'none';
   document.getElementById('new-page').style.display = 'block';
-
-  // 3. Load snapshot into background layer
-  snapshot.style.backgroundImage = imgUrl ? `url(${imgUrl})` : 'none';
-
-  // 4. Show overlay at opacity 0, then fade it in quickly
-  overlay.style.display = 'block';
-  overlay.animate([{ opacity: 0 }, { opacity: 1 }], {
-    duration: 220,
-    easing: 'linear',
-    fill: 'forwards',
-  });
 
   // 4. Snapshot layer: spin + clip-path collapse (mirrors HomeShell snapshot animation)
   if (imgUrl) {
@@ -723,6 +717,7 @@ async function triggerVortexTransition() {
   // 11. After transition completes, dismiss the overlay — new page is already visible.
   setTimeout(() => {
     overlay.style.display = 'none';
+    overlay.style.opacity = '';
     history.pushState({ page: 'blog' }, '', '/blog');
     vortexActive = false;
   }, VORTEX_DURATION_MS);
@@ -740,9 +735,71 @@ function showBlog() {
   document.getElementById('new-page').style.display = 'block';
 }
 
+function triggerSlideBackTransition() {
+  const newPageEl = document.getElementById('new-page');
+  const sceneEl   = document.getElementById('scene');
+  const duration  = 900;
+  const easing = 'ease-in-out';
+
+  // Bring scene into view off-screen left so it can slide in
+  sceneEl.style.display   = '';
+  sceneEl.style.transform = 'translateX(-100%)';
+
+  const anim1 = newPageEl.animate(
+    [{ transform: 'translateX(0)' }, { transform: 'translateX(100%)' }],
+    { duration, easing, fill: 'forwards' }
+  );
+
+  const anim2 = sceneEl.animate(
+    [{ transform: 'translateX(-100%)' }, { transform: 'translateX(0)' }],
+    { duration, easing, fill: 'forwards' }
+  );
+
+  anim2.onfinish = () => {
+    anim1.cancel();
+    anim2.cancel();
+    sceneEl.style.transform   = '';
+    newPageEl.style.transform = '';
+    history.pushState({ page: 'home' }, '', '/');
+    showHome();
+  };
+}
+
 document.getElementById('back-btn').addEventListener('click', () => {
-  history.pushState({ page: 'home' }, '', '/');
-  showHome();
+  triggerSlideBackTransition();
+});
+
+// ─── Back-button bubble ───────────────────────────────────────────────────────
+let backBubbleEl    = null;
+let backBubbleTimer = null;
+const backBtn       = document.getElementById('back-btn');
+const newPage       = document.getElementById('new-page');
+
+backBtn.addEventListener('mouseenter', () => {
+  clearTimeout(backBubbleTimer);
+  if (backBubbleEl) return;
+  const rect = backBtn.getBoundingClientRect();
+  const el = document.createElement('div');
+  el.className = 'speech-bubble bubble-below';
+  el.textContent = 'Click to go back.';
+  el.style.position = 'absolute';
+  el.style.top  = (rect.bottom + 16) + 'px';
+  newPage.appendChild(el);
+  const margin      = 12;
+  const center      = rect.left + rect.width / 2;
+  const half        = el.offsetWidth / 2;
+  const clampedLeft = Math.max(center, half + margin);
+  el.style.left = clampedLeft + 'px';
+  // Tail must point at the button center regardless of clamping
+  const tailX = center - (clampedLeft - half);
+  el.style.setProperty('--tail-x', tailX + 'px');
+  backBubbleEl = el;
+});
+
+backBtn.addEventListener('mouseleave', () => {
+  backBubbleTimer = setTimeout(() => {
+    if (backBubbleEl) { backBubbleEl.remove(); backBubbleEl = null; }
+  }, 120);
 });
 
 // Keep the browser back/forward buttons in sync.
