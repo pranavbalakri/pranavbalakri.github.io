@@ -221,3 +221,91 @@ html, body {
   text-shadow: 1px 1px 0 #000;
   line-height: 1.6;
 }
+
+/* ── Experience overlay ───────────────────────────────────────────────────── */
+#experience-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.48);
+}
+#experience-overlay.hidden {
+  display: none;
+}
+
+#experience-panel {
+  position: relative;
+  width: min(73.92vw, calc(67.2vh * (1501 / 1072)));
+  aspect-ratio: 1501 / 1072;
+  image-rendering: pixelated;
+  animation: invOpen 0.14s ease-out forwards;
+  isolation: isolate;
+}
+
+#experience-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('inventory.png') center / 100% 100% no-repeat;
+  image-rendering: pixelated;
+  filter: hue-rotate(220deg);
+  z-index: -1;
+}
+
+#experience-title {
+  position: absolute;
+  top: 5.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(8px, 1.4vw, 18px);
+  color: #001a3d;
+  text-shadow:
+    1px  1px 0 #2a4a7f,
+   -1px -1px 0 #2a4a7f,
+    1px -1px 0 #2a4a7f,
+   -1px  1px 0 #2a4a7f;
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: 2px;
+  z-index: 1;
+}
+
+.exp-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: clamp(4px, 0.6vw, 10px);
+}
+
+.exp-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(5px, 0.75vw, 10px);
+  color: #f5e79e;
+  text-shadow: 1px 1px 0 #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.exp-date {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(4px, 0.5vw, 6px);
+  color: #72c4e8;
+  text-shadow: 1px 1px 0 #000;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.exp-company {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(4px, 0.5vw, 6px);
+  color: #9ab8d4;
+  text-shadow: 1px 1px 0 #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

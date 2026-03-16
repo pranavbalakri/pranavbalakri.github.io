@@ -87,18 +87,25 @@ const ROBOT_DEFS = [
     speed: 0.3,
     html: `Check out my projects on <a href="https://github.com/pranavbalakri" target="_blank">GitHub,</a> or by clicking this monster!`,
   },
+  {
+    sprite: 'Pink_Monster_Walk_6',
+    hue: 300,
+    speed: 0.29,
+    html: `Click to see my experience!`,
+  },
 ];
 
 // ─── Draw Robot ───────────────────────────────────────────────────────────────
-function drawRobot(bx, by, spriteImg, frameIndex, flip, hue) {
+function drawRobot(bx, by, spriteImg, frameIndex, flip, hue, invert) {
   if (!spriteImg || !spriteImg.complete || spriteImg.naturalWidth === 0) return;
 
   ctx.save();
   ctx.imageSmoothingEnabled = false;
 
-  if (hue) {
-    ctx.filter = `hue-rotate(${hue}deg)`;
-  }
+  const filters = [];
+  if (invert) filters.push('invert(1)');
+  if (hue)    filters.push(`hue-rotate(${hue}deg)`);
+  if (filters.length) ctx.filter = filters.join(' ');
 
   if (flip) {
     ctx.translate(bx + SW, 0);
@@ -183,7 +190,8 @@ class Robot {
       SPRITES[this.def.sprite],
       frameIndex,
       this.dir < 0,
-      this.def.hue
+      this.def.hue,
+      this.def.invert
     );
   }
 
@@ -415,7 +423,6 @@ const inventoryOverlay = document.getElementById('inventory-overlay');
 const inventoryPanel   = document.getElementById('inventory-panel');
 
 function openInventory() {
-  // Pause and unhover all robots
   for (const r of robots) {
     r.hovered = false;
     r.bubbleHovered = false;
@@ -428,23 +435,41 @@ function closeInventory() {
   inventoryOverlay.classList.add('hidden');
 }
 
-// Click backdrop (but not the panel itself) → close
 inventoryOverlay.addEventListener('click', e => {
   if (e.target === inventoryOverlay) closeInventory();
 });
 
-// ESC → close
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeInventory();
+// ─── Experience ───────────────────────────────────────────────────────────────
+const experienceOverlay = document.getElementById('experience-overlay');
+
+function openExperience() {
+  for (const r of robots) {
+    r.hovered = false;
+    r.bubbleHovered = false;
+    hideBubble(r);
+  }
+  experienceOverlay.classList.remove('hidden');
+}
+
+function closeExperience() {
+  experienceOverlay.classList.add('hidden');
+}
+
+experienceOverlay.addEventListener('click', e => {
+  if (e.target === experienceOverlay) closeExperience();
 });
 
-// Click on the GitHub robot (index 4) → open inventory
+// ESC → close either overlay
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeInventory(); closeExperience(); }
+});
+
+// Click on robots by index
 canvas.addEventListener('click', e => {
   const { x, y } = getCanvasPos(e);
   for (const robot of robots) {
-    if (robot.index === 4 && robot.contains(x, y)) {
-      openInventory();
-    }
+    if (robot.index === 4 && robot.contains(x, y)) openInventory();
+    if (robot.index === 5 && robot.contains(x, y)) openExperience();
   }
 });
 
