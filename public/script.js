@@ -808,38 +808,131 @@ backBtn.addEventListener('mouseleave', () => {
   }, 120);
 });
 
-// Keep the browser back/forward buttons in sync.
-window.addEventListener('popstate', e => {
-  if (e.state && e.state.page === 'blog') {
-    showBlog();
-  } else {
-    showHome();
-  }
-});
-
-// Handle direct navigation to /blog (restored from 404.html redirect).
-if (window.location.pathname === '/blog') {
-  showBlog();
-}
-
 // ─── Blog Articles ────────────────────────────────────────────────────────────
 const ARTICLES = [
   {
     id: 1,
+    slug: 'coming-soon',
     title: 'Coming soon!',
     date: 'March 2026',
     author: 'Pranav Balakrishnan',
-    readTime: '0 min read',
     excerpt: 'I will be posting some thoughts on here in the future.',
-    body: `<p>I will be posting some thoughts on here in the future.</p>`,
+    file: '/articles/coming-soon.txt',
+  },
+  {
+    id: 2,
+    slug: 'test-article',
+    title: 'A Test Article',
+    date: 'March 2026',
+    author: 'Pranav Balakrishnan',
+    excerpt: 'A test article covering inline math, display math, text formatting, lists, and block quotes.',
+    file: '/articles/test-article.txt',
+  },
+  {
+    id: 3,
+    slug: 'paradigm',
+    title: '',
+    date: '',
+    author: 'Pranav Balakrishnan',
+    excerpt: '',
+    file: '/articles/paradigm.txt',
+    hidden: true,
   },
 ];
 
-// Render the article listing inside #article-list
+// ─── LaTeX → HTML parser ──────────────────────────────────────────────────────
+function parseLatexToHtml(src) {
+  let s = src;
+
+  // 1. Strip line comments
+  s = s.replace(/%[^\n]*/g, '');
+
+  // 2. Protect math blocks with null-byte placeholders so text processing
+  //    never touches the math content.
+  const math = [];
+  const protect = m => { math.push(m); return '\x00M' + (math.length - 1) + '\x00'; };
+
+  s = s.replace(/\\\[([\s\S]*?)\\\]/g,  m => protect(m));
+  s = s.replace(/\$\$([\s\S]*?)\$\$/g,  m => protect(m));
+  s = s.replace(/\\begin\{(equation|align|gather)\*?\}([\s\S]*?)\\end\{\1\*?\}/g, m => protect(m));
+  s = s.replace(/\$(?!\$)([^$\n]+?)\$/g, m => protect(m));
+  s = s.replace(/\\\(([\s\S]*?)\\\)/g,  m => protect(m));
+
+  // 3. Metadata
+  let title = '', author = '', date = '';
+  s = s.replace(/\\title\{([^}]*)\}/,  (_, v) => { title  = v; return ''; });
+  s = s.replace(/\\author\{([^}]*)\}/, (_, v) => { author = v; return ''; });
+  s = s.replace(/\\date\{([^}]*)\}/,   (_, v) => { date   = v; return ''; });
+
+  // 4. Environments
+  const items = c => c.split('\\item').slice(1).map(t => '<li>' + t.trim() + '</li>').join('');
+  s = s.replace(/\\begin\{itemize\}([\s\S]*?)\\end\{itemize\}/g,
+    (_, c) => '<ul>' + items(c) + '</ul>');
+  s = s.replace(/\\begin\{enumerate\}([\s\S]*?)\\end\{enumerate\}/g,
+    (_, c) => '<ol>' + items(c) + '</ol>');
+  s = s.replace(/\\begin\{quote\}([\s\S]*?)\\end\{quote\}/g,
+    (_, c) => '<blockquote>' + c.trim() + '</blockquote>');
+  s = s.replace(/\\begin\{center\}([\s\S]*?)\\end\{center\}/g,
+    (_, c) => '<div style="text-align:center">' + c.trim() + '</div>');
+
+  // 5. Headings
+  s = s.replace(/\\section\*?\{([^}]*)\}/g,       '<h2>$1</h2>');
+  s = s.replace(/\\subsection\*?\{([^}]*)\}/g,    '<h3>$1</h3>');
+  s = s.replace(/\\subsubsection\*?\{([^}]*)\}/g, '<h4>$1</h4>');
+
+  // 6. Inline formatting
+  s = s.replace(/\\textbf\{([^}]*)\}/g,   '<strong>$1</strong>');
+  s = s.replace(/\\textit\{([^}]*)\}/g,   '<em>$1</em>');
+  s = s.replace(/\\emph\{([^}]*)\}/g,     '<em>$1</em>');
+  s = s.replace(/\\underline\{([^}]*)\}/g,'<u>$1</u>');
+  s = s.replace(/\\texttt\{([^}]*)\}/g,   '<code>$1</code>');
+  s = s.replace(/\\text\{([^}]*)\}/g,     '$1');
+
+  // 7. Links
+  s = s.replace(/\\href\{([^}]*)\}\{([^}]*)\}/g, '<a href="$1" target="_blank">$2</a>');
+  s = s.replace(/\\url\{([^}]*)\}/g,              '<a href="$1" target="_blank">$1</a>');
+
+  // 8. Rules
+  s = s.replace(/\\hrule/g,                '<hr>');
+  s = s.replace(/\\rule\{[^}]*\}\{[^}]*\}/g, '<hr>');
+
+  // 9. Spacing / structural commands to discard
+  s = s.replace(/\\(noindent|medskip|bigskip|smallskip|newpage|clearpage|maketitle)\b\s*/g, '');
+  s = s.replace(/\\(vspace|hspace)\{[^}]*\}/g, '');
+  s = s.replace(/\\label\{[^}]*\}/g, '');
+  s = s.replace(/\\ref\{([^}]*)\}/g, '($1)');
+
+  // 10. Explicit line breaks
+  s = s.replace(/\\\\\s*/g, '<br>');
+  s = s.replace(/\\newline/g, '<br>');
+
+  // 11. Typography
+  s = s.replace(/---/g, '\u2014').replace(/--/g, '\u2013');
+  s = s.replace(/``/g, '\u201C').replace(/''/g, '\u201D');
+
+  // 12. Escaped special chars
+  s = s.replace(/\\&/g, '&amp;').replace(/\\%/g, '%')
+       .replace(/\\\$/g, '$').replace(/\\#/g, '#');
+
+  // 13. Wrap plain-text blocks in <p> (blank lines separate blocks)
+  s = s.split(/\n{2,}/).map(b => {
+    b = b.trim().replace(/\n/g, ' ');
+    if (!b) return '';
+    if (/^<(h[2-6]|ul|ol|blockquote|div|hr)/.test(b)) return b;
+    return '<p>' + b + '</p>';
+  }).filter(Boolean).join('\n');
+
+  // 14. Restore math
+  s = s.replace(/\x00M(\d+)\x00/g, (_, i) => math[+i]);
+
+  return { title, author, date, html: s };
+}
+
+// ─── Article rendering ────────────────────────────────────────────────────────
 function renderArticleListing() {
   const container = document.getElementById('article-list');
   container.innerHTML = '';
-  ARTICLES.forEach(article => {
+  ARTICLES.filter(a => !a.hidden).forEach(article => {
     const el = document.createElement('div');
     el.className = 'article-item';
     el.innerHTML = `
@@ -852,31 +945,87 @@ function renderArticleListing() {
   });
 }
 
-function openArticle(id) {
+async function openArticle(id, { pushState = true } = {}) {
   const article = ARTICLES.find(a => a.id === id);
   if (!article) return;
+
   document.getElementById('article-title').textContent = article.title;
-  const metaParts = [article.author, article.date].filter(Boolean);
-  document.getElementById('article-meta').textContent  = metaParts.join(' · ');
-  document.getElementById('article-body').innerHTML    = article.body;
-  document.getElementById('blog-listing').style.display  = 'none';
-  document.getElementById('article-view').style.display  = 'block';
+  document.getElementById('article-meta').textContent =
+    [article.author, article.date].filter(Boolean).join(' · ');
+
+  const bodyEl = document.getElementById('article-body');
+  bodyEl.innerHTML = '<p style="opacity:.45">Loading\u2026</p>';
+
+  document.getElementById('blog-listing').style.display = 'none';
+  document.getElementById('article-view').style.display = 'block';
   document.getElementById('new-page').scrollTop = 0;
+
+  if (pushState) {
+    history.pushState({ page: 'article', slug: article.slug }, '', '/blog/' + article.slug);
+  }
+
+  try {
+    const resp = await fetch(article.file);
+    if (!resp.ok) throw new Error(resp.status);
+    const { html } = parseLatexToHtml(await resp.text());
+    bodyEl.innerHTML = html;
+    if (window.renderMathInElement) {
+      renderMathInElement(bodyEl, {
+        delimiters: [
+          { left: '$$',   right: '$$',   display: true  },
+          { left: '\\[',  right: '\\]',  display: true  },
+          { left: '$',    right: '$',    display: false },
+          { left: '\\(',  right: '\\)',  display: false },
+        ],
+        throwOnError: false,
+      });
+    }
+  } catch (_) {
+    bodyEl.innerHTML = '<p>Could not load article.</p>';
+  }
 }
 
 function closeArticle() {
   document.getElementById('article-view').style.display  = 'none';
   document.getElementById('blog-listing').style.display  = 'block';
   document.getElementById('new-page').scrollTop = 0;
+  history.pushState({ page: 'blog' }, '', '/blog');
 }
 
 document.getElementById('article-back').addEventListener('click', closeArticle);
 
-// Reset blog to listing view whenever the home→blog transition runs
+// Reset to listing whenever the home→blog transition runs
 const _origShowBlog = showBlog;
 showBlog = function () {
   _origShowBlog();
-  closeArticle();
+  document.getElementById('article-view').style.display  = 'none';
+  document.getElementById('blog-listing').style.display  = 'block';
 };
+
+// ─── Routing ──────────────────────────────────────────────────────────────────
+window.addEventListener('popstate', e => {
+  const p = e.state && e.state.page;
+  if (p === 'article') {
+    const a = ARTICLES.find(x => x.slug === e.state.slug);
+    if (a) { showBlog(); openArticle(a.id, { pushState: false }); }
+  } else if (p === 'blog') {
+    showBlog();
+  } else {
+    showHome();
+  }
+});
+
+// Handle direct navigation (restored from 404.html redirect)
+(function () {
+  const path = window.location.pathname;
+  if (path === '/blog') {
+    showBlog();
+  } else if (path.startsWith('/blog/')) {
+    const slug = path.slice(6);
+    const a = ARTICLES.find(x => x.slug === slug);
+    showBlog();
+    if (a) openArticle(a.id, { pushState: false });
+  }
+})();
 
 renderArticleListing();

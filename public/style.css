@@ -558,3 +558,44 @@ html, body {
 #back-btn:hover {
   border-color: #aaa;
 }
+
+/* ── KaTeX math rendering ─────────────────────────────────────────────────── */
+#article-body .katex { color: rgba(255,255,255,.9); font-size: 1em; }
+#article-body .katex-display {
+  margin: 1.6em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  text-align: center;
+}
+#article-body .katex-display > .katex { display: inline-block; text-align: left; }
+#article-body code {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: .88em;
+  background: rgba(255,255,255,.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+#article-body blockquote {
+  border-left: 3px solid rgba(255,255,255,.25);
+  margin: 24px 0;
+  padding: 4px 0 4px 20px;
+  color: rgba(255,255,255,.55);
+  font-style: italic;
+}
+#article-body h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin: 32px 0 12px;
+}
+#article-body h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255,255,255,.8);
+  margin: 24px 0 8px;
+}
+#article-body ul, #article-body ol {
+  margin: 0 0 24px 24px;
+  padding: 0;
+}
+#article-body li { margin-bottom: 8px; }

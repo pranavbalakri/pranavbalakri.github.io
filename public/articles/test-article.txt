@@ -1,0 +1,63 @@
+\title{A Test Article}
+\author{Pranav Balakrishnan}
+\date{March 2026}
+
+This is a test article to make sure the blog is rendering correctly. It covers plain text, math, formatting, and lists.
+
+\section{Inline Math}
+
+The quadratic formula solves $ax^2 + bx + c = 0$ and gives roots $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$.
+
+Euler's identity is often called the most beautiful equation in mathematics: $e^{i\pi} + 1 = 0$.
+
+\section{Display Math}
+
+The Gaussian integral:
+
+$$\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}$$
+
+Bayes' theorem in full form:
+
+$$P(A \mid B) = \frac{P(B \mid A)\, P(A)}{P(B)}$$
+
+\section{Text Formatting}
+
+This sentence has \textbf{bold text}, \textit{italic text}, and \texttt{monospace code} in it.
+
+You can also \emph{emphasise} things this way.
+
+\section{Lists}
+
+An unordered list:
+
+\begin{itemize}
+  \item First item
+  \item Second item, with $x^2$ math inside
+  \item Third item with \textbf{bold text}
+\end{itemize}
+
+An ordered list:
+
+\begin{enumerate}
+  \item Step one
+  \item Step two
+  \item Step three
+\end{enumerate}
+
+\section{Block Quote}
+
+\begin{quote}
+The only way to do great work is to love what you do. --- Steve Jobs
+\end{quote}
+
+\section{Longer Display Math}
+
+The definition of a derivative:
+
+$$f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$$
+
+And the fundamental theorem of calculus:
+
+$$\int_a^b f'(x)\, dx = f(b) - f(a)$$
+
+That's everything. If this page looks right, the blog is working correctly.
