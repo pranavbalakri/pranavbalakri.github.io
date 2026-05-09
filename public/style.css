@@ -10,10 +10,148 @@ html, body {
   overflow: hidden;
 }
 
-#scene {
-  position: relative;
+body {
+  background: #14141a;
+}
+
+/* ── Light rays background canvas ───────────────────────────────────────── */
+#light-rays {
+  position: fixed;
+  inset: 0;
   width: 100vw;
   height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+  opacity: 0.6;
+}
+
+/* ── Home wrapper (covers viewport, holds the TV) ───────────────────────── */
+#home-wrapper {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 1;
+}
+
+/* ── TV frame: anchored flush to the bottom of the viewport ─────────────── */
+#tv-frame {
+  position: absolute;
+  /* TV image (900x700) has ~92px of transparent padding at the bottom
+     (13.14% of its height). Shift the frame down by that amount so the
+     visible TV's bottom edge sits flush with the viewport bottom. */
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 13.14%);
+  aspect-ratio: 900 / 700;
+  width: min(96vw, calc(100vh * (900 / 700)));
+  max-width: 96vw;
+  max-height: 100vh;
+}
+
+#tv-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter:
+    drop-shadow(0 28px 48px rgba(0,0,0,0.75))
+    drop-shadow(0 8px 16px rgba(0,0,0,0.55))
+    drop-shadow(0 2px 4px rgba(0,0,0,0.45));
+}
+
+/* Cutout matches the transparent screen area in tv.webp */
+#tv-screen {
+  position: absolute;
+  top: 21.43%;
+  left: 13.56%;
+  width: 57.22%;
+  height: 56.57%;
+  overflow: hidden;
+  background: #000;
+  border-radius: 6% / 7%;
+  z-index: 1;
+  isolation: isolate;
+}
+
+#tv-screen-inner {
+  position: absolute;
+  inset: 0;
+  filter: url(#crt-curve);
+  animation: crtFlicker 5.6s ease-in-out infinite;
+}
+
+/* CRT scanlines */
+#tv-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.18) 0px,
+      rgba(0,0,0,0.18) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  mix-blend-mode: multiply;
+  opacity: 0.7;
+}
+
+/* Vignette + glass tint */
+#tv-glass {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 35%),
+    radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.45) 100%);
+}
+
+@keyframes crtFlicker {
+  0%, 100% { opacity: 1;     }
+  47%      { opacity: 1;     }
+  48%      { opacity: 0.965; }
+  49%      { opacity: 1;     }
+  82%      { opacity: 1;     }
+  83%      { opacity: 0.975; }
+  84%      { opacity: 1;     }
+}
+
+/* Occasional horizontal tear (subtle) */
+#tv-screen-inner::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.06);
+  pointer-events: none;
+  z-index: 4;
+  top: 0;
+  opacity: 0;
+  animation: crtTear 14s linear infinite;
+}
+
+@keyframes crtTear {
+  0%, 96%, 100% { opacity: 0; transform: translateY(0); }
+  97%           { opacity: 0.6; transform: translateY(20%); }
+  97.5%         { opacity: 0;   transform: translateY(40%); }
+  98%           { opacity: 0.5; transform: translateY(70%); }
+  98.5%         { opacity: 0;   transform: translateY(90%); }
+}
+
+#scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
   background-image: url('background.png');
   background-size: cover;
   background-position: center top;
@@ -31,26 +169,6 @@ html, body {
 
 #root {
   display: none;
-}
-
-#title {
-  position: absolute;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(7px, 1.2vw, 14px);
-  color: #fff8e8;
-  text-shadow:
-    2px  2px 0 #2a1000,
-   -2px -2px 0 #2a1000,
-    2px -2px 0 #2a1000,
-   -2px  2px 0 #2a1000,
-    0    3px 8px rgba(0,0,0,0.7);
-  white-space: nowrap;
-  z-index: 10;
-  pointer-events: none;
-  letter-spacing: 1px;
 }
 
 #bubbles {
@@ -87,7 +205,7 @@ html, body {
   content: '';
   position: absolute;
   bottom: -11px;
-  left: 50%;
+  left: var(--tail-x, 50%);
   transform: translateX(-50%);
   width: 0;
   height: 0;
@@ -100,7 +218,7 @@ html, body {
   content: '';
   position: absolute;
   bottom: -7px;
-  left: 50%;
+  left: var(--tail-x, 50%);
   transform: translateX(-50%);
   width: 0;
   height: 0;
@@ -169,7 +287,7 @@ html, body {
 
 /* ── Inventory overlay ───────────────────────────────────────────────────── */
 #inventory-overlay {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 50;
   display: flex;
@@ -245,7 +363,7 @@ html, body {
 
 /* ── Experience overlay ───────────────────────────────────────────────────── */
 #experience-overlay {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 50;
   display: flex;

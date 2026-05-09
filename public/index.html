@@ -25,13 +25,33 @@
     <title>Pranav's Website</title>
   </head>
   <body>
-    <div id="scene">
-      <canvas id="gameCanvas"></canvas>
-      <div id="title">Pranav Balakrishnan<span style="color:lightgrey;"> : </span><span style="color:#f94449;">Cornell CS</span></div>
-      <div id="bubbles"></div>
-    </div>
+    <!-- ── Light rays background (vanilla WebGL) ───────────────────────── -->
+    <canvas id="light-rays" aria-hidden="true"></canvas>
 
-    <div id="inventory-overlay" class="hidden">
+    <!-- ── CRT bulge filter (referenced by #tv-screen) ─────────────────── -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <filter id="crt-curve" x="-2%" y="-2%" width="104%" height="104%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="0.3" result="blur" />
+          <feComponentTransfer in="blur" result="boost">
+            <feFuncR type="linear" slope="1.04" />
+            <feFuncG type="linear" slope="1.04" />
+            <feFuncB type="linear" slope="1.04" />
+          </feComponentTransfer>
+        </filter>
+      </defs>
+    </svg>
+
+    <div id="home-wrapper">
+      <div id="tv-frame">
+        <div id="tv-screen">
+          <div id="tv-screen-inner">
+            <div id="scene">
+              <canvas id="gameCanvas"></canvas>
+              <div id="bubbles"></div>
+            </div>
+
+            <div id="inventory-overlay" class="hidden in-tv">
       <div id="inventory-panel">
         <div id="inventory-title">PROJECTS</div>
 
@@ -86,7 +106,7 @@
       </div>
     </div>
 
-    <div id="experience-overlay" class="hidden">
+    <div id="experience-overlay" class="hidden in-tv">
       <div id="experience-panel">
         <div id="experience-title">EXPERIENCE</div>
 
@@ -137,6 +157,13 @@
       </div>
     </div>
 
+          </div><!-- /#tv-screen-inner -->
+          <div id="tv-glass"></div>
+        </div><!-- /#tv-screen -->
+        <img id="tv-image" src="%PUBLIC_URL%/tv.webp" alt="" />
+      </div><!-- /#tv-frame -->
+    </div><!-- /#home-wrapper -->
+
     <!-- ── Vortex transition overlay (z-index 100) ──────────────────────── -->
     <div id="vortex-overlay">
       <div id="vortex-snapshot"></div>
@@ -171,6 +198,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script src="%PUBLIC_URL%/light-rays.js"></script>
     <script src="%PUBLIC_URL%/script.js"></script>
   </body>
 </html>

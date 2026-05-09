@@ -81,18 +81,6 @@ const ROBOT_DEFS = [
     speed: 0.384,
     html: `Email me at<br><a href="mailto:pb629@cornell.edu">pb629@cornell.edu</a>`,
   },
-  {
-    sprite: 'Pink_Monster_Walk_6',
-    hue: 195,    // blue-shifted Pink
-    speed: 0.3,
-    html: `Check out my projects on <a href="https://github.com/pranavbalakri" target="_blank">GitHub,</a> or by clicking this monster!`,
-  },
-  {
-    sprite: 'Pink_Monster_Walk_6',
-    hue: 300,
-    speed: 0.29,
-    html: `Click to see my experience!`,
-  },
 ];
 
 // ─── Draw Robot ───────────────────────────────────────────────────────────────
@@ -228,8 +216,7 @@ function showBubble(robot) {
   el.style.left = anchor.x + 'px';
   el.style.top = '0px';
   bubblesContainer.appendChild(el);
-  const h = el.offsetHeight;
-  el.style.top = (anchor.y - h - 16) + 'px';
+  placeBubbleAbove(el, anchor.x, anchor.y);
   el.addEventListener('mouseenter', () => {
     robot.bubbleHovered = true;
     clearTimeout(robot._hideTimeout);
@@ -272,8 +259,7 @@ function showStatueBubble() {
   el.style.left = cx + 'px';
   el.style.top  = '0px';
   bubblesContainer.appendChild(el);
-  const h = el.offsetHeight;
-  el.style.top = (topY - h - 16) + 'px';
+  placeBubbleAbove(el, cx, topY);
   statueBubbleEl = el;
 }
 
@@ -436,27 +422,37 @@ canvas.addEventListener('touchstart', e => {
   }
 }, { passive: false });
 
+function placeBubbleAbove(el, anchorX, anchorY) {
+  const containerW = bubblesContainer.clientWidth;
+  const margin = 8;
+  const half   = el.offsetWidth / 2;
+  const clampedX = Math.max(half + margin, Math.min(anchorX, containerW - half - margin));
+  el.style.left = clampedX + 'px';
+  const h = el.offsetHeight;
+  el.style.top = (anchorY - h - 16) + 'px';
+  el.style.setProperty('--tail-x', (anchorX - (clampedX - half)) + 'px');
+}
+
 function updateBubblePositions() {
   for (const robot of robots) {
     if (robot.bubbleEl) {
       const anchor = robot.bubbleAnchor();
-      robot.bubbleEl.style.left = anchor.x + 'px';
-      const h = robot.bubbleEl.offsetHeight;
-      robot.bubbleEl.style.top = (anchor.y - h - 16) + 'px';
+      placeBubbleAbove(robot.bubbleEl, anchor.x, anchor.y);
     }
   }
   if (statueBubbleEl) {
     const { cx, topY } = getStatueBounds();
-    statueBubbleEl.style.left = cx + 'px';
-    const h = statueBubbleEl.offsetHeight;
-    statueBubbleEl.style.top = (topY - h - 16) + 'px';
+    placeBubbleAbove(statueBubbleEl, cx, topY);
   }
 }
 
 // ─── Resize ───────────────────────────────────────────────────────────────────
 function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  // Size the canvas to its parent (#tv-screen-inner) so it fits inside the TV cutout.
+  const parent = canvas.parentElement;
+  const rect   = parent.getBoundingClientRect();
+  canvas.width  = Math.max(1, Math.round(rect.width));
+  canvas.height = Math.max(1, Math.round(rect.height));
   ctx.imageSmoothingEnabled = false;
   initParticles();
   initRobots();
@@ -538,10 +534,6 @@ canvas.addEventListener('click', e => {
     return;
   }
 
-  for (const robot of robots) {
-    if (robot.index === 4 && robot.contains(x, y)) openInventory();
-    if (robot.index === 5 && robot.contains(x, y)) openExperience();
-  }
 });
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
@@ -560,7 +552,7 @@ async function captureViewport() {
   try {
     const c = await html2canvas(document.body, {
       useCORS:       true,
-      backgroundColor: '#000',
+      backgroundColor: '#14141a',
       logging:       false,
       scale:         1,
       x:             0,
@@ -649,7 +641,7 @@ async function triggerVortexTransition() {
   overlay.style.opacity  = '1';
 
   // 3. Swap pages now that the overlay is covering the scene.
-  document.getElementById('scene').style.display = 'none';
+  document.getElementById('home-wrapper').style.display = 'none';
   document.getElementById('new-page').style.display = 'block';
 
   // 4. Snapshot layer: spin + clip-path collapse (mirrors HomeShell snapshot animation)
@@ -732,31 +724,31 @@ async function triggerVortexTransition() {
 // ─── Blog ↔ Home navigation ───────────────────────────────────────────────────
 function showHome() {
   document.getElementById('new-page').style.display = 'none';
-  document.getElementById('scene').style.display = '';
+  document.getElementById('home-wrapper').style.display = '';
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
 function showBlog() {
-  document.getElementById('scene').style.display = 'none';
+  document.getElementById('home-wrapper').style.display = 'none';
   document.getElementById('new-page').style.display = 'block';
 }
 
 function triggerSlideBackTransition() {
   const newPageEl = document.getElementById('new-page');
-  const sceneEl   = document.getElementById('scene');
+  const homeEl    = document.getElementById('home-wrapper');
   const duration  = 900;
-  const easing = 'ease-in-out';
+  const easing    = 'ease-in-out';
 
-  // Bring scene into view off-screen left so it can slide in
-  sceneEl.style.display   = '';
-  sceneEl.style.transform = 'translateX(-100%)';
+  // Bring home (TV + beige bg) into view off-screen left so it can slide in
+  homeEl.style.display   = '';
+  homeEl.style.transform = 'translateX(-100%)';
 
   const anim1 = newPageEl.animate(
     [{ transform: 'translateX(0)' }, { transform: 'translateX(100%)' }],
     { duration, easing, fill: 'forwards' }
   );
 
-  const anim2 = sceneEl.animate(
+  const anim2 = homeEl.animate(
     [{ transform: 'translateX(-100%)' }, { transform: 'translateX(0)' }],
     { duration, easing, fill: 'forwards' }
   );
@@ -764,7 +756,7 @@ function triggerSlideBackTransition() {
   anim2.onfinish = () => {
     anim1.cancel();
     anim2.cancel();
-    sceneEl.style.transform   = '';
+    homeEl.style.transform    = '';
     newPageEl.style.transform = '';
     history.pushState({ page: 'home' }, '', '/');
     showHome();
