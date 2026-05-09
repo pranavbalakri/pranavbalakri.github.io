@@ -6,8 +6,15 @@
 
 html, body {
   width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-x: hidden;
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* legacy IE/Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;                /* Chrome / Safari / WebKit */
 }
 
 body {
@@ -26,10 +33,11 @@ body {
   opacity: 0.6;
 }
 
-/* ── Home wrapper (covers viewport, holds the TV) ───────────────────────── */
+/* ── Home wrapper (covers the first viewport, holds the TV) ─────────────── */
 #home-wrapper {
-  position: fixed;
-  inset: 0;
+  position: relative;
+  width: 100%;
+  height: 100vh;
   background: transparent;
   z-index: 1;
 }
@@ -449,6 +457,105 @@ body {
   text-overflow: ellipsis;
 }
 
+/* ── Site footer (below the home view) ──────────────────────────────────── */
+#site-footer {
+  position: relative;
+  z-index: 2;            /* sits above the fixed light-rays canvas (z:0) */
+  background: #f4f1ea;   /* warm off-white — close to white, not pure */
+  color: #2a2620;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  /* Flex-center the inner block so About+Links sit in the middle of the
+     footer; the absolutely-positioned name stays pinned at bottom-right. */
+  display: flex;
+  align-items: center;
+  min-height: clamp(280px, 24vw, 400px);
+}
+
+.footer-inner {
+  /* No max-width / centering — keeps About+Links anchored near the left edge
+     of the viewport so the layout balances against the right-anchored name. */
+  width: 100%;
+  padding: 24px 32px 24px clamp(32px, 5vw, 80px);
+}
+
+.footer-cols {
+  display: grid;
+  /* Cap each column so About doesn't sprawl across the full inner — leaves
+     visual breathing room on the right for the absolutely-positioned name. */
+  grid-template-columns: repeat(2, minmax(0, 280px));
+  gap: 56px;
+}
+
+.footer-col h3 {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+  color: #6e655a;
+}
+
+.footer-col p {
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0;
+  color: #3a342c;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-col li {
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.footer-col a {
+  color: #3a342c;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+  transition: color .15s, border-color .15s;
+}
+
+.footer-col a:hover {
+  color: #000;
+  border-bottom-color: rgba(0, 0, 0, 0.55);
+}
+
+/* Big serif name anchored flush to the footer's bottom-right corner so it
+   doesn't share grid space with the columns — they get full breathing room. */
+.footer-name {
+  position: absolute;
+  right: 24px;
+  bottom: 10px;
+  text-align: right;
+  font-family: Georgia, 'Times New Roman', 'Iowan Old Style', serif;
+  font-weight: 600;
+  font-size: clamp(44px, 6.5vw, 96px);
+  line-height: 0.82;
+  letter-spacing: -0.025em;
+  color: #1f1b16;
+  pointer-events: none;
+  user-select: none;
+}
+
+.footer-name-line {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 720px) {
+  .footer-inner { padding: 56px 24px clamp(140px, 36vw, 220px); }
+  .footer-cols  { grid-template-columns: 1fr; gap: 36px; }
+  .footer-name  { font-size: clamp(40px, 12vw, 80px); right: 16px; bottom: 12px; }
+}
+
 /* ── Vortex transition overlay ───────────────────────────────────────────── */
 #vortex-overlay {
   display: none;
@@ -666,6 +773,42 @@ body {
   cursor: pointer;
   animation: owlet-idle 1.4s steps(4) infinite;
   transition: border-color .2s;
+}
+
+/* ── Forward button (home → blog) — mirrors #back-btn style ──────────────── */
+#forward-btn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 45px;
+  height: 45px;
+  padding: 0;
+  background: transparent;
+  border: 1.5px solid #555;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .2s;
+  z-index: 10;
+}
+
+#forward-btn svg {
+  width: 32px;
+  height: auto;
+  fill: #c8c8c8;
+  image-rendering: pixelated;
+  filter: drop-shadow(1px 1px 0 #000);
+  transition: fill .2s;
+}
+
+#forward-btn:hover {
+  border-color: #aaa;
+}
+
+#forward-btn:hover svg {
+  fill: #fff;
 }
 
 @keyframes owlet-idle {

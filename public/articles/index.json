@@ -1,0 +1,11 @@
+[
+  {
+    "slug": "test-article",
+    "title": "A Test Article",
+    "author": "Pranav Balakrishnan",
+    "date": "March 2026",
+    "excerpt": "This is a test article to make sure the blog is rendering correctly. It covers plain text, math, formatting, and lists. The quadratic formula solves and gives roots . Euler's…",
+    "hidden": false,
+    "file": "/articles/test-article.txt"
+  }
+]

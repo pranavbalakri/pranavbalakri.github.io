@@ -21,6 +21,9 @@
     "yaml": "^2.8.2"
   },
   "scripts": {
+    "build:articles": "node scripts/build-articles.js",
+    "prestart": "npm run build:articles",
+    "prebuild": "npm run build:articles",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

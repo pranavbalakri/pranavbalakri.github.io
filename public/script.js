@@ -67,13 +67,13 @@ const ROBOT_DEFS = [
     sprite: 'Owlet_Monster_Walk_6',
     hue: 0,
     speed: 0.33,
-    html: `I'm a Cornell CS student interested in large-scale ML, stochastic systems, financial technology, and AI safety.`,
+    html: `Hi, I'm Pranav! I'm a Cornell CS student interested in large-scale ML, stochastic systems, financial technology, and AI safety.`,
   },
   {
     sprite: 'Pink_Monster_Walk_6',
     hue: 0,
     speed: 0.216,
-    html: `Check out my <a href="https://linkedin.com/in/pranavbalakri" target="_blank">LinkedIn!</a>`,
+    html: `Check out my <a href="https://linkedin.com/in/pranavbalakri" target="_blank">LinkedIn</a> and <a href="https://github.com/pranavbalakri" target="_blank">GitHub</a>!`,
   },
   {
     sprite: 'Dude_Monster_Walk_6',
@@ -767,6 +767,82 @@ document.getElementById('back-btn').addEventListener('click', () => {
   triggerSlideBackTransition();
 });
 
+// Forward slide (home → blog): home slides off to the left, blog slides in from the right.
+let forwardSlideActive = false;
+function triggerSlideForwardTransition() {
+  if (forwardSlideActive) return;
+  forwardSlideActive = true;
+
+  const newPageEl = document.getElementById('new-page');
+  const homeEl    = document.getElementById('home-wrapper');
+  const duration  = 900;
+  const easing    = 'ease-in-out';
+
+  // Make sure blog is on the listing view (not a previously-open article).
+  document.getElementById('article-view').style.display = 'none';
+  document.getElementById('blog-listing').style.display = 'block';
+
+  // Show the blog page off-screen right so it can slide in.
+  newPageEl.style.display   = 'block';
+  newPageEl.style.transform = 'translateX(100%)';
+
+  const anim1 = homeEl.animate(
+    [{ transform: 'translateX(0)' }, { transform: 'translateX(-100%)' }],
+    { duration, easing, fill: 'forwards' }
+  );
+
+  const anim2 = newPageEl.animate(
+    [{ transform: 'translateX(100%)' }, { transform: 'translateX(0)' }],
+    { duration, easing, fill: 'forwards' }
+  );
+
+  anim2.onfinish = () => {
+    anim1.cancel();
+    anim2.cancel();
+    homeEl.style.transform    = '';
+    newPageEl.style.transform = '';
+    homeEl.style.display      = 'none';
+    history.pushState({ page: 'blog' }, '', '/blog');
+    forwardSlideActive = false;
+  };
+}
+
+document.getElementById('forward-btn').addEventListener('click', triggerSlideForwardTransition);
+
+// ─── Forward-button bubble ───────────────────────────────────────────────────
+let forwardBubbleEl    = null;
+let forwardBubbleTimer = null;
+const forwardBtn       = document.getElementById('forward-btn');
+const homeWrapper      = document.getElementById('home-wrapper');
+
+forwardBtn.addEventListener('mouseenter', () => {
+  clearTimeout(forwardBubbleTimer);
+  if (forwardBubbleEl) return;
+  const rect = forwardBtn.getBoundingClientRect();
+  const el = document.createElement('div');
+  el.className = 'speech-bubble bubble-below';
+  el.textContent = 'Click to go to blog.';
+  el.style.position = 'absolute';
+  el.style.top  = (rect.bottom + 16) + 'px';
+  homeWrapper.appendChild(el);
+  const margin       = 12;
+  const center       = rect.left + rect.width / 2;
+  const half         = el.offsetWidth / 2;
+  // Clamp so the bubble doesn't run off the right edge of the viewport.
+  const clampedLeft  = Math.min(center, window.innerWidth - half - margin);
+  el.style.left = clampedLeft + 'px';
+  // Tail must point at the button center regardless of clamping
+  const tailX = center - (clampedLeft - half);
+  el.style.setProperty('--tail-x', tailX + 'px');
+  forwardBubbleEl = el;
+});
+
+forwardBtn.addEventListener('mouseleave', () => {
+  forwardBubbleTimer = setTimeout(() => {
+    if (forwardBubbleEl) { forwardBubbleEl.remove(); forwardBubbleEl = null; }
+  }, 120);
+});
+
 // ─── Back-button bubble ───────────────────────────────────────────────────────
 let backBubbleEl    = null;
 let backBubbleTimer = null;
@@ -801,36 +877,20 @@ backBtn.addEventListener('mouseleave', () => {
 });
 
 // ─── Blog Articles ────────────────────────────────────────────────────────────
-const ARTICLES = [
-  {
-    id: 1,
-    slug: 'coming-soon',
-    title: 'Coming soon!',
-    date: 'March 2026',
-    author: 'Pranav Balakrishnan',
-    excerpt: 'I will be posting some thoughts on here in the future.',
-    file: '/articles/coming-soon.txt',
-  },
-  {
-    id: 2,
-    slug: 'test-article',
-    title: 'A Test Article',
-    date: 'March 2026',
-    author: 'Pranav Balakrishnan',
-    excerpt: 'A test article covering inline math, display math, text formatting, lists, and block quotes.',
-    file: '/articles/test-article.txt',
-  },
-  {
-    id: 3,
-    slug: 'paradigm',
-    title: '',
-    date: '',
-    author: 'Pranav Balakrishnan',
-    excerpt: '',
-    file: '/articles/paradigm.txt',
-    hidden: true,
-  },
-];
+// The listing is generated at build time by scripts/build-articles.js, which
+// scans public/articles/*.txt and writes index.json. To add an article, drop a
+// new .txt in that folder — the prebuild npm hook regenerates the index.
+let ARTICLES = [];
+let _articlesPromise = null;
+
+function loadArticles() {
+  if (_articlesPromise) return _articlesPromise;
+  _articlesPromise = fetch('/articles/index.json')
+    .then(r => r.ok ? r.json() : [])
+    .then(list => { ARTICLES = list; return ARTICLES; })
+    .catch(err => { console.warn('[articles] index load failed', err); return ARTICLES; });
+  return _articlesPromise;
+}
 
 // ─── LaTeX → HTML parser ──────────────────────────────────────────────────────
 function parseLatexToHtml(src) {
@@ -932,13 +992,14 @@ function renderArticleListing() {
       <div class="article-item-meta">${[article.author, article.date].filter(Boolean).join(' · ')}</div>
       <div class="article-item-excerpt">${article.excerpt}</div>
     `;
-    el.addEventListener('click', () => openArticle(article.id));
+    el.addEventListener('click', () => openArticle(article.slug));
     container.appendChild(el);
   });
 }
 
-async function openArticle(id, { pushState = true } = {}) {
-  const article = ARTICLES.find(a => a.id === id);
+async function openArticle(slug, { pushState = true } = {}) {
+  await loadArticles();
+  const article = ARTICLES.find(a => a.slug === slug);
   if (!article) return;
 
   document.getElementById('article-title').textContent = article.title;
@@ -995,11 +1056,12 @@ showBlog = function () {
 };
 
 // ─── Routing ──────────────────────────────────────────────────────────────────
-window.addEventListener('popstate', e => {
+window.addEventListener('popstate', async e => {
   const p = e.state && e.state.page;
   if (p === 'article') {
-    const a = ARTICLES.find(x => x.slug === e.state.slug);
-    if (a) { showBlog(); openArticle(a.id, { pushState: false }); }
+    await loadArticles();
+    showBlog();
+    openArticle(e.state.slug, { pushState: false });
   } else if (p === 'blog') {
     showBlog();
   } else {
@@ -1007,17 +1069,17 @@ window.addEventListener('popstate', e => {
   }
 });
 
-// Handle direct navigation (restored from 404.html redirect)
-(function () {
+// Initial load: fetch the index, render the listing, then handle direct
+// navigation (e.g. a refresh on /blog/<slug> restored by 404.html).
+(async function () {
+  await loadArticles();
+  renderArticleListing();
+
   const path = window.location.pathname;
   if (path === '/blog') {
     showBlog();
   } else if (path.startsWith('/blog/')) {
-    const slug = path.slice(6);
-    const a = ARTICLES.find(x => x.slug === slug);
     showBlog();
-    if (a) openArticle(a.id, { pushState: false });
+    openArticle(path.slice(6), { pushState: false });
   }
 })();
-
-renderArticleListing();
