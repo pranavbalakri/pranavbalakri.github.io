@@ -514,7 +514,9 @@ body {
 
 .footer-col li {
   font-size: 15px;
-  line-height: 1.9;
+  /* Match the paragraph's line-height so 4 list items occupy the same
+     vertical space as the 4-line About paragraph next to them. */
+  line-height: 1.7;
 }
 
 .footer-col a {
@@ -534,12 +536,13 @@ body {
 .footer-name {
   position: absolute;
   right: 24px;
-  bottom: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   text-align: right;
   font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
   font-weight: 700;
-  font-size: clamp(44px, 6.5vw, 96px);
-  line-height: 0.82;
+  font-size: clamp(35px, 5.2vw, 77px);
+  line-height: 1.0;
   letter-spacing: -0.025em;
   color: #1f1b16;
   pointer-events: none;
@@ -555,7 +558,7 @@ body {
 @media (max-width: 720px) {
   .footer-inner { padding: 56px 24px clamp(140px, 36vw, 220px); }
   .footer-cols  { grid-template-columns: 1fr; gap: 36px; }
-  .footer-name  { font-size: clamp(40px, 12vw, 80px); right: 16px; bottom: 12px; }
+  .footer-name  { font-size: clamp(32px, 9.6vw, 64px); right: 16px; }
 }
 
 /* ── Vortex transition overlay ───────────────────────────────────────────── */
@@ -775,42 +778,6 @@ body {
   cursor: pointer;
   animation: owlet-idle 1.4s steps(4) infinite;
   transition: border-color .2s;
-}
-
-/* ── Forward button (home → blog) — mirrors #back-btn style ──────────────── */
-#forward-btn {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  width: 45px;
-  height: 45px;
-  padding: 0;
-  background: transparent;
-  border: 1.5px solid #555;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color .2s;
-  z-index: 10;
-}
-
-#forward-btn svg {
-  width: 32px;
-  height: auto;
-  fill: #c8c8c8;
-  image-rendering: pixelated;
-  filter: drop-shadow(1px 1px 0 #000);
-  transition: fill .2s;
-}
-
-#forward-btn:hover {
-  border-color: #aaa;
-}
-
-#forward-btn:hover svg {
-  fill: #fff;
 }
 
 @keyframes owlet-idle {

@@ -807,41 +807,17 @@ function triggerSlideForwardTransition() {
   };
 }
 
-document.getElementById('forward-btn').addEventListener('click', triggerSlideForwardTransition);
-
-// ─── Forward-button bubble ───────────────────────────────────────────────────
-let forwardBubbleEl    = null;
-let forwardBubbleTimer = null;
-const forwardBtn       = document.getElementById('forward-btn');
-const homeWrapper      = document.getElementById('home-wrapper');
-
-forwardBtn.addEventListener('mouseenter', () => {
-  clearTimeout(forwardBubbleTimer);
-  if (forwardBubbleEl) return;
-  const rect = forwardBtn.getBoundingClientRect();
-  const el = document.createElement('div');
-  el.className = 'speech-bubble bubble-below';
-  el.textContent = 'Click to go to blog.';
-  el.style.position = 'absolute';
-  el.style.top  = (rect.bottom + 16) + 'px';
-  homeWrapper.appendChild(el);
-  const margin       = 12;
-  const center       = rect.left + rect.width / 2;
-  const half         = el.offsetWidth / 2;
-  // Clamp so the bubble doesn't run off the right edge of the viewport.
-  const clampedLeft  = Math.min(center, window.innerWidth - half - margin);
-  el.style.left = clampedLeft + 'px';
-  // Tail must point at the button center regardless of clamping
-  const tailX = center - (clampedLeft - half);
-  el.style.setProperty('--tail-x', tailX + 'px');
-  forwardBubbleEl = el;
-});
-
-forwardBtn.addEventListener('mouseleave', () => {
-  forwardBubbleTimer = setTimeout(() => {
-    if (forwardBubbleEl) { forwardBubbleEl.remove(); forwardBubbleEl = null; }
-  }, 120);
-});
+// Footer "Blog" link triggers the slide transition instead of a hard nav.
+const footerBlogLink = document.getElementById('footer-blog-link');
+if (footerBlogLink) {
+  footerBlogLink.addEventListener('click', e => {
+    e.preventDefault();
+    // Scroll back to the top so the home view fills the viewport during the
+    // slide — otherwise the user sees the half-scrolled footer slide off too.
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    triggerSlideForwardTransition();
+  });
+}
 
 // ─── Back-button bubble ───────────────────────────────────────────────────────
 let backBubbleEl    = null;
@@ -910,11 +886,14 @@ function parseLatexToHtml(src) {
   s = s.replace(/\$(?!\$)([^$\n]+?)\$/g, m => protect(m));
   s = s.replace(/\\\(([\s\S]*?)\\\)/g,  m => protect(m));
 
-  // 3. Metadata
+  // 3. Metadata — extract title/author/date and strip excerpt/hidden so they
+  //    don't leak into the rendered article body.
   let title = '', author = '', date = '';
-  s = s.replace(/\\title\{([^}]*)\}/,  (_, v) => { title  = v; return ''; });
-  s = s.replace(/\\author\{([^}]*)\}/, (_, v) => { author = v; return ''; });
-  s = s.replace(/\\date\{([^}]*)\}/,   (_, v) => { date   = v; return ''; });
+  s = s.replace(/\\title\{([^}]*)\}/,   (_, v) => { title  = v; return ''; });
+  s = s.replace(/\\author\{([^}]*)\}/,  (_, v) => { author = v; return ''; });
+  s = s.replace(/\\date\{([^}]*)\}/,    (_, v) => { date   = v; return ''; });
+  s = s.replace(/\\excerpt\{[^}]*\}/g,  '');
+  s = s.replace(/\\hidden(?:\{[^}]*\})?/g, '');
 
   // 4. Environments
   const items = c => c.split('\\item').slice(1).map(t => '<li>' + t.trim() + '</li>').join('');
