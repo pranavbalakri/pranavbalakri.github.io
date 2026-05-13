@@ -1062,3 +1062,28 @@ window.addEventListener('popstate', async e => {
     openArticle(path.slice(6), { pushState: false });
   }
 })();
+
+// ─── Scroll-hint chevrons: fade out on first scroll, stay gone until reload ───
+(function () {
+  const chevrons = document.getElementById('scroll-chevrons');
+  if (!chevrons) return;
+  let done = false;
+  const fade = () => {
+    if (done) return;
+    const y = window.scrollY || window.pageYOffset
+            || document.documentElement.scrollTop
+            || document.body.scrollTop || 0;
+    if (y > 0.5) {
+      done = true;
+      chevrons.classList.add('faded');
+      window.removeEventListener('scroll',     fade);
+      window.removeEventListener('wheel',      fade);
+      window.removeEventListener('touchmove',  fade);
+      document.removeEventListener('scroll',   fade);
+    }
+  };
+  window.addEventListener('scroll',     fade, { passive: true });
+  document.addEventListener('scroll',   fade, { passive: true });
+  window.addEventListener('wheel',      fade, { passive: true });
+  window.addEventListener('touchmove',  fade, { passive: true });
+})();
