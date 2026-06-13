@@ -55,7 +55,7 @@ const ROBOT_DEFS = [
     sprite: 'Dude_Monster_Walk_6',
     hue: 0,
     speed: 0.255,
-    html: `I'm a bit of an <a href="https://www.effectivealtruism.org/" target="_blank" rel="noopener">effective altruist</a>. I think the world's greatest moral objectives include AI safety and ending factory farming.`,
+    html: `I'm a bit of an <a href="https://www.effectivealtruism.org/" target="_blank" rel="noopener">EA</a>. I think the world's greatest moral objectives include AI safety and ending factory farming.`,
   },
   {
     sprite: 'Owlet_Monster_Walk_6',
