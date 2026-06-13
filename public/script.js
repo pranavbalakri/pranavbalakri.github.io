@@ -37,7 +37,6 @@ function getGroundY(x) {
 
 // ─── Sprite Loading ───────────────────────────────────────────────────────────
 const SPRITES = {};
-let loadedCount = 0;
 const SPRITE_NAMES = [
   'Dude_Monster_Walk_6',
   'Owlet_Monster_Walk_6',
@@ -46,13 +45,8 @@ const SPRITE_NAMES = [
 
 for (const name of SPRITE_NAMES) {
   const img = new Image();
-  img.onload = () => { loadedCount++; };
-  img.src = name + '.png';
+  img.src = '/' + name + '.png';
   SPRITES[name] = img;
-}
-
-function spritesReady() {
-  return loadedCount === SPRITE_NAMES.length;
 }
 
 // ─── Robot Definitions ────────────────────────────────────────────────────────
@@ -61,13 +55,13 @@ const ROBOT_DEFS = [
     sprite: 'Dude_Monster_Walk_6',
     hue: 0,
     speed: 0.255,
-    html: `In high school, I loved policy debate, and won two national championships while being ranked #2 in the United States.`,
+    html: `I'm a bit of an <a href="https://www.effectivealtruism.org/" target="_blank" rel="noopener">effective altruist</a>. I think the world's greatest moral objectives include AI safety and ending factory farming.`,
   },
   {
     sprite: 'Owlet_Monster_Walk_6',
     hue: 0,
     speed: 0.33,
-    html: `Hi, I'm Pranav! I'm a Cornell CS student interested in large-scale ML, stochastic systems, financial technology, and AI safety.`,
+    html: `Click here to learn more about <a href="https://www.endurance.exchange/" target="_blank" rel="noopener">Endurance</a>.`,
   },
   {
     sprite: 'Pink_Monster_Walk_6',
@@ -79,7 +73,7 @@ const ROBOT_DEFS = [
     sprite: 'Dude_Monster_Walk_6',
     hue: 130,    // green-shifted Dude
     speed: 0.384,
-    html: `Email me at<br><a href="mailto:pb629@cornell.edu">pb629@cornell.edu</a>`,
+    html: `Contact me at<br><a href="mailto:pranavbalakri+website@gmail.com">pranavbalakri@gmail.com</a>`,
   },
 ];
 
@@ -244,35 +238,6 @@ function scheduleBubbleHide(robot) {
   }, 120);
 }
 
-// ─── Statue Bubble ────────────────────────────────────────────────────────────
-let statueHovered     = false;
-let statueBubbleEl    = null;
-let statueBubbleTimer = null;
-
-function showStatueBubble() {
-  if (statueBubbleEl) return;
-  clearTimeout(statueBubbleTimer);
-  const { cx, topY } = getStatueBounds();
-  const el = document.createElement('div');
-  el.className = 'speech-bubble';
-  el.textContent = 'Click to transition to blog!';
-  el.style.left = cx + 'px';
-  el.style.top  = '0px';
-  bubblesContainer.appendChild(el);
-  placeBubbleAbove(el, cx, topY);
-  statueBubbleEl = el;
-}
-
-function hideStatueBubble() {
-  clearTimeout(statueBubbleTimer);
-  if (statueBubbleEl) { statueBubbleEl.remove(); statueBubbleEl = null; }
-}
-
-function scheduleStatueBubbleHide() {
-  clearTimeout(statueBubbleTimer);
-  statueBubbleTimer = setTimeout(hideStatueBubble, 120);
-}
-
 // ─── Particles (fireflies) ────────────────────────────────────────────────────
 const NUM_PARTICLES = 22;
 const particles = [];
@@ -338,21 +303,6 @@ function initRobots() {
   });
 }
 
-// ─── Statue Hit-Test ──────────────────────────────────────────────────────────
-// Single source of truth for hitbox geometry — edit values here only.
-function getStatueBounds() {
-  const cx      = canvas.width / 2;
-  const groundY = canvas.height * 0.73;
-  const halfW   = canvas.width  * 0.02;
-  const topY    = groundY - canvas.height * 0.10;
-  return { cx, groundY, halfW, topY };
-}
-
-function isOverStatue(mx, my) {
-  const { cx, groundY, halfW, topY } = getStatueBounds();
-  return mx >= cx - halfW && mx <= cx + halfW && my >= topY && my <= groundY;
-}
-
 // ─── Mouse Handling ───────────────────────────────────────────────────────────
 function getCanvasPos(e) {
   const rect = canvas.getBoundingClientRect();
@@ -380,15 +330,7 @@ canvas.addEventListener('mousemove', e => {
     }
     if (hit) anyHit = true;
   }
-  const statueHit = isOverStatue(x, y);
-  if (statueHit && !statueHovered) {
-    statueHovered = true;
-    showStatueBubble();
-  } else if (!statueHit && statueHovered) {
-    statueHovered = false;
-    scheduleStatueBubbleHide();
-  }
-  canvas.style.cursor = (anyHit || statueHit) ? 'pointer' : 'default';
+  canvas.style.cursor = anyHit ? 'pointer' : 'default';
 });
 
 canvas.addEventListener('mouseleave', () => {
@@ -397,10 +339,6 @@ canvas.addEventListener('mouseleave', () => {
       robot.hovered = false;
       scheduleBubbleHide(robot);
     }
-  }
-  if (statueHovered) {
-    statueHovered = false;
-    scheduleStatueBubbleHide();
   }
   canvas.style.cursor = 'default';
 });
@@ -440,15 +378,11 @@ function updateBubblePositions() {
       placeBubbleAbove(robot.bubbleEl, anchor.x, anchor.y);
     }
   }
-  if (statueBubbleEl) {
-    const { cx, topY } = getStatueBounds();
-    placeBubbleAbove(statueBubbleEl, cx, topY);
-  }
 }
 
 // ─── Resize ───────────────────────────────────────────────────────────────────
 function resize() {
-  // Size the canvas to its parent (#tv-screen-inner) so it fits inside the TV cutout.
+  // Size the canvas to its parent (#scene) so it fills the banner.
   const parent = canvas.parentElement;
   const rect   = parent.getBoundingClientRect();
   canvas.width  = Math.max(1, Math.round(rect.width));
@@ -477,345 +411,38 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
-// ─── Inventory ────────────────────────────────────────────────────────────────
-const inventoryOverlay = document.getElementById('inventory-overlay');
-const inventoryPanel   = document.getElementById('inventory-panel');
-
-function openInventory() {
-  for (const r of robots) {
-    r.hovered = false;
-    r.bubbleHovered = false;
-    hideBubble(r);
-  }
-  inventoryOverlay.classList.remove('hidden');
-}
-
-function closeInventory() {
-  inventoryOverlay.classList.add('hidden');
-}
-
-inventoryOverlay.addEventListener('click', e => {
-  if (e.target === inventoryOverlay) closeInventory();
-});
-
-// ─── Experience ───────────────────────────────────────────────────────────────
-const experienceOverlay = document.getElementById('experience-overlay');
-
-function openExperience() {
-  for (const r of robots) {
-    r.hovered = false;
-    r.bubbleHovered = false;
-    hideBubble(r);
-  }
-  experienceOverlay.classList.remove('hidden');
-}
-
-function closeExperience() {
-  experienceOverlay.classList.add('hidden');
-}
-
-experienceOverlay.addEventListener('click', e => {
-  if (e.target === experienceOverlay) closeExperience();
-});
-
-// ESC → close either overlay
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeInventory(); closeExperience(); }
-});
-
-// Click on robots by index; statue click triggers the vortex transition.
-canvas.addEventListener('click', e => {
-  const { x, y } = getCanvasPos(e);
-
-  // Statue takes priority — robot hitboxes won't overlap the center column
-  // in normal gameplay, but return early just in case.
-  if (isOverStatue(x, y)) {
-    triggerVortexTransition();
-    return;
-  }
-
-});
-
 // ─── Init ─────────────────────────────────────────────────────────────────────
 resize();
 loop();
 
-// ─── Vortex Transition ────────────────────────────────────────────────────────
-// Animation constants — mirror the framer-motion reference implementation.
-const VORTEX_DURATION_MS = 2400;
-const VORTEX_EASE        = 'cubic-bezier(0.18, 1, 0.22, 1)';
-
-let vortexActive = false;
-
-// Capture the current viewport to a data URL using html2canvas (loaded via CDN).
-async function captureViewport() {
-  try {
-    const c = await html2canvas(document.body, {
-      useCORS:       true,
-      backgroundColor: '#14141a',
-      logging:       false,
-      scale:         1,
-      x:             0,
-      y:             window.scrollY,
-      width:         window.innerWidth,
-      height:        window.innerHeight,
-      scrollX:       0,
-      scrollY:       -window.scrollY,
-      windowWidth:   document.documentElement.clientWidth,
-      windowHeight:  window.innerHeight,
-      removeContainer: true,
-    });
-    return c.toDataURL('image/png');
-  } catch (err) {
-    console.error('[vortex] captureViewport:', err);
-    return null;
-  }
-}
-
-// Spawn 20 debris particles arranged in a ring and animate each one spiralling
-// inward — equivalent to the VortexScreen particle system in the reference code.
-function spawnParticles(container) {
-  container.innerHTML = '';
-  const COUNT = 20;
-  for (let i = 0; i < COUNT; i++) {
-    const angle = (i / COUNT) * Math.PI * 2;
-    const dist  = 140 + (i % 5) * 34;
-    const ox    = Math.cos(angle) * dist;
-    const oy    = Math.sin(angle) * dist;
-    const spin  = i % 2 === 0 ? 160 : -160;
-    const size  = i % 3 === 0 ? 10 : 7;
-    const delay = i * 30; // ms stagger
-
-    const el = document.createElement('span');
-    el.style.cssText = [
-      'position:absolute',
-      `left:calc(50% - ${size / 2}px)`,
-      `top:calc(50% - ${size / 2}px)`,
-      `width:${size}px`,
-      `height:${size}px`,
-      'border-radius:50%',
-      'background:rgba(147,210,255,0.8)',
-      'box-shadow:0 0 8px rgba(147,210,255,0.6)',
-    ].join(';');
-    container.appendChild(el);
-
-    el.animate(
-      [
-        { opacity: 0,    transform: `translate(${ox}px,${oy}px) scale(.75) rotate(0deg)` },
-        { opacity: 0.9,  transform: `translate(${ox}px,${oy}px) scale(1) rotate(${spin * .3}deg)`, offset: 0.20 },
-        { opacity: 0.34, transform: `translate(${ox * .38}px,${oy * .26}px) scale(1) rotate(${spin * .6}deg)`, offset: 0.60 },
-        { opacity: 0,    transform: `translate(0,0) scale(.24) rotate(${spin}deg)` },
-      ],
-      { duration: VORTEX_DURATION_MS, delay, easing: VORTEX_EASE, fill: 'forwards' }
-    );
-  }
-}
-
-// Full transition: capture → overlay → vortex animation → new page.
-async function triggerVortexTransition() {
-  if (vortexActive) return;
-  vortexActive = true;
-
-  // 1. Hide any open bubbles so they don't get captured mid-reflow or appear
-  //    in the snapshot at a reflow-shifted position.
-  hideStatueBubble();
-  statueHovered = false;
-  for (const r of robots) { hideBubble(r); r.hovered = false; }
-
-  // 2. Snapshot before showing anything
-  const imgUrl = await captureViewport();
-
-  const overlay    = document.getElementById('vortex-overlay');
-  const snapshot   = document.getElementById('vortex-snapshot');
-  const ringOuter  = document.getElementById('vortex-ring-outer');
-  const ringBorder = document.getElementById('vortex-ring-border');
-  const particles  = document.getElementById('vortex-particles');
-  const gridEl     = document.getElementById('vortex-grid');
-  const darkEl     = document.getElementById('vortex-dark');
-  const captionEl  = document.getElementById('vortex-caption');
-
-  // 2. Load snapshot and show overlay immediately at full opacity —
-  //    this must happen before the page swap so the blog never flashes.
-  snapshot.style.backgroundImage = imgUrl ? `url(${imgUrl})` : 'none';
-  overlay.style.display  = 'block';
-  overlay.style.opacity  = '1';
-
-  // 3. Swap pages now that the overlay is covering the scene.
-  document.getElementById('home-wrapper').style.display = 'none';
-  document.getElementById('new-page').style.display = 'block';
-
-  // 4. Snapshot layer: spin + clip-path collapse (mirrors HomeShell snapshot animation)
-  if (imgUrl) {
-    snapshot.animate(
-      [
-        { offset: 0,    opacity: 1,    transform: 'rotate(0deg)  scale(1)',    clipPath: 'circle(165% at 50% 50%)', filter: 'brightness(1.02) saturate(1.02) contrast(1.02) blur(0px)'   },
-        { offset: 0.58, opacity: 1,    transform: 'rotate(7deg)  scale(1.05)', clipPath: 'circle(118% at 50% 50%)', filter: 'brightness(1.08) saturate(0.94) contrast(1.08) blur(0.8px)' },
-        { offset: 0.86, opacity: 0.86, transform: 'rotate(26deg) scale(1.12)', clipPath: 'circle(46%  at 50% 50%)', filter: 'brightness(1.16) saturate(0.72) contrast(1.16) blur(2.2px)' },
-        { offset: 1,    opacity: 0.22, transform: 'rotate(92deg) scale(1.32)', clipPath: 'circle(2%   at 50% 50%)', filter: 'brightness(1.24) saturate(0.42) contrast(1.24) blur(4.8px)' },
-      ],
-      { duration: VORTEX_DURATION_MS, easing: 'ease-in-out', fill: 'forwards' }
-    );
-  }
-
-  // 5. Glow ring: expand then implode
-  ringOuter.animate(
-    [
-      { transform: 'translate(-50%,-50%) scale(.2)',   opacity: 0    },
-      { transform: 'translate(-50%,-50%) scale(1.16)', opacity: 0.98, offset: 0.5 },
-      { transform: 'translate(-50%,-50%) scale(.26)',  opacity: 0    },
-    ],
-    { duration: VORTEX_DURATION_MS, easing: VORTEX_EASE, fill: 'forwards' }
-  );
-
-  // 6. Border ring: same expand/implode pattern
-  ringBorder.animate(
-    [
-      { transform: 'translate(-50%,-50%) scale(.35)',  opacity: 0    },
-      { transform: 'translate(-50%,-50%) scale(1.34)', opacity: 0.84, offset: 0.5 },
-      { transform: 'translate(-50%,-50%) scale(.08)',  opacity: 0    },
-    ],
-    { duration: VORTEX_DURATION_MS, easing: VORTEX_EASE, fill: 'forwards' }
-  );
-
-  // 7. Debris particles spiralling to center
-  spawnParticles(particles);
-
-  // 8. Dot-grid overlay: flash then vanish
-  gridEl.animate(
-    [
-      { opacity: 0.06 },
-      { opacity: 0.22, offset: 0.56 },
-      { opacity: 0.08, offset: 0.86 },
-      { opacity: 0    },
-    ],
-    { duration: VORTEX_DURATION_MS, easing: 'ease-in-out', fill: 'forwards' }
-  );
-
-  // 9. Dark radial vignette: slowly builds
-  darkEl.animate(
-    [
-      { opacity: 0    },
-      { opacity: 0.10, offset: 0.56 },
-      { opacity: 0.18, offset: 0.86 },
-      { opacity: 0.24 },
-    ],
-    { duration: VORTEX_DURATION_MS, easing: 'ease-in-out', fill: 'forwards' }
-  );
-
-  // 10. Caption: fade in then fade out
-  captionEl.animate(
-    [
-      { opacity: 0    },
-      { opacity: 0.7,  offset: 0.30 },
-      { opacity: 0.08 },
-    ],
-    { duration: VORTEX_DURATION_MS, easing: 'ease-in-out', fill: 'forwards' }
-  );
-
-  // 11. After transition completes, dismiss the overlay — new page is already visible.
-  setTimeout(() => {
-    overlay.style.display = 'none';
-    overlay.style.opacity = '';
-    history.pushState({ page: 'blog' }, '', '/blog');
-    vortexActive = false;
-  }, VORTEX_DURATION_MS);
-}
-
 // ─── Blog ↔ Home navigation ───────────────────────────────────────────────────
 function showHome() {
   document.getElementById('new-page').style.display = 'none';
-  document.getElementById('home-wrapper').style.display = '';
+  document.getElementById('page').style.display = '';
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
 function showBlog() {
-  document.getElementById('home-wrapper').style.display = 'none';
+  document.getElementById('page').style.display = 'none';
   document.getElementById('new-page').style.display = 'block';
-}
-
-function triggerSlideBackTransition() {
-  const newPageEl = document.getElementById('new-page');
-  const homeEl    = document.getElementById('home-wrapper');
-  const duration  = 900;
-  const easing    = 'ease-in-out';
-
-  // Bring home (TV + beige bg) into view off-screen left so it can slide in
-  homeEl.style.display   = '';
-  homeEl.style.transform = 'translateX(-100%)';
-
-  const anim1 = newPageEl.animate(
-    [{ transform: 'translateX(0)' }, { transform: 'translateX(100%)' }],
-    { duration, easing, fill: 'forwards' }
-  );
-
-  const anim2 = homeEl.animate(
-    [{ transform: 'translateX(-100%)' }, { transform: 'translateX(0)' }],
-    { duration, easing, fill: 'forwards' }
-  );
-
-  anim2.onfinish = () => {
-    anim1.cancel();
-    anim2.cancel();
-    homeEl.style.transform    = '';
-    newPageEl.style.transform = '';
-    history.pushState({ page: 'home' }, '', '/');
-    showHome();
-  };
-}
-
-document.getElementById('back-btn').addEventListener('click', () => {
-  triggerSlideBackTransition();
-});
-
-// Forward slide (home → blog): home slides off to the left, blog slides in from the right.
-let forwardSlideActive = false;
-function triggerSlideForwardTransition() {
-  if (forwardSlideActive) return;
-  forwardSlideActive = true;
-
-  const newPageEl = document.getElementById('new-page');
-  const homeEl    = document.getElementById('home-wrapper');
-  const duration  = 900;
-  const easing    = 'ease-in-out';
-
-  // Make sure blog is on the listing view (not a previously-open article).
   document.getElementById('article-view').style.display = 'none';
   document.getElementById('blog-listing').style.display = 'block';
-
-  // Show the blog page off-screen right so it can slide in.
-  newPageEl.style.display   = 'block';
-  newPageEl.style.transform = 'translateX(100%)';
-
-  const anim1 = homeEl.animate(
-    [{ transform: 'translateX(0)' }, { transform: 'translateX(-100%)' }],
-    { duration, easing, fill: 'forwards' }
-  );
-
-  const anim2 = newPageEl.animate(
-    [{ transform: 'translateX(100%)' }, { transform: 'translateX(0)' }],
-    { duration, easing, fill: 'forwards' }
-  );
-
-  anim2.onfinish = () => {
-    anim1.cancel();
-    anim2.cancel();
-    homeEl.style.transform    = '';
-    newPageEl.style.transform = '';
-    homeEl.style.display      = 'none';
-    history.pushState({ page: 'blog' }, '', '/blog');
-    forwardSlideActive = false;
-  };
+  document.getElementById('new-page').scrollTop = 0;
 }
 
-// Footer "Blog" link triggers the slide transition instead of a hard nav.
-const footerBlogLink = document.getElementById('footer-blog-link');
-if (footerBlogLink) {
-  footerBlogLink.addEventListener('click', e => {
+// Back button on the blog page returns home.
+document.getElementById('back-btn').addEventListener('click', () => {
+  history.pushState({ page: 'home' }, '', '/');
+  showHome();
+});
+
+// "Blog" link navigates to the blog page (client-side, no reload).
+const blogLink = document.getElementById('blog-link');
+if (blogLink) {
+  blogLink.addEventListener('click', e => {
     e.preventDefault();
-    // Scroll back to the top so the home view fills the viewport during the
-    // slide — otherwise the user sees the half-scrolled footer slide off too.
-    window.scrollTo({ top: 0, behavior: 'auto' });
-    triggerSlideForwardTransition();
+    history.pushState({ page: 'blog' }, '', '/blog');
+    showBlog();
   });
 }
 
@@ -1061,29 +688,4 @@ window.addEventListener('popstate', async e => {
     showBlog();
     openArticle(path.slice(6), { pushState: false });
   }
-})();
-
-// ─── Scroll-hint chevrons: fade out on first scroll, stay gone until reload ───
-(function () {
-  const chevrons = document.getElementById('scroll-chevrons');
-  if (!chevrons) return;
-  let done = false;
-  const fade = () => {
-    if (done) return;
-    const y = window.scrollY || window.pageYOffset
-            || document.documentElement.scrollTop
-            || document.body.scrollTop || 0;
-    if (y > 0.5) {
-      done = true;
-      chevrons.classList.add('faded');
-      window.removeEventListener('scroll',     fade);
-      window.removeEventListener('wheel',      fade);
-      window.removeEventListener('touchmove',  fade);
-      document.removeEventListener('scroll',   fade);
-    }
-  };
-  window.addEventListener('scroll',     fade, { passive: true });
-  document.addEventListener('scroll',   fade, { passive: true });
-  window.addEventListener('wheel',      fade, { passive: true });
-  window.addEventListener('touchmove',  fade, { passive: true });
 })();

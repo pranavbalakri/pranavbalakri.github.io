@@ -5,7 +5,7 @@
 }
 
 html, body {
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
   scrollbar-width: none;        /* Firefox */
@@ -18,150 +18,36 @@ body::-webkit-scrollbar {
 }
 
 body {
-  background: #14141a;
+  background: #000;
+  color: #f2f2f2;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ── Light rays background canvas ───────────────────────────────────────── */
-#light-rays {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  pointer-events: none;
-  display: block;
-  opacity: 0.6;
+#root { display: none; }
+
+/* ── Page column ─────────────────────────────────────────────────────────── */
+#page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 24px 110px;
 }
 
-/* ── Home wrapper (covers the first viewport, holds the TV) ─────────────── */
-#home-wrapper {
+/* ── Scene banner (animated Goldwin Smith scene) ─────────────────────────── */
+#scene-banner {
   position: relative;
   width: 100%;
-  /* Slightly under 100vh so a sliver of the footer below peeks above the
-     viewport bottom — a visual hint that there's more to scroll to. */
-  height: calc(100vh - 20px);
-  background: transparent;
-  z-index: 1;
-}
-
-/* ── TV frame: anchored flush to the bottom of the viewport ─────────────── */
-#tv-frame {
-  position: absolute;
-  /* TV image (900x700) has ~92px of transparent padding at the bottom
-     (13.14% of its height). Shift the frame down by that amount so the
-     visible TV's bottom edge sits flush with the viewport bottom. */
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, 13.14%);
-  aspect-ratio: 900 / 700;
-  width: min(110.4vw, calc(115vh * (900 / 700)));
-  max-width: 110.4vw;
-  max-height: 115vh;
-}
-
-#tv-image {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 5;
-  user-select: none;
-  -webkit-user-drag: none;
-  filter:
-    drop-shadow(0 28px 48px rgba(0,0,0,0.75))
-    drop-shadow(0 8px 16px rgba(0,0,0,0.55))
-    drop-shadow(0 2px 4px rgba(0,0,0,0.45));
-}
-
-/* Cutout matches the transparent screen area in tv.webp */
-#tv-screen {
-  position: absolute;
-  top: 21.43%;
-  left: 13.56%;
-  width: 57.22%;
-  height: 56.57%;
+  aspect-ratio: 3 / 2;
   overflow: hidden;
+  border-radius: 4px;
   background: #000;
-  border-radius: 6% / 7%;
-  z-index: 1;
-  isolation: isolate;
-}
-
-#tv-screen-inner {
-  position: absolute;
-  inset: 0;
-  filter: url(#crt-curve);
-  animation: crtFlicker 5.6s ease-in-out infinite;
-}
-
-/* CRT scanlines */
-#tv-screen::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 4;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(0,0,0,0.18) 0px,
-      rgba(0,0,0,0.18) 1px,
-      transparent 1px,
-      transparent 3px
-    );
-  mix-blend-mode: multiply;
-  opacity: 0.7;
-}
-
-/* Vignette + glass tint */
-#tv-glass {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 3;
-  background:
-    radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 35%),
-    radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.45) 100%);
-}
-
-@keyframes crtFlicker {
-  0%, 100% { opacity: 1;     }
-  47%      { opacity: 1;     }
-  48%      { opacity: 0.965; }
-  49%      { opacity: 1;     }
-  82%      { opacity: 1;     }
-  83%      { opacity: 0.975; }
-  84%      { opacity: 1;     }
-}
-
-/* Occasional horizontal tear (subtle) */
-#tv-screen-inner::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: rgba(255,255,255,0.06);
-  pointer-events: none;
-  z-index: 4;
-  top: 0;
-  opacity: 0;
-  animation: crtTear 14s linear infinite;
-}
-
-@keyframes crtTear {
-  0%, 96%, 100% { opacity: 0; transform: translateY(0); }
-  97%           { opacity: 0.6; transform: translateY(20%); }
-  97.5%         { opacity: 0;   transform: translateY(40%); }
-  98%           { opacity: 0.5; transform: translateY(70%); }
-  98.5%         { opacity: 0;   transform: translateY(90%); }
+  /* Match the heading→paragraph gap (the h2's 28px bottom margin) above the image. */
+  margin-top: 28px;
 }
 
 #scene {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   background-image: url('background.png');
   background-size: cover;
   background-position: center top;
@@ -177,27 +63,86 @@ body {
   cursor: default;
 }
 
-#root {
-  display: none;
-}
-
 #bubbles {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   pointer-events: none;
   z-index: 20;
 }
 
+/* ── Article (editable) ──────────────────────────────────────────────────── */
+#about {
+  margin-top: 48px;
+}
+
+#about h1,
+#about h2 {
+  font-weight: 700;
+  font-size: clamp(24px, 3.8vw, 30px);
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin-bottom: 28px;
+}
+
+#about p {
+  font-size: 17px;
+  line-height: 1.85;
+  color: #d8d8d8;
+  margin-bottom: 22px;
+}
+
+#about a {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(255, 255, 255, 0.4);
+  transition: text-decoration-color .15s;
+}
+#about a:hover { text-decoration-color: #fff; }
+
+/* ── Links ───────────────────────────────────────────────────────────────── */
+#links {
+  margin-top: 56px;
+}
+
+#links h2 {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  margin-bottom: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+}
+
+#links ul {
+  list-style: none;
+}
+
+#links li {
+  font-size: 17px;
+  line-height: 2;
+}
+
+#links a {
+  color: #e8e8e8;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+  transition: color .15s, border-color .15s;
+}
+#links a:hover {
+  color: #fff;
+  border-bottom-color: rgba(255, 255, 255, 0.7);
+}
+
+/* ── Speech bubbles (creature hover popups) ──────────────────────────────── */
 .speech-bubble {
   position: absolute;
   background: #fdf3d0;
   border: 3px solid #2a1200;
   padding: 10px 13px;
   font-family: 'Press Start 2P', monospace;
-  font-size: clamp(5px, 0.65vw, 8px);
+  font-size: clamp(5px, 1.1vw, 8px);
   line-height: 2;
   color: #2a1200;
   max-width: 260px;
@@ -239,9 +184,7 @@ body {
 }
 
 /* tail pointing up (bubble displayed below the character) */
-.speech-bubble.bubble-below {
-  max-width: 110px;
-}
+.speech-bubble.bubble-below { max-width: 110px; }
 
 .speech-bubble.bubble-below::after {
   bottom: auto;
@@ -265,447 +208,14 @@ body {
   font-family: inherit;
   font-size: inherit;
 }
-
-.speech-bubble a:hover {
-  color: #cc2200;
-}
+.speech-bubble a:hover { color: #cc2200; }
 
 @keyframes bubblePop {
   0%   { transform: translateX(-50%) scale(0.4); opacity: 0; }
   100% { transform: translateX(-50%) scale(1);   opacity: 1; }
 }
 
-/* ── Inventory title ─────────────────────────────────────────────────────── */
-#inventory-title {
-  position: absolute;
-  top: 5.5%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(8px, 1.4vw, 18px);
-  color: #3d1a00;
-  text-shadow:
-    1px  1px 0 #6f4e37,
-   -1px -1px 0 #6f4e37,
-    1px -1px 0 #6f4e37,
-   -1px  1px 0 #6f4e37;
-  white-space: nowrap;
-  pointer-events: none;
-  letter-spacing: 2px;
-  z-index: 1;
-}
-
-/* ── Inventory overlay ───────────────────────────────────────────────────── */
-#inventory-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.48);
-}
-#inventory-overlay.hidden {
-  display: none;
-}
-
-#inventory-panel {
-  position: relative;
-  /* Maintain 1501:1072 aspect ratio, fit within viewport with padding */
-  width: min(73.92vw, calc(67.2vh * (1501 / 1072)));
-  aspect-ratio: 1501 / 1072;
-  background: url('inventory.png') center / 100% 100% no-repeat;
-  image-rendering: pixelated;
-  animation: invOpen 0.14s ease-out forwards;
-}
-
-@keyframes invOpen {
-  from { transform: scale(0.88); opacity: 0; }
-  to   { transform: scale(1);    opacity: 1; }
-}
-
-.inv-slot {
-  position: absolute;
-  left: 8.5%;
-  width: 83%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: clamp(2px, 0.4vh, 5px);
-  padding: clamp(2px, 0.6vh, 7px) 1% 0;
-}
-
-.inv-row-top {
-  display: flex;
-  align-items: baseline;
-  gap: clamp(6px, 1vw, 14px);
-  flex-wrap: wrap;
-}
-
-.inv-name {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(6px, 0.85vw, 11px);
-  color: #f5e79e;
-  text-decoration: none;
-  text-shadow: 1px 1px 0 #000;
-  white-space: nowrap;
-}
-.inv-name:hover {
-  color: #ffffff;
-  text-decoration: underline;
-}
-
-.inv-lang {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(4px, 0.55vw, 7px);
-  color: #72c48a;
-  text-shadow: 1px 1px 0 #000;
-  white-space: nowrap;
-}
-
-.inv-desc {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(4px, 0.55vw, 7px);
-  color: #a89f78;
-  text-shadow: 1px 1px 0 #000;
-  line-height: 1.6;
-}
-
-/* ── Experience overlay ───────────────────────────────────────────────────── */
-#experience-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.48);
-}
-#experience-overlay.hidden {
-  display: none;
-}
-
-#experience-panel {
-  position: relative;
-  width: min(73.92vw, calc(67.2vh * (1501 / 1072)));
-  aspect-ratio: 1501 / 1072;
-  image-rendering: pixelated;
-  animation: invOpen 0.14s ease-out forwards;
-  isolation: isolate;
-}
-
-#experience-panel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url('inventory.png') center / 100% 100% no-repeat;
-  image-rendering: pixelated;
-  filter: hue-rotate(220deg);
-  z-index: -1;
-}
-
-#experience-title {
-  position: absolute;
-  top: 5.5%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(8px, 1.4vw, 18px);
-  color: #001a3d;
-  text-shadow:
-    1px  1px 0 #2a4a7f,
-   -1px -1px 0 #2a4a7f,
-    1px -1px 0 #2a4a7f,
-   -1px  1px 0 #2a4a7f;
-  white-space: nowrap;
-  pointer-events: none;
-  letter-spacing: 2px;
-  z-index: 1;
-}
-
-.exp-row-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: clamp(4px, 0.6vw, 10px);
-}
-
-.exp-title {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(5px, 0.75vw, 10px);
-  color: #f5e79e;
-  text-shadow: 1px 1px 0 #000;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.exp-date {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(4px, 0.5vw, 6px);
-  color: #72c4e8;
-  text-shadow: 1px 1px 0 #000;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.exp-company {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(4px, 0.5vw, 6px);
-  color: #9ab8d4;
-  text-shadow: 1px 1px 0 #000;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Scroll-hint chevrons in the sliver of footer visible above the viewport fold */
-#scroll-chevrons {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  pointer-events: none;
-  z-index: 3;
-  transition: opacity 0.6s ease-out;
-}
-#scroll-chevrons.faded {
-  opacity: 0;
-}
-#scroll-chevrons.faded .chev {
-  animation: none;
-}
-#scroll-chevrons .chev {
-  width: 7px;
-  height: 7px;
-  border-right: 1.5px solid #8a7f70;
-  border-bottom: 1.5px solid #8a7f70;
-  transform: translateY(-2px) rotate(45deg);
-  animation: scrollChevPulse 5s ease-in-out infinite;
-}
-#scroll-chevrons .chev:nth-child(odd)  { animation-delay: 0s;   }
-#scroll-chevrons .chev:nth-child(even) { animation-delay: 0.4s; }
-@keyframes scrollChevPulse {
-  0%, 100% { opacity: 0.35; }
-  50%      { opacity: 0.9;  }
-}
-
-/* ── Site footer (below the home view) ──────────────────────────────────── */
-#site-footer {
-  position: relative;
-  z-index: 2;            /* sits above the fixed light-rays canvas (z:0) */
-  background: #f4f1ea;   /* warm off-white — close to white, not pure */
-  color: #2a2620;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  /* Flex-center the inner block so About+Links sit in the middle of the
-     footer; the absolutely-positioned name stays pinned at bottom-right. */
-  display: flex;
-  align-items: center;
-  min-height: clamp(200px, 16vw, 290px);
-}
-
-.footer-inner {
-  /* No max-width / centering — keeps About+Links anchored near the left edge
-     of the viewport so the layout balances against the right-anchored name. */
-  width: 100%;
-  padding: 16px 32px 16px clamp(32px, 5vw, 80px);
-}
-
-.footer-cols {
-  display: grid;
-  /* Cap each column so About doesn't sprawl across the full inner — leaves
-     visual breathing room on the right for the absolutely-positioned name. */
-  grid-template-columns: repeat(2, minmax(0, 280px));
-  gap: 56px;
-}
-
-.footer-col h3 {
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin: 0 0 14px;
-  color: #6e655a;
-}
-
-.footer-col p {
-  font-size: 15px;
-  line-height: 1.7;
-  margin: 0;
-  color: #3a342c;
-}
-
-.footer-col ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.footer-col li {
-  font-size: 15px;
-  /* Match the paragraph's line-height so 4 list items occupy the same
-     vertical space as the 4-line About paragraph next to them. */
-  line-height: 1.7;
-}
-
-.footer-col a {
-  color: #3a342c;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
-  transition: color .15s, border-color .15s;
-}
-
-.footer-col a:hover {
-  color: #000;
-  border-bottom-color: rgba(0, 0, 0, 0.55);
-}
-
-/* Big serif name anchored flush to the footer's bottom-right corner so it
-   doesn't share grid space with the columns — they get full breathing room. */
-.footer-name {
-  position: absolute;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  text-align: right;
-  font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
-  font-weight: 700;
-  font-size: clamp(35px, 5.2vw, 77px);
-  line-height: 1.0;
-  letter-spacing: -0.025em;
-  color: #1f1b16;
-  pointer-events: none;
-  user-select: none;
-}
-
-.footer-name-line {
-  display: block;
-  margin: 0;
-  padding: 0;
-}
-
-@media (max-width: 720px) {
-  /* Footer: drop the absolutely-positioned name into normal flow under the
-     stacked columns so it doesn't overlap them. */
-  #site-footer {
-    display: block;
-    min-height: 0;
-  }
-  .footer-inner {
-    padding: 48px 24px 16px;
-  }
-  .footer-cols {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-  .footer-name {
-    position: static;
-    transform: none;
-    text-align: right;
-    padding: 8px 24px 16px;
-    font-size: clamp(34px, 10vw, 64px);
-    line-height: 1.05;
-  }
-}
-
-/* ── Vortex transition overlay ───────────────────────────────────────────── */
-#vortex-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  overflow: hidden;
-}
-
-/* Captured screenshot layer — spins & collapses via WAAPI */
-#vortex-snapshot {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  transform-origin: 50% 50%;
-}
-
-/* Large soft radial glow ring */
-#vortex-ring-outer {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 26vmax;
-  height: 26vmax;
-  border-radius: 50%;
-  filter: blur(8px);
-  background: radial-gradient(circle,
-    rgba(214,248,255,.95) 0%,
-    rgba(108,212,255,.48) 34%,
-    rgba(6,33,74,.16)    62%,
-    transparent          75%);
-  pointer-events: none;
-}
-
-/* Thin outer border ring */
-#vortex-ring-border {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 18vmax;
-  height: 18vmax;
-  border-radius: 50%;
-  border: 1px solid rgba(212,241,255,.6);
-  pointer-events: none;
-}
-
-/* Container for JS-spawned debris particles */
-#vortex-particles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-/* Subtle dot-grid overlay */
-#vortex-grid {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgba(214,236,255,.86) .9px, transparent .9px);
-  background-size: 6px 6px;
-  mix-blend-mode: screen;
-  pointer-events: none;
-}
-
-/* Dark radial vignette that builds up as the vortex closes */
-#vortex-dark {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 50%,
-    rgba(30,88,140,.04)  0%,
-    rgba(6,18,34,.22)   48%,
-    rgba(2,8,18,.42)   100%);
-  pointer-events: none;
-}
-
-/* Bottom caption text */
-#vortex-caption {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(6px, 0.9vw, 10px);
-  text-transform: uppercase;
-  letter-spacing: .15em;
-  color: rgba(186,230,255,.9);
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-/* ── New destination page ────────────────────────────────────────────────── */
+/* ── Blog page (shown when navigating to /blog) ──────────────────────────── */
 #new-page {
   display: none;
   position: fixed;
@@ -839,9 +349,7 @@ body {
   to   { background-position: -179px 0; }
 }
 
-#back-btn:hover {
-  border-color: #aaa;
-}
+#back-btn:hover { border-color: #aaa; }
 
 /* ── KaTeX math rendering ─────────────────────────────────────────────────── */
 #article-body .katex { color: rgba(255,255,255,.9); font-size: 1em; }

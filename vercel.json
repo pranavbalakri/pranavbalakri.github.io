@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build:articles",
+  "outputDirectory": "public",
+  "rewrites": [
+    { "source": "/blog", "destination": "/index.html" },
+    { "source": "/blog/(.*)", "destination": "/index.html" }
+  ]
+}

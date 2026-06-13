@@ -13,197 +13,56 @@
         }
       })();
     </script>
-    <link rel="icon" href="%PUBLIC_URL%/Owlet_Monster.ico" />
+    <link rel="icon" href="/Owlet_Monster.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#1a0a00" />
+    <meta name="theme-color" content="#000000" />
     <meta name="description" content="Pranav's Website" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
-    <link rel="stylesheet" href="%PUBLIC_URL%/style.css" />
+    <link rel="stylesheet" href="/style.css" />
     <title>Pranav's Website</title>
   </head>
   <body>
-    <!-- ── Light rays background (vanilla WebGL) ───────────────────────── -->
-    <canvas id="light-rays" aria-hidden="true"></canvas>
+    <main id="page">
+      <!-- ════════════════════════════════════════════════════════════════════
+           ARTICLE — edit the text below freely. It's plain HTML: each <p> is a
+           paragraph, use <a href="…">…</a> for links, <em>…</em> for italics.
+           ════════════════════════════════════════════════════════════════════ -->
+      <article id="about">
+        <h2>Hello, I&rsquo;m Pranav.</h2>
 
-    <!-- ── CRT bulge filter (referenced by #tv-screen) ─────────────────── -->
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-      <defs>
-        <filter id="crt-curve" x="-2%" y="-2%" width="104%" height="104%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="0.3" result="blur" />
-          <feComponentTransfer in="blur" result="boost">
-            <feFuncR type="linear" slope="1.04" />
-            <feFuncG type="linear" slope="1.04" />
-            <feFuncB type="linear" slope="1.04" />
-          </feComponentTransfer>
-        </filter>
-      </defs>
-    </svg>
+        <p></p>
 
-    <div id="home-wrapper">
-      <div id="tv-frame">
-        <div id="tv-screen">
-          <div id="tv-screen-inner">
-            <div id="scene">
-              <canvas id="gameCanvas"></canvas>
-              <div id="bubbles"></div>
-            </div>
 
-            <div id="inventory-overlay" class="hidden in-tv">
-      <div id="inventory-panel">
-        <div id="inventory-title">PROJECTS</div>
+        <p>
+          I grew up in Austin, Texas and studied computer science at Cornell. There, I found myself interested in machine learning, markets, and math.
+        </p>
 
-        <div class="inv-slot" style="top:12.6%;height:10.2%">
-          <div class="inv-row-top">
-            <a class="inv-name" href="https://github.com/pranavbalakri/giggle" target="_blank">giggle</a>
-            <span class="inv-lang">TypeScript</span>
-          </div>
-          <div class="inv-desc">Freelance marketplace with AI-reviewed deliverables, hosted on the blockchain.</div>
-        </div>
+        <p>
+          In high school, I joined the policy debate team, which was the most rewarding experience of my life. I won a national tournament and was ranked <a href="https://hsimpact.wordpress.com/2024/12/31/coaches-poll-2-berkeley-prep-rv-1/" target="_blank" rel="noopener">second</a> in the United States along with my partner. We also won an <a href="https://www.ippfdebate.com/post/westwood-high-school-students-crowned-champion-of-international-public-policy-forum-debate-contest" target="_blank" rel="noopener">international championship</a> (in a different event).           
+        </p>
 
-        <div class="inv-slot" style="top:25.0%;height:9.2%">
-          <div class="inv-row-top">
-            <a class="inv-name" href="https://github.com/pranavbalakri/odds-scraper" target="_blank">odds-scraper</a>
-            <span class="inv-lang">Python</span>
-          </div>
-          <div class="inv-desc">Sports book webscraper &amp; Polymarket trading algorithm.</div>
-        </div>
+        <p>
+          I also spent some working on robotics (working on hardware), where our team ranked in the <a href="https://westwoodhorizon.com/2024/05/robotics-ftc-team-westwood-tomahawk-makes-rrisd-history/" target="_blank" rel="noopener">top three alliances</a> at the FIRST Tech Challenge (FTC) world championship.
+        </p>
 
-        <div class="inv-slot" style="top:36.5%;height:9.1%">
-          <div class="inv-row-top">
-            <a class="inv-name" href="https://github.com/pranavbalakri/tradeAdjustment" target="_blank">tradeAdjustment</a>
-            <span class="inv-lang">Python</span>
-          </div>
-          <div class="inv-desc">Data standardization algorithms for TAA analysis.</div>
-        </div>
+        <p>
+          With some of my friends from my high school debate team (three of whom went to Cornell along with me), I co-founded <a href="https://www.endurance.exchange/" target="_blank" rel="noopener">Endurance</a>, a software company that aims to provide infrastructure for alternative assets markets.
+        </p>
+      </article>
+      <!-- ════════════════════════════════════════ end editable article ═══════ -->
 
-        <div class="inv-slot" style="top:47.9%;height:9.3%">
-          <div class="inv-row-top">
-            <a class="inv-name" href="https://github.com/pranavbalakri/mini-notes" target="_blank">mini-notes</a>
-            <span class="inv-lang">Swift</span>
-          </div>
-          <div class="inv-desc">MacOS menu bar app for displaying quick notes.</div>
-        </div>
-
-        <div class="inv-slot" style="top:59.3%;height:9.1%">
-          <div class="inv-row-top">
-            <a class="inv-name" href="https://github.com/pranavbalakri/pranavbalakri.github.io" target="_blank">pranavbalakri.github.io</a>
-            <span class="inv-lang">JavaScript</span>
-          </div>
-          <div class="inv-desc">This website!</div>
-        </div>
-
-        <div class="inv-slot" style="top:69.6%;height:9.4%">
-          <div class="inv-row-top">
-            <a class="inv-name" href="https://github.com/pranavbalakri/GEIST" target="_blank">GEIST</a>
-            <span class="inv-lang">C#</span>
-          </div>
-          <div class="inv-desc">A .NET expense tracking application.</div>
-        </div>
-
-      </div>
-    </div>
-
-    <div id="experience-overlay" class="hidden in-tv">
-      <div id="experience-panel">
-        <div id="experience-title">EXPERIENCE</div>
-
-        <div class="inv-slot" style="top:12.6%;height:10.2%">
-          <div class="exp-row-top">
-            <span class="exp-title">Incoming Software Engineer Intern</span>
-            <span class="exp-date">May 2026 – Aug 2026</span>
-          </div>
-          <div class="exp-company">Samsung Electronics · Austin, TX</div>
-        </div>
-
-        <div class="inv-slot" style="top:25.0%;height:9.2%">
-          <div class="exp-row-top">
-            <span class="exp-title">Machine Learning Engineer Intern</span>
-            <span class="exp-date">Feb 2026 – Present</span>
-          </div>
-          <div class="exp-company">Mercor · San Francisco, CA (Remote)</div>
-          <div class="inv-desc">Designed 10,000+ test cases for multimodal AI model evaluations; built 10+ RL environments for diffusion and image classification models.</div>
-        </div>
-
-        <div class="inv-slot" style="top:36.5%;height:9.1%">
-          <div class="exp-row-top">
-            <span class="exp-title">Intelligence Engineer</span>
-            <span class="exp-date">Oct 2025 – Present</span>
-          </div>
-          <div class="exp-company">Cornell UAS (CUAir) · Ithaca, NY</div>
-          <div class="inv-desc">Built ML mapping algorithm stitching 1000+ drone images via OpenCV &amp; GPS; reduced feature misalignment by 43% and edge visibility by 74%.</div>
-        </div>
-
-        <div class="inv-slot" style="top:47.9%;height:9.3%">
-          <div class="exp-row-top">
-            <span class="exp-title">Research Intern</span>
-            <span class="exp-date">May 2025 – Oct 2025</span>
-          </div>
-          <div class="exp-company">University of Michigan (Ross) · Ann Arbor, MI</div>
-          <div class="inv-desc">Standardized 2000+ irregular addresses at ~96% accuracy to analyze government trade assistance effects on offshoring.</div>
-        </div>
-
-        <div class="inv-slot" style="top:59.3%;height:9.1%">
-          <div class="exp-row-top">
-            <span class="exp-title">Assistant Debate Coach</span>
-            <span class="exp-date">May 2025 – Present</span>
-          </div>
-          <div class="exp-company">Break Debate · Lexington, MA (Remote)</div>
-          <div class="inv-desc">Curated 1000+ scholarly sources for 150+ debaters annually; coached teams to top-5 national finishes in tech, policy, and economics.</div>
-        </div>
-
-      </div>
-    </div>
-
-          </div><!-- /#tv-screen-inner -->
-          <div id="tv-glass"></div>
-        </div><!-- /#tv-screen -->
-        <img id="tv-image" src="%PUBLIC_URL%/tv.webp" alt="" />
-      </div><!-- /#tv-frame -->
-    </div><!-- /#home-wrapper -->
-
-    <!-- ── Footer (sits below the home view; revealed by scrolling) ────── -->
-    <footer id="site-footer">
-      <div id="scroll-chevrons" aria-hidden="true">
-        <span class="chev"></span><span class="chev"></span>
-      </div>
-      <div class="footer-inner">
-        <div class="footer-cols">
-          <div class="footer-col">
-            <h3>About</h3>
-            <p>Hi, I'm Pranav. I grew up in Austin, Texas and now study computer science at Cornell. At <a href="https://endurance.exchange" target="_blank" rel="noopener">Endurance</a>, I'm working on democratizing access to infrastructure.</p>
-          </div>
-          <div class="footer-col">
-            <h3>Links</h3>
-            <ul>
-              <li><a href="/blog" id="footer-blog-link">Blog</a></li>
-              <li><a href="https://github.com/pranavbalakri" target="_blank" rel="noopener">GitHub</a></li>
-              <li><a href="https://linkedin.com/in/pranavbalakri" target="_blank" rel="noopener">LinkedIn</a></li>
-              <li><a href="mailto:pb629@cornell.edu">Email</a></li>
-            </ul>
-          </div>
+      <!-- ── Scene banner: animated Goldwin Smith scene (creatures + fireflies) ── -->
+      <div id="scene-banner">
+        <div id="scene">
+          <canvas id="gameCanvas"></canvas>
+          <div id="bubbles"></div>
         </div>
       </div>
-      <div class="footer-name" aria-hidden="true">
-        <span class="footer-name-line">PRANAV</span>
-        <span class="footer-name-line">BALAKRISHNAN</span>
-      </div>
-    </footer>
 
-    <!-- ── Vortex transition overlay (z-index 100) ──────────────────────── -->
-    <div id="vortex-overlay">
-      <div id="vortex-snapshot"></div>
-      <div id="vortex-ring-outer"></div>
-      <div id="vortex-ring-border"></div>
-      <div id="vortex-particles"></div>
-      <div id="vortex-grid"></div>
-      <div id="vortex-dark"></div>
-      <p id="vortex-caption">Entering Blog...</p>
-    </div>
-
-    <!-- ── New destination page (z-index 200) ───────────────────────────── -->
+    <!-- ── Blog page (z-index above home; shown when navigating to /blog) ────── -->
     <div id="new-page">
       <button id="back-btn" aria-label="Back to home"></button>
 
@@ -223,10 +82,8 @@
     </div>
 
     <div id="root"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
-    <script src="%PUBLIC_URL%/light-rays.js"></script>
-    <script src="%PUBLIC_URL%/script.js"></script>
+    <script src="/script.js"></script>
   </body>
 </html>
