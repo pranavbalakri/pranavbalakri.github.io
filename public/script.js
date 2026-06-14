@@ -73,7 +73,7 @@ const ROBOT_DEFS = [
     sprite: 'Dude_Monster_Walk_6',
     hue: 130,    // green-shifted Dude
     speed: 0.384,
-    html: `Contact me at<br><a href="mailto:pranavbalakri+website@gmail.com">pranavbalakri@gmail.com</a>`,
+    html: `Contact me at<br><a href="mailto:pranavbalakri@gmail.com">pranavbalakri@gmail.com</a>`,
   },
 ];
 
