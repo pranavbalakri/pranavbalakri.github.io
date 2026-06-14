@@ -18,31 +18,60 @@
   // Don't track local development.
   if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
 
-  // ── Geo lookup (cached per session to avoid hammering the API) ───────────────
+  // ── Geo lookup (cached per session to avoid hammering the APIs) ──────────────
+  // Tries several free, no-key providers in turn. If one is blocked (ad/privacy
+  // blockers often blocklist these domains) or down, it falls through to the
+  // next. Each provider's response shape is normalised to one geo object.
+  const GEO_PROVIDERS = [
+    { url: 'https://ipwho.is/', map: d => ({
+        ip: d.ip, country: d.country, region: d.region, city: d.city,
+        lat: d.latitude, lon: d.longitude,
+        isp: d.connection && d.connection.isp,
+        org: d.connection && d.connection.org,
+        domain: d.connection && d.connection.domain,
+    }) },
+    { url: 'https://get.geojs.io/v1/ip/geo.json', map: d => ({
+        ip: d.ip, country: d.country, region: d.region, city: d.city,
+        lat: d.latitude, lon: d.longitude,
+        isp: d.organization_name, org: d.organization_name, domain: '',
+    }) },
+    { url: 'https://ipapi.co/json/', map: d => ({
+        ip: d.ip, country: d.country_name, region: d.region, city: d.city,
+        lat: d.latitude, lon: d.longitude,
+        isp: d.org, org: d.org, domain: '',
+    }) },
+  ];
+
+  function normalize(raw) {
+    return {
+      ip: raw.ip || '', country: raw.country || '', region: raw.region || '',
+      city: raw.city || '', lat: raw.lat || '', lon: raw.lon || '',
+      isp: raw.isp || '', org: raw.org || '', domain: raw.domain || '',
+    };
+  }
+
   function getGeo() {
     try {
       const cached = sessionStorage.getItem('geo');
       if (cached) return Promise.resolve(JSON.parse(cached));
     } catch (_) {}
 
-    return fetch('https://ipwho.is/')
-      .then(r => r.json())
-      .then(d => {
-        const geo = {
-          ip: d.ip || '',
-          country: d.country || '',
-          region: d.region || '',
-          city: d.city || '',
-          lat: d.latitude || '',
-          lon: d.longitude || '',
-          isp: (d.connection && d.connection.isp) || '',
-          org: (d.connection && d.connection.org) || '',
-          domain: (d.connection && d.connection.domain) || '',
-        };
-        try { sessionStorage.setItem('geo', JSON.stringify(geo)); } catch (_) {}
-        return geo;
-      })
-      .catch(() => ({})); // never block tracking on a geo failure
+    // Try providers in order; resolve with the first that yields a country.
+    const tryNext = i => {
+      if (i >= GEO_PROVIDERS.length) return Promise.resolve({});
+      const p = GEO_PROVIDERS[i];
+      return fetch(p.url)
+        .then(r => r.json())
+        .then(d => {
+          const geo = normalize(p.map(d));
+          if (!geo.country && !geo.ip) return tryNext(i + 1);
+          try { sessionStorage.setItem('geo', JSON.stringify(geo)); } catch (_) {}
+          return geo;
+        })
+        .catch(() => tryNext(i + 1)); // blocked or down → next provider
+    };
+
+    return tryNext(0);
   }
 
   // ── Send one page-view record ────────────────────────────────────────────────
