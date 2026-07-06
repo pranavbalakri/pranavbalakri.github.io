@@ -430,21 +430,139 @@ function showBlog() {
   document.getElementById('new-page').scrollTop = 0;
 }
 
-// Back button on the blog page returns home.
-document.getElementById('back-btn').addEventListener('click', () => {
-  history.pushState({ page: 'home' }, '', '/');
-  showHome();
-});
+// ─── Pixelation engine ────────────────────────────────────────────────────────
+// Clicking "Hello" charges a meter that drains over time. The charge drives a
+// mosaic SVG filter (#pixelate-filter in index.html) over the visible page;
+// reaching full charge plays a pixelate-in → page swap → pixelate-out
+// transition. The blog back button reuses the same transition in reverse.
 
-// "Blog" link navigates to the blog page (client-side, no reload).
-const blogLink = document.getElementById('blog-link');
-if (blogLink) {
-  blogLink.addEventListener('click', e => {
-    e.preventDefault();
+const pxFlood   = document.getElementById('px-flood');
+const pxComp    = document.getElementById('px-comp');
+const pxMorph   = document.getElementById('px-morph');
+const pxTargets = [document.getElementById('page'), document.getElementById('new-page')];
+
+// WebKit (Safari and every iOS browser) can't apply this SVG filter chain via
+// CSS filter:url() — the element either renders unfiltered or disappears — so
+// those browsers get a chunky blur instead.
+const PX_USE_BLUR =
+  (/AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg|OPR/.test(navigator.userAgent)) ||
+  /iPad|iPhone|iPod|CriOS|FxiOS/.test(navigator.userAgent);
+
+let _pxApplied = false;
+
+// px = mosaic cell size in CSS pixels; 0 removes the effect entirely.
+function setPixelation(px) {
+  if (px < 1.25) {
+    if (_pxApplied) {
+      for (const t of pxTargets) t.style.filter = '';
+      _pxApplied = false;
+    }
+    return;
+  }
+  let css;
+  if (PX_USE_BLUR) {
+    css = 'blur(' + (px / 4).toFixed(2) + 'px)';
+  } else {
+    // feFlood drops a tiny seed at each cell's center, feTile repeats it,
+    // the composite samples the source through the seeds, and feMorphology
+    // dilates each sample into a full px×px square.
+    const seed = Math.max(1, px / 6);
+    pxFlood.setAttribute('x', (px - seed) / 2);
+    pxFlood.setAttribute('y', (px - seed) / 2);
+    pxFlood.setAttribute('width', seed);
+    pxFlood.setAttribute('height', seed);
+    pxComp.setAttribute('width', px);
+    pxComp.setAttribute('height', px);
+    pxMorph.setAttribute('radius', px / 2);
+    css = 'url(#pixelate-filter)';
+  }
+  for (const t of pxTargets) t.style.filter = css;
+  _pxApplied = true;
+}
+
+// ─── Click-to-charge state ────────────────────────────────────────────────────
+const CLICK_BOOST   = 0.42;  // charge added per click (3 quick clicks → full)
+const DECAY_PER_SEC = 0.42;  // charge drained per second between clicks
+const CHARGE_MAX_PX = 22;    // mosaic cell size at full charge
+const PEAK_PX       = 60;    // cell size at the transition midpoint
+const RAMP_UP_MS    = 300;
+const RAMP_DOWN_MS  = 750;
+
+let charge        = 0;
+let chargeRaf     = null;
+let chargeLast    = 0;
+let transitioning = false;
+
+const chargeToPx   = c => Math.pow(c, 1.5) * CHARGE_MAX_PX;
+const easeInQuad   = t => t * t;
+const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+
+function chargeTick(t) {
+  const dt = Math.min(0.1, (t - chargeLast) / 1000);
+  chargeLast = t;
+  charge = Math.max(0, charge - DECAY_PER_SEC * dt);
+  setPixelation(chargeToPx(charge));
+  chargeRaf = charge > 0 ? requestAnimationFrame(chargeTick) : null;
+}
+
+function bumpCharge() {
+  if (transitioning) return;
+  charge += CLICK_BOOST;
+  if (charge >= 1) {
+    charge = 1;
     history.pushState({ page: 'blog' }, '', '/blog');
-    showBlog();
+    pixelTransition(() => showBlog());
+    return;
+  }
+  setPixelation(chargeToPx(charge));
+  if (!chargeRaf) {
+    chargeLast = performance.now();
+    chargeRaf = requestAnimationFrame(chargeTick);
+  }
+}
+
+// Pixelate up from the current charge to PEAK_PX, swap pages at the peak,
+// then smoothly resolve back down to zero.
+function pixelTransition(swap) {
+  transitioning = true;
+  if (chargeRaf) { cancelAnimationFrame(chargeRaf); chargeRaf = null; }
+  const fromPx = chargeToPx(charge);
+  const t0 = performance.now();
+
+  requestAnimationFrame(function up(t) {
+    const k = Math.min(1, (t - t0) / RAMP_UP_MS);
+    setPixelation(fromPx + (PEAK_PX - fromPx) * easeInQuad(k));
+    if (k < 1) { requestAnimationFrame(up); return; }
+
+    swap();
+    const t1 = performance.now();
+    requestAnimationFrame(function down(t2) {
+      const k2 = Math.min(1, (t2 - t1) / RAMP_DOWN_MS);
+      setPixelation(PEAK_PX * (1 - easeOutCubic(k2)));
+      if (k2 < 1) { requestAnimationFrame(down); return; }
+      setPixelation(0);
+      charge = 0;
+      transitioning = false;
+    });
   });
 }
+
+// "Hello" is the door to the blog.
+const helloLink = document.getElementById('hello-link');
+helloLink.addEventListener('click', bumpCharge);
+helloLink.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    bumpCharge();
+  }
+});
+
+// Back button on the blog page pixelates back home.
+document.getElementById('back-btn').addEventListener('click', () => {
+  if (transitioning) return;
+  history.pushState({ page: 'home' }, '', '/');
+  pixelTransition(() => showHome());
+});
 
 // ─── Back-button bubble ───────────────────────────────────────────────────────
 let backBubbleEl    = null;

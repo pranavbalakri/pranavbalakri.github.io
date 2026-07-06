@@ -100,6 +100,29 @@ body {
 }
 #about a:hover { text-decoration-color: #fff; }
 
+/* ── "Hello" → blog trigger ──────────────────────────────────────────────── */
+#hello-link {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color .15s, text-shadow .25s;
+}
+
+#hello-link:hover,
+#hello-link:focus-visible {
+  text-decoration-color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 0 16px rgba(255, 255, 255, 0.6);
+  outline: none;
+}
+
+#hello-link:active {
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.95);
+}
+
 /* ── Links ───────────────────────────────────────────────────────────────── */
 #links {
   margin-top: 56px;
@@ -222,7 +245,6 @@ body {
   inset: 0;
   z-index: 95;
   background: #000;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
   overflow-y: auto;
   -webkit-font-smoothing: antialiased;
 }
