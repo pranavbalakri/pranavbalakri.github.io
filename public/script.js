@@ -55,13 +55,13 @@ const ROBOT_DEFS = [
     sprite: 'Dude_Monster_Walk_6',
     hue: 0,
     speed: 0.255,
-    html: `I'm a bit of an <a href="https://www.effectivealtruism.org/" target="_blank" rel="noopener">EA</a>. I think the world's greatest moral objectives include AI safety and ending factory farming.`,
+    html: `I think the world's greatest moral objectives include AI safety and ending factory farming.`,
   },
   {
     sprite: 'Owlet_Monster_Walk_6',
     hue: 0,
     speed: 0.33,
-    html: `Click here to learn more about <a href="https://www.endurance.exchange/" target="_blank" rel="noopener">Endurance</a>.`,
+    html: `Some of my interests include poker, scrabble, and policy debate.`,
   },
   {
     sprite: 'Pink_Monster_Walk_6',
