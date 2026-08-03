@@ -360,6 +360,14 @@ body {
   color: rgba(255,255,255,.78);
 }
 #article-body p  { margin: 0 0 24px; }
+#article-body a {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(255, 255, 255, 0.4);
+  transition: text-decoration-color .15s;
+}
+#article-body a:hover { text-decoration-color: #fff; }
 #article-body h2 {
   font-size: 22px;
   font-weight: 600;
