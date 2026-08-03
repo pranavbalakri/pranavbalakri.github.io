@@ -1,5 +1,14 @@
 [
   {
+    "slug": "my-thoughts-on-open-weights",
+    "title": "My Thoughts on Open Weights",
+    "author": "Pranav Balakrishnan",
+    "date": "August 2026",
+    "excerpt": "With the release of Kimi K3, it seems clear that open-weights models will be close to the capabilities of the frontier closed-weight models. Models that are capable of large-scale…",
+    "hidden": false,
+    "file": "/articles/my-thoughts-on-open-weights.txt"
+  },
+  {
     "slug": "test-article",
     "title": "A Test Article",
     "author": "Pranav Balakrishnan",
