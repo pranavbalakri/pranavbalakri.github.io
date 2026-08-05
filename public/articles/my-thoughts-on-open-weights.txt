@@ -1,6 +1,6 @@
 \title{My Thoughts on Open Weights}
 \author{Pranav Balakrishnan}
-\date{August 2026}
+\date{Aug 3, 2026}
 \excerpt{I think they create a lot of risk.}
 
 With the release of Kimi K3, it seems clear that open-weights models will be close to the capabilities of the frontier closed-weight models. Models that are capable of large-scale cyberattacks or invention of new diseases are likely on the horizon, if not already here.
