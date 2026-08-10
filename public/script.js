@@ -61,7 +61,7 @@ const ROBOT_DEFS = [
     sprite: 'Owlet_Monster_Walk_6',
     hue: 0,
     speed: 0.33,
-    html: `Some of my interests include poker, scrabble, and policy debate.`,
+    html: `Some of my interests include poker, Geoguessr, and policy debate.`,
   },
   {
     sprite: 'Pink_Monster_Walk_6',
