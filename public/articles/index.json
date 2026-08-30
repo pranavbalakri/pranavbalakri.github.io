@@ -1,23 +1,5 @@
 [
   {
-    "slug": "open-weights-are-a-fundamentally-unsustainable-business-model",
-    "title": "Open Weights are a Fundamentally Unsustainable Business Model",
-    "author": "Pranav Balakrishnan",
-    "date": "Aug 4, 2026",
-    "excerpt": "Models aren’t anything like open-source software.",
-    "hidden": false,
-    "file": "/articles/open-weights-are-a-fundamentally-unsustainable-business-model.txt"
-  },
-  {
-    "slug": "my-thoughts-on-open-weights",
-    "title": "My Thoughts on Open Weights",
-    "author": "Pranav Balakrishnan",
-    "date": "Aug 3, 2026",
-    "excerpt": "I think they create a lot of risk.",
-    "hidden": false,
-    "file": "/articles/my-thoughts-on-open-weights.txt"
-  },
-  {
     "slug": "test-article",
     "title": "A Test Article",
     "author": "Pranav Balakrishnan",

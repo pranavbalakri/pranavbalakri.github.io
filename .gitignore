@@ -11,6 +11,9 @@
 # production
 /build
 
+# local-only article archive (kept out of the deployed site)
+/articles-archive
+
 # misc
 .DS_Store
 .env.local
