@@ -59,6 +59,10 @@ function stripLatex(src) {
   s = s.replace(/\\(?:title|author|date|excerpt)\{[^}]*\}/g, '');
   s = s.replace(/\\hidden(?:\{[^}]*\})?/g, '');
 
+  // Rich media contributes nothing to a text excerpt
+  s = s.replace(/\\begin\{(html|chart)\}(?:\[[^\]]*\])?[\s\S]*?\\end\{\1\}/g, '');
+  s = s.replace(/\\image(?:\[[^\]]*\])?\{[^}]*\}(?:\{(?:[^{}]|\{[^{}]*\})*\})?/g, '');
+
   // Comments
   s = s.replace(/(^|[^\\])%[^\n]*/g, '$1');
 

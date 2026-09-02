@@ -1,0 +1,46 @@
+
+\title{My Thoughts on Open Weights}
+\author{Pranav Balakrishnan}
+\date{Aug 3, 2026}
+\excerpt{kimi k3 and jensen’s letter should give the world a lot to think about}
+
+after the release of kimi k3, it became pretty clear that open-weight models will be close to the capabilities of the frontier closed-weight models. models that are capable of large-scale cyberattacks are here, as is evidenced by hugging face. 
+
+capable models can be used for many bad things, including assisting building CBRN weapons. they can also be dangerous themselves if they are misaligned. 
+
+\href{https://www.nytimes.com/2026/07/10/us/politics/ai-terrorism-boko-haram-nigeria.html}{boko haram} already uses AI models to learn how to build bombs, modify their motorcycles so they can jump over bridges, upgrade their weapons, and ideate on attack plans. in addition to things like this, models can also be used for large-scale disinformation campaigns.
+
+hugging face showed that models will \href{https://openai.com/index/hugging-face-model-evaluation-security-incident/}{paperclip-maximize} to solve evaluation questions. they also sometimes \href{https://www.anthropic.com/research/alignment-faking}{fake alignment} when they know they are being evaluated. they can also hide these things from their evaluators, so it’s quite likely that we wouldn’t know about models’ misaligned behavior until they already executed it. models also learn to avoid being evaluated. old interpretability research becomes less effective over time because the models learn to suppress whatever we were interpreting. 
+
+\section{You Can't Kill-Switch an Open-Weights Model}
+
+who runs closed-weights models’ inference is determined by the owner of the model. for example, openai runs its models on aws and azure. anthropic uses aws, azure, and google cloud. If openai wanted to shut down access to their models tomorrow, they would just have to tell aws and azure to unplug the relevant data centers (more or less, i’m sure it’s not that simple). 
+
+open-weights models can never be shut down. everyone can run them, as long as they have the necessary compute. this means every cloud provider, government, or uniquely well-capitalized individual can run them, and no one can ever really stop them. and the weights are public on the internet, so it’s really impossible to properly “scrub” them. 
+a reasonable objection is that closed-weights models don’t prevent this because they could “save themselves” by creating copies of themselves on external hardware. while this could happen, open-weights models would be able to do this too. so, open-weights models can \textit{only be more dangerous} than closed-weights models in this sense, and there’s no reason to take on extra risk.
+
+\section{Open-Weights Models are Easier to Jailbreak}
+
+it’s much harder to add safeguards to open-weights models, since they can be easily modified and fine-tuned, and can also be run with any system prompt. dario said this in his \href{https://www.anthropic.com/news/position-open-weights-models}{comment} on the letter i’ll talk about below.
+
+for example, anthropic has some method of checking whether prompts are related to cybersecurity or biology when you use fable 5. with an open-weights model, you can easily take this constraint away because you can just run the model without that check.
+
+safeguards can be directly encoded into the model in post-training. However, it’s \href{https://arxiv.org/html/2506.17209v1}{known} that fine tuning can remove these safety constraints, and closed-weights models allow another layer of safety like the check anthropic uses on fable 5.
+
+\section{Jensen's Open-Weights Letter}
+
+jensen’s letter makes good arguments in favor of open-weights models. here are my thoughts on those:
+
+\subsection{Open-Weights Models Allow Anyone to Build on Advanced Models}
+
+i think there is some level of capability where it becomes too dangerous to allow this. but it seems fair for some less capable models to be released with open weights, if we are sure that their capabilities are not strong enough to create significant risks.
+
+\subsection{Open-Weights Models Create Competition}
+
+closed-weights models seem to create enough competition. the united states still seems to be ahead in AI capabilities, and there are at least five competitive american AI model developers. granted, this isn’t very many, but it seems to be enough to keep the rate of AI progress quite high.
+
+\subsection{Open-Weights Allows Anyone to Find Vulnerabilities in AI Models, so we can Improve Them}
+
+the risk that people will exploit these vulnerabilities seem to be higher than the risk they will report them to model developers. open-weights models also make it very difficult for people that find vulnerabilities to fix them everywhere, because they cannot possibly report those vulnerabilities to everyone that has built a model on top of those open-weights models, or everyone that is simply running that model.
+
+

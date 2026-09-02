@@ -1,11 +1,11 @@
 [
   {
-    "slug": "test-article",
-    "title": "A Test Article",
+    "slug": "my-thoughts-on-open-weights",
+    "title": "My Thoughts on Open Weights",
     "author": "Pranav Balakrishnan",
-    "date": "March 2026",
-    "excerpt": "Hello!",
+    "date": "Aug 3, 2026",
+    "excerpt": "kimi k3 and jensen’s letter should give the world a lot to think about",
     "hidden": false,
-    "file": "/articles/test-article.txt"
+    "file": "/articles/my-thoughts-on-open-weights.txt"
   }
 ]

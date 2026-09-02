@@ -19,7 +19,7 @@ body::-webkit-scrollbar {
 
 body {
   background: #000;
-  color: #f2f2f2;
+  color: #fff;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
@@ -107,7 +107,7 @@ body {
 #about p {
   font-size: 17px;
   line-height: 1.85;
-  color: #d8d8d8;
+  color: #fff;
   margin-bottom: 22px;
 }
 
@@ -120,29 +120,6 @@ body {
 }
 #about a:hover { text-decoration-color: #fff; }
 
-/* ── "Hello" → blog trigger ──────────────────────────────────────────────── */
-#hello-link {
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-select: none;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  text-decoration-thickness: 2px;
-  text-decoration-color: transparent;
-  transition: text-decoration-color .15s, text-shadow .25s;
-}
-
-#hello-link:hover,
-#hello-link:focus-visible {
-  text-decoration-color: rgba(255, 255, 255, 0.85);
-  text-shadow: 0 0 16px rgba(255, 255, 255, 0.6);
-  outline: none;
-}
-
-#hello-link:active {
-  text-shadow: 0 0 24px rgba(255, 255, 255, 0.95);
-}
-
 /* ── Links ───────────────────────────────────────────────────────────────── */
 #links {
   margin-top: 56px;
@@ -153,7 +130,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #8a8a8a;
+  color: #fff;
   margin-bottom: 14px;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
 }
@@ -168,7 +145,7 @@ body {
 }
 
 #links a {
-  color: #e8e8e8;
+  color: #fff;
   text-decoration: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.22);
   transition: color .15s, border-color .15s;
@@ -266,6 +243,7 @@ body {
   z-index: 95;
   background: #000;
   overflow-y: auto;
+  overflow-x: hidden;   /* breakout media may touch the viewport edges */
   -webkit-font-smoothing: antialiased;
 }
 
@@ -281,31 +259,30 @@ body {
   font-weight: 700;
   color: #fff;
   letter-spacing: -0.025em;
-  margin: 0 0 24px;
+  margin: 0 0 44px;
 }
 
+/* Items mirror the article header: date above the title, byline below it.
+   Whitespace separates entries — no divider lines. */
 .article-item {
-  padding: 28px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin: 0 0 52px;
   cursor: pointer;
   transition: opacity .15s;
 }
-
-.article-item:first-child { border-top: 1px solid rgba(255,255,255,0.08); }
 .article-item:hover { opacity: .7; }
 
+.article-item-date {
+  font-size: 13px;
+  color: rgba(255,255,255,.38);
+  margin-bottom: 12px;
+}
+
 .article-item-title {
-  font-size: 19px;
+  font-size: 21px;
   font-weight: 600;
   color: #fff;
   letter-spacing: -.01em;
-  margin-bottom: 6px;
-}
-
-.article-item-meta {
-  font-size: 13px;
-  color: rgba(255,255,255,.38);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .article-item-excerpt {
@@ -317,28 +294,21 @@ body {
 /* ── Article detail ──────────────────────────────────────────────────────── */
 #article-view {
   display: none;
+  position: relative;   /* anchors the TOC rail */
   max-width: 640px;
   margin: 0 auto;
   padding: 96px 24px 80px;
 }
 
-#article-back {
-  display: inline-block;
-  background: none;
-  border: none;
-  padding: 0;
-  margin-bottom: 40px;
-  font-family: inherit;
-  font-size: 14px;
-  color: rgba(255,255,255,.4);
-  cursor: pointer;
-  transition: color .15s;
-  letter-spacing: .01em;
+/* Article date, above the title */
+#article-date {
+  font-size: 13px;
+  color: rgba(255,255,255,.38);
+  margin-bottom: 14px;
 }
-#article-back:hover { color: rgba(255,255,255,.9); }
 
 #article-title {
-  font-size: 34px;
+  font-size: clamp(29px, 4vw, 36px);
   font-weight: 700;
   color: #fff;
   letter-spacing: -.02em;
@@ -346,18 +316,17 @@ body {
   margin: 0 0 14px;
 }
 
-#article-meta {
-  font-size: 13px;
-  color: rgba(255,255,255,.38);
-  margin-bottom: 18px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255,255,255,.08);
+/* Byline under the title */
+#article-author {
+  font-size: 15px;
+  color: rgba(255,255,255,.6);
+  margin: 0 0 40px;
 }
 
 #article-body {
   font-size: 17px;
   line-height: 1.8;
-  color: rgba(255,255,255,.78);
+  color: #fff;
 }
 #article-body p  { margin: 0 0 24px; }
 #article-body a {
@@ -369,11 +338,12 @@ body {
 }
 #article-body a:hover { text-decoration-color: #fff; }
 #article-body h2 {
-  font-size: 22px;
-  font-weight: 600;
+  font-size: 27px;
+  font-weight: 400;
   color: #fff;
   letter-spacing: -.01em;
-  margin: 44px 0 16px;
+  margin: 48px 0 16px;
+  scroll-margin-top: 110px;   /* room under the viewport top for TOC jumps */
 }
 
 #back-btn {
@@ -402,7 +372,7 @@ body {
 #back-btn:hover { border-color: #aaa; }
 
 /* ── KaTeX math rendering ─────────────────────────────────────────────────── */
-#article-body .katex { color: rgba(255,255,255,.9); font-size: 1em; }
+#article-body .katex { color: #fff; font-size: 1em; }
 #article-body .katex-display {
   margin: 1.6em 0;
   overflow-x: auto;
@@ -425,10 +395,11 @@ body {
   font-style: italic;
 }
 #article-body h3 {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 21px;
+  font-weight: 400;
   color: #fff;
-  margin: 32px 0 12px;
+  margin: 36px 0 12px;
+  scroll-margin-top: 110px;
 }
 #article-body h4 {
   font-size: 15px;
@@ -441,3 +412,126 @@ body {
   padding: 0;
 }
 #article-body li { margin-bottom: 8px; }
+
+/* ── Article media (figures, charts, raw embeds) ─────────────────────────── */
+/* [wide] and [full] break media out of the text column, OpenAI-style. Widths
+   are capped to the viewport so they never cause horizontal scrolling. */
+#article-body .wide,
+#article-body .full {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#article-body .wide { width: min(880px, calc(100vw - 48px)); }
+#article-body .full { width: min(1160px, calc(100vw - 32px)); }
+
+#article-body figure { margin: 36px 0; }
+#article-body figure img {
+  display: block;
+  width: 100%;
+  border-radius: 10px;
+}
+#article-body figcaption {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255,255,255,.5);
+}
+
+#article-body .article-chart {
+  position: relative;   /* Chart.js sizes its canvas to this box */
+  height: 340px;
+  margin: 36px 0;
+}
+#article-body .article-chart.wide,
+#article-body .article-chart.full { height: 420px; }
+
+#article-body .article-embed { margin: 36px 0; }
+
+/* ── Article table of contents ───────────────────────────────────────────── */
+/* Fixed to the left of the text column on wide screens; built by JS from the
+   article's h2 headings. */
+#article-toc {
+  /* Rail anchored to the article column; JS sets `top` to the body's start
+     so the list can never render above it. */
+  position: absolute;
+  left: -230px;
+  bottom: 0;
+  width: 190px;
+}
+
+#article-toc-inner {
+  position: sticky;   /* scrolls with the page, then pins near the top */
+  top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#article-toc a {
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255,255,255,.45);
+  text-decoration: none;
+  transition: color .15s ease-out;
+}
+#article-toc a:hover { color: rgba(255,255,255,.85); }
+#article-toc a.active { color: #fff; }
+
+/* Sub-sub-headings: indented under their section, hung off a thin tree line */
+#article-toc .toc-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: -2px 0 0 3px;      /* tuck the branch up under its parent */
+  padding-left: 14px;
+}
+
+#article-toc .toc-sub a {
+  position: relative;
+  font-size: 12.5px;
+  color: rgba(255,255,255,.4);
+}
+
+/* branch tick from the tree line to each item.
+   #292929 = 16% white on the black background, but opaque: segments and
+   ticks overlap at joints, and translucent paint would double up there. */
+#article-toc .toc-sub a::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  width: 9px;
+  height: 1px;
+  background: #292929;
+}
+
+/* the tree line: each item draws its own segment (bridging the gap above it),
+   so the line ends exactly at the final item's branch tick */
+#article-toc .toc-sub a::after {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: -10px;
+  bottom: 0;
+  width: 1px;
+  background: #292929;
+}
+#article-toc .toc-sub a:last-child::after {
+  bottom: auto;
+  height: calc(50% + 11px);   /* stop at this item's tick */
+}
+
+#article-toc .toc-sub a:hover  { color: rgba(255,255,255,.85); }
+#article-toc .toc-sub a.active { color: #fff; }
+
+/* Back link above the section list (nested ids outweigh `#article-toc a`) */
+#article-toc #article-toc-back {
+  color: rgba(255,255,255,.55);
+  margin-bottom: 6px;
+}
+#article-toc #article-toc-back:hover { color: #fff; }
+
+@media (max-width: 1279px) {
+  #article-toc { display: none; }
+}

@@ -25,7 +25,7 @@
     <title>Pranav's Website</title>
   </head>
   <body>
-    <!-- Mosaic filter used by the Hello → Blog pixelation effect. JS animates
+    <!-- Mosaic filter used by the home ↔ blog pixelation transition. JS animates
          the cell size by mutating the primitive attributes each frame. -->
     <svg width="0" height="0" style="position:fixed" aria-hidden="true" focusable="false">
       <defs>
@@ -45,7 +45,7 @@
            paragraph, use <a href="…">…</a> for links, <em>…</em> for italics.
            ════════════════════════════════════════════════════════════════════ -->
       <article id="about">
-        <h2><span id="hello-link" role="button" tabindex="0" aria-label="Open the blog">Hello</span>, I&rsquo;m Pranav.</h2>
+        <h2>Hello, I&rsquo;m Pranav.</h2>
 
         <p></p>
 
@@ -62,7 +62,7 @@
         </p>
 
         <p>
-          Contact me at <a href="mailto:pranavbalakri@gmail.com">pranavbalakri@gmail.com</a>.
+          Contact me at <a href="mailto:pranavbalakri@gmail.com">pranavbalakri@gmail.com</a>. Also, check out my <a href="/blog">blog</a>.
         </p>
 
       </article>
@@ -108,9 +108,9 @@
 
       <!-- Article detail (populated + shown by JS) -->
       <div id="article-view">
-        <button id="article-back">← Articles</button>
+        <div id="article-date"></div>
         <h1 id="article-title"></h1>
-        <div id="article-meta"></div>
+        <div id="article-author"></div>
         <div id="article-body"></div>
       </div>
     </div>

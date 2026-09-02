@@ -431,10 +431,9 @@ function showBlog() {
 }
 
 // ─── Pixelation engine ────────────────────────────────────────────────────────
-// Clicking "Hello" charges a meter that drains over time. The charge drives a
-// mosaic SVG filter (#pixelate-filter in index.html) over the visible page;
-// reaching full charge plays a pixelate-in → page swap → pixelate-out
-// transition. The blog back button reuses the same transition in reverse.
+// Entering the blog plays a pixelate-in → page swap → pixelate-out transition,
+// driven by a mosaic SVG filter (#pixelate-filter in index.html) over the
+// visible page. The blog back button reuses the same transition in reverse.
 
 const pxFlood   = document.getElementById('px-flood');
 const pxComp    = document.getElementById('px-comp');
@@ -480,58 +479,25 @@ function setPixelation(px) {
   _pxApplied = true;
 }
 
-// ─── Click-to-charge state ────────────────────────────────────────────────────
-const CLICK_BOOST   = 0.42;  // charge added per click (3 quick clicks → full)
-const DECAY_PER_SEC = 0.42;  // charge drained per second between clicks
-const CHARGE_MAX_PX = 22;    // mosaic cell size at full charge
-const PEAK_PX       = 60;    // cell size at the transition midpoint
-const RAMP_UP_MS    = 300;
-const RAMP_DOWN_MS  = 750;
+// ─── Pixel transition ─────────────────────────────────────────────────────────
+const PEAK_PX      = 60;    // cell size at the transition midpoint
+const RAMP_UP_MS   = 300;
+const RAMP_DOWN_MS = 750;
 
-let charge        = 0;
-let chargeRaf     = null;
-let chargeLast    = 0;
 let transitioning = false;
 
-const chargeToPx   = c => Math.pow(c, 1.5) * CHARGE_MAX_PX;
 const easeInQuad   = t => t * t;
 const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
 
-function chargeTick(t) {
-  const dt = Math.min(0.1, (t - chargeLast) / 1000);
-  chargeLast = t;
-  charge = Math.max(0, charge - DECAY_PER_SEC * dt);
-  setPixelation(chargeToPx(charge));
-  chargeRaf = charge > 0 ? requestAnimationFrame(chargeTick) : null;
-}
-
-function bumpCharge() {
-  if (transitioning) return;
-  charge += CLICK_BOOST;
-  if (charge >= 1) {
-    charge = 1;
-    history.pushState({ page: 'blog' }, '', '/blog');
-    pixelTransition(() => showBlog());
-    return;
-  }
-  setPixelation(chargeToPx(charge));
-  if (!chargeRaf) {
-    chargeLast = performance.now();
-    chargeRaf = requestAnimationFrame(chargeTick);
-  }
-}
-
-// Pixelate up from the current charge to PEAK_PX, swap pages at the peak,
-// then smoothly resolve back down to zero.
+// Pixelate up to PEAK_PX, swap pages at the peak, then smoothly resolve back
+// down to zero.
 function pixelTransition(swap) {
   transitioning = true;
-  if (chargeRaf) { cancelAnimationFrame(chargeRaf); chargeRaf = null; }
-  const fromPx = chargeToPx(charge);
   const t0 = performance.now();
 
   requestAnimationFrame(function up(t) {
     const k = Math.min(1, (t - t0) / RAMP_UP_MS);
-    setPixelation(fromPx + (PEAK_PX - fromPx) * easeInQuad(k));
+    setPixelation(PEAK_PX * easeInQuad(k));
     if (k < 1) { requestAnimationFrame(up); return; }
 
     swap();
@@ -541,21 +507,27 @@ function pixelTransition(swap) {
       setPixelation(PEAK_PX * (1 - easeOutCubic(k2)));
       if (k2 < 1) { requestAnimationFrame(down); return; }
       setPixelation(0);
-      charge = 0;
       transitioning = false;
     });
   });
 }
 
-// "Hello" is the door to the blog.
-const helloLink = document.getElementById('hello-link');
-helloLink.addEventListener('click', bumpCharge);
-helloLink.addEventListener('keydown', e => {
-  if (e.key === 'Enter' || e.key === ' ') {
+// One click on any blog door pixelates straight into the blog.
+function enterBlog() {
+  if (transitioning) return;
+  history.pushState({ page: 'blog' }, '', '/blog');
+  pixelTransition(() => showBlog());
+}
+
+// In-page /blog links animate instead of doing a full page load. Modified
+// clicks (cmd/ctrl/shift — new tab, etc.) keep native behavior.
+for (const a of document.querySelectorAll('#page a[href="/blog"]')) {
+  a.addEventListener('click', e => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
-    bumpCharge();
-  }
-});
+    enterBlog();
+  });
+}
 
 // Back button on the blog page pixelates back home.
 document.getElementById('back-btn').addEventListener('click', () => {
@@ -614,11 +586,35 @@ function loadArticles() {
 }
 
 // ─── LaTeX → HTML parser ──────────────────────────────────────────────────────
+// Breakout option shared by rich media: [wide] and [full] widen an element
+// past the text column (see style.css).
+const breakoutClass = opt =>
+  opt === 'wide' ? ' wide' : opt === 'full' ? ' full' : '';
+
 function parseLatexToHtml(src) {
   let s = src;
 
-  // 1. Strip line comments
-  s = s.replace(/%[^\n]*/g, '');
+  // 0. Lift rich blocks (raw HTML embeds and Chart.js charts) out before any
+  //    text processing so their contents are never rewritten. Each leaves a
+  //    single-line <div data-embed-slot> token — block-level, so paragraph
+  //    wrapping skips it — that is swapped back at the very end.
+  const embeds = [];
+  const slot = html => {
+    embeds.push(html);
+    return '\n\n<div data-embed-slot="' + (embeds.length - 1) + '"></div>\n\n';
+  };
+
+  s = s.replace(/\\begin\{html\}(?:\[([^\]]*)\])?([\s\S]*?)\\end\{html\}/g,
+    (_, opt, body) =>
+      slot('<div class="article-embed' + breakoutClass(opt) + '">' + body.trim() + '</div>'));
+
+  s = s.replace(/\\begin\{chart\}(?:\[([^\]]*)\])?([\s\S]*?)\\end\{chart\}/g,
+    (_, opt, body) =>
+      slot('<div class="article-chart' + breakoutClass(opt) + '">' +
+           '<canvas data-chart="' + encodeURIComponent(body.trim()) + '"></canvas></div>'));
+
+  // 1. Strip line comments (an escaped \% survives)
+  s = s.replace(/(^|[^\\])%[^\n]*/g, '$1');
 
   // 2. Protect math blocks with null-byte placeholders so text processing
   //    never touches the math content.
@@ -650,6 +646,18 @@ function parseLatexToHtml(src) {
     (_, c) => '<blockquote>' + c.trim() + '</blockquote>');
   s = s.replace(/\\begin\{center\}([\s\S]*?)\\end\{center\}/g,
     (_, c) => '<div style="text-align:center">' + c.trim() + '</div>');
+
+  // 4b. Images: \image[wide|full]{src}{optional caption}. The caption is
+  //     re-inserted into the stream, so inline commands inside it still work.
+  s = s.replace(/\\image(?:\[([^\]]*)\])?\{([^}]*)\}(?:\{((?:[^{}]|\{[^{}]*\})*)\})?/g,
+    (_, opt, url, cap) => {
+      const alt = (cap || '').replace(/\\[a-zA-Z]+\*?/g, '').replace(/[{}]/g, '')
+        .replace(/"/g, '&quot;').trim();
+      return '<figure class="article-figure' + breakoutClass(opt) + '">' +
+        '<img src="' + url.trim() + '" alt="' + alt + '" loading="lazy">' +
+        (cap ? '<figcaption>' + cap + '</figcaption>' : '') +
+        '</figure>';
+    });
 
   // 5. Headings
   s = s.replace(/\\section\*?\{([^}]*)\}/g,       '<h2>$1</h2>');
@@ -694,12 +702,13 @@ function parseLatexToHtml(src) {
   s = s.split(/\n{2,}/).map(b => {
     b = b.trim().replace(/\n/g, ' ');
     if (!b) return '';
-    if (/^<(h[2-6]|ul|ol|blockquote|div|hr)/.test(b)) return b;
+    if (/^<(h[2-6]|ul|ol|blockquote|div|hr|figure)/.test(b)) return b;
     return '<p>' + b + '</p>';
   }).filter(Boolean).join('\n');
 
-  // 14. Restore math
+  // 14. Restore math, then rich blocks
   s = s.replace(/\x00M(\d+)\x00/g, (_, i) => math[+i]);
+  s = s.replace(/<div data-embed-slot="(\d+)"><\/div>/g, (_, i) => embeds[+i]);
 
   return { title, author, date, html: s };
 }
@@ -711,11 +720,10 @@ function renderArticleListing() {
   ARTICLES.filter(a => !a.hidden).forEach(article => {
     const el = document.createElement('div');
     el.className = 'article-item';
-    el.innerHTML = `
-      <div class="article-item-title">${article.title}</div>
-      <div class="article-item-meta">${[article.author, article.date].filter(Boolean).join(' · ')}</div>
-      <div class="article-item-excerpt">${article.excerpt}</div>
-    `;
+    el.innerHTML =
+      (article.date ? `<div class="article-item-date">${article.date}</div>` : '') +
+      `<div class="article-item-title">${article.title}</div>` +
+      (article.excerpt ? `<div class="article-item-excerpt">${article.excerpt}</div>` : '');
     el.addEventListener('click', () => openArticle(article.slug));
     container.appendChild(el);
   });
@@ -727,10 +735,22 @@ async function openArticle(slug, { pushState = true } = {}) {
   if (!article) return;
 
   document.getElementById('article-title').textContent = article.title;
-  document.getElementById('article-meta').textContent =
-    [article.author, article.date].filter(Boolean).join(' · ');
+
+  const dateEl = document.getElementById('article-date');
+  dateEl.textContent = article.date || '';
+  dateEl.style.display = article.date ? '' : 'none';
+
+  const authorEl = document.getElementById('article-author');
+  authorEl.textContent = article.author || '';
+  authorEl.style.display = article.author ? '' : 'none';
 
   const bodyEl = document.getElementById('article-body');
+  if (window.Chart) {
+    for (const c of bodyEl.querySelectorAll('canvas')) {
+      const chart = Chart.getChart(c);
+      if (chart) chart.destroy();
+    }
+  }
   bodyEl.innerHTML = '<p style="opacity:.45">Loading\u2026</p>';
 
   document.getElementById('blog-listing').style.display = 'none';
@@ -746,6 +766,8 @@ async function openArticle(slug, { pushState = true } = {}) {
     if (!resp.ok) throw new Error(resp.status);
     const { html } = parseLatexToHtml(await resp.text());
     bodyEl.innerHTML = html;
+    buildArticleToc(bodyEl);
+    renderArticleCharts(bodyEl);
     if (window.renderMathInElement) {
       renderMathInElement(bodyEl, {
         delimiters: [
@@ -769,7 +791,181 @@ function closeArticle() {
   history.pushState({ page: 'blog' }, '', '/blog');
 }
 
-document.getElementById('article-back').addEventListener('click', closeArticle);
+// ─── Article table of contents ────────────────────────────────────────────────
+// Wide viewports get a sidebar listing the article's sections (h2s). The rail
+// is anchored so its top sits exactly where the article body starts (it can
+// never render higher); the inner list is sticky, so it scrolls with the page
+// and pins near the viewport top. Hidden (via CSS) on narrow viewports.
+let _tocSpy = null;
+let _tocPosition = null;
+
+function buildArticleToc(bodyEl) {
+  const old = document.getElementById('article-toc');
+  if (old) old.remove();
+  _tocPosition = null;
+  const newPageEl = document.getElementById('new-page');
+  if (_tocSpy) { newPageEl.removeEventListener('scroll', _tocSpy); _tocSpy = null; }
+
+  const toc = document.createElement('nav');
+  toc.id = 'article-toc';
+  toc.setAttribute('aria-label', 'On this page');
+  const inner = document.createElement('div');
+  inner.id = 'article-toc-inner';
+  toc.appendChild(inner);
+
+  // Back to the listing, above the section list. (On narrow viewports the
+  // rail is hidden; browser back still returns to the listing.)
+  const back = document.createElement('a');
+  back.id = 'article-toc-back';
+  back.href = '/blog';
+  back.textContent = '← Articles';
+  back.addEventListener('click', e => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    closeArticle();
+  });
+  inner.appendChild(back);
+
+  // Section (h2) and sub-section (h3) links; h3s are grouped into an
+  // indented .toc-sub container hanging off their parent section's tree
+  // line. Articles with fewer than two headings get no list.
+  const heads = [...bodyEl.querySelectorAll('h2, h3')];
+  const sections = heads.length >= 2 ? heads : [];
+
+  const seen = {};
+  const parents = [];      // for each link: its parent h2 link, or null
+  let lastH2Link = null;
+  let subGroup = null;     // open .toc-sub container under the last h2
+
+  const links = sections.map(h => {
+    let id = h.textContent.trim().toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-') || 'section';
+    seen[id] = (seen[id] || 0) + 1;
+    if (seen[id] > 1) id += '-' + seen[id];
+    h.id = id;
+
+    const a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      h.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    });
+
+    if (h.tagName === 'H3') {
+      if (!subGroup) {
+        subGroup = document.createElement('div');
+        subGroup.className = 'toc-sub';
+        inner.appendChild(subGroup);
+      }
+      subGroup.appendChild(a);
+      parents.push(lastH2Link);
+    } else {
+      subGroup = null;
+      lastH2Link = a;
+      inner.appendChild(a);
+      parents.push(null);
+    }
+    return a;
+  });
+
+  document.getElementById('article-view').appendChild(toc);
+
+  // Align the rail's top with the start of the article body (below the
+  // title), re-aligning if a resize rewraps the title.
+  _tocPosition = () => { toc.style.top = bodyEl.offsetTop + 'px'; };
+  _tocPosition();
+
+  if (links.length) {
+    let raf = null;
+    const update = () => {
+      raf = null;
+      let active = 0;
+      for (let i = 0; i < links.length; i++) {
+        if (sections[i].getBoundingClientRect().top <= 160) active = i;
+      }
+      links.forEach((a, i) => a.classList.toggle('active', i === active));
+      // Keep the parent section lit while one of its children is active.
+      if (parents[active]) parents[active].classList.add('active');
+    };
+    _tocSpy = () => { if (!raf) raf = requestAnimationFrame(update); };
+    newPageEl.addEventListener('scroll', _tocSpy, { passive: true });
+    update();
+  }
+}
+
+window.addEventListener('resize', () => { if (_tocPosition) _tocPosition(); });
+
+// ─── Article charts (Chart.js, loaded only when an article uses one) ──────────
+const CHART_PALETTE = ['#7dd3fc', '#f0abfc', '#86efac', '#fcd34d', '#fca5a5'];
+let _chartJsPromise = null;
+
+function loadChartJs() {
+  if (window.Chart) return Promise.resolve();
+  if (!_chartJsPromise) {
+    _chartJsPromise = new Promise((resolve, reject) => {
+      const el = document.createElement('script');
+      el.src = 'https://cdn.jsdelivr.net/npm/chart.js@4';
+      el.onload = resolve;
+      el.onerror = () => { _chartJsPromise = null; reject(new Error('Chart.js failed to load')); };
+      document.head.appendChild(el);
+    });
+  }
+  return _chartJsPromise;
+}
+
+// Dark-theme defaults merged underneath whatever the article's config sets.
+function themedChartConfig(config) {
+  const o = (config.options = config.options || {});
+  o.responsive = true;
+  o.maintainAspectRatio = false;
+  o.plugins = o.plugins || {};
+  o.plugins.legend = o.plugins.legend || {};
+  o.plugins.legend.labels = Object.assign(
+    { color: 'rgba(255,255,255,.75)', boxWidth: 12, boxHeight: 12 },
+    o.plugins.legend.labels);
+
+  if (!/^(pie|doughnut|polarArea|radar)$/.test(config.type)) {
+    const scales = (o.scales = o.scales || {});
+    for (const axis of ['x', 'y']) {
+      const sc = (scales[axis] = scales[axis] || {});
+      sc.ticks  = Object.assign({ color: 'rgba(255,255,255,.55)' }, sc.ticks);
+      sc.grid   = Object.assign({ color: 'rgba(255,255,255,.08)' }, sc.grid);
+      sc.border = Object.assign({ color: 'rgba(255,255,255,.15)' }, sc.border);
+    }
+  }
+
+  ((config.data && config.data.datasets) || []).forEach((d, i) => {
+    const color = CHART_PALETTE[i % CHART_PALETTE.length];
+    if (d.borderColor == null)     d.borderColor = color;
+    if (d.backgroundColor == null)
+      d.backgroundColor = config.type === 'line' ? 'transparent' : color + 'd9';
+    if (config.type === 'line' && d.tension == null) d.tension = 0.35;
+  });
+
+  return config;
+}
+
+async function renderArticleCharts(bodyEl) {
+  const canvases = bodyEl.querySelectorAll('canvas[data-chart]');
+  if (!canvases.length) return;
+  try { await loadChartJs(); } catch (_) { return; }
+
+  Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+  Chart.defaults.font.size = 12;
+
+  for (const canvas of canvases) {
+    if (!canvas.isConnected) continue;   // article was closed while loading
+    let config;
+    try { config = JSON.parse(decodeURIComponent(canvas.dataset.chart)); }
+    catch (_) {
+      canvas.parentElement.innerHTML = '<p style="opacity:.45">Could not render chart.</p>';
+      continue;
+    }
+    new Chart(canvas, themedChartConfig(config));
+  }
+}
 
 // Reset to listing whenever the home→blog transition runs
 const _origShowBlog = showBlog;
