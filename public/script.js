@@ -881,13 +881,20 @@ function buildArticleToc(bodyEl) {
     let raf = null;
     const update = () => {
       raf = null;
-      let active = 0;
+      // Active = last heading above a line through the middle of the screen;
+      // above the first heading nothing is lit.
+      const midline = newPageEl.clientHeight / 2;
+      let active = -1;
       for (let i = 0; i < links.length; i++) {
-        if (sections[i].getBoundingClientRect().top <= 160) active = i;
+        if (sections[i].getBoundingClientRect().top <= midline) active = i;
+      }
+      // Pinned to the bottom of the page: always light the last section.
+      if (newPageEl.scrollTop + newPageEl.clientHeight >= newPageEl.scrollHeight - 2) {
+        active = links.length - 1;
       }
       links.forEach((a, i) => a.classList.toggle('active', i === active));
       // Keep the parent section lit while one of its children is active.
-      if (parents[active]) parents[active].classList.add('active');
+      if (active >= 0 && parents[active]) parents[active].classList.add('active');
     };
     _tocSpy = () => { if (!raf) raf = requestAnimationFrame(update); };
     newPageEl.addEventListener('scroll', _tocSpy, { passive: true });
