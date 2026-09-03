@@ -1,0 +1,18 @@
+\title{Some Thoughts on the Miracle Discourse}
+\author{Pranav Balakrishnan}
+\date{Sep 2, 2026}
+\excerpt{can miracles change people’s minds?}
+
+I’ve been seeing a lot of articles about Catholic miracles (\href{https://motivacredibilitatis.substack.com/p/st-pio-of-pietrelcina}{Padre Pio}, \href{https://motivacredibilitatis.substack.com/p/our-lady-of-fatima}{Fatima}, etc). I don’t really understand why these arguments matter. 
+
+I feel like the following three things can be true for any given miracle:
+
+\begin{enumerate}
+\item Everyone involved in recording the miracle hallucinated.
+\item You are hallucinating hearing/reading the evidence about the miracle.
+\item Something is wrong with the way we understand science/physics, so the miracle could have happened naturally.
+\end{enumerate}
+
+All of these are very, very low probability. But someone who thinks $P(God) > P(1 \lor 2 \lor 3)$ probably already started with a $P(God)$ that was nonzero. If you thought $P(God)$ was nonzero, shouldn’t you just take Pascal’s wager? 
+
+
