@@ -3,7 +3,7 @@
 \date{Sep 28, 2026}
 \excerpt{from elementary school to now}
 
-\image{/articles/images/top_9_games.png}{The tweet that inspired this list.}
+\image{/articles/images/top_9_games.png}{i just saw this on twitter so i was inspired}
 
 \begin{enumerate}
   \item Minecraft
