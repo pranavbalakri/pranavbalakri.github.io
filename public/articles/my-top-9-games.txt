@@ -1,0 +1,18 @@
+\title{My Top 9 Games}
+\author{Pranav Balakrishnan}
+\date{Sep 28, 2026}
+\excerpt{from elementary school to now}
+
+\image{/articles/images/top_9_games.png}{The tweet that inspired this list.}
+
+\begin{enumerate}
+  \item Minecraft
+  \item Geoguessr
+  \item Scrabble
+  \item Poker
+  \item Geometry Dash
+  \item Fantastic Contraption
+  \item Bad Piggies
+  \item Among Us (before all the new updates)
+  \item Bloons TD 6
+\end{enumerate}

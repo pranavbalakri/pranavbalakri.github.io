@@ -1,5 +1,14 @@
 [
   {
+    "slug": "my-top-9-games",
+    "title": "My Top 9 Games",
+    "author": "Pranav Balakrishnan",
+    "date": "Sep 28, 2026",
+    "excerpt": "the definitive ranking",
+    "hidden": false,
+    "file": "/articles/my-top-9-games.txt"
+  },
+  {
     "slug": "some-thoughts-on-miracle-discourse",
     "title": "Some Thoughts on the Miracle Discourse",
     "author": "Pranav Balakrishnan",
