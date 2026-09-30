@@ -1,0 +1,64 @@
+\title{What Are Colleges Looking For?}
+\author{Pranav Balakrishnan}
+\date{Sep 29, 2026}
+\excerpt{for people applying}
+
+\emph{I wrote this for one of my extended family members, but thought it might be useful for students applying to college now.}
+
+\section{Introduction}
+
+Colleges are (sort of) businesses. They are in the business of having successful alumni. These alumni can be successful in many different ways, including becoming:
+
+\begin{itemize}
+  \item famous athletes or actors,
+  \item influential professors,
+  \item politicians,
+  \item corporate leadership, and
+  \item top-tier engineers.
+\end{itemize}
+
+In the college’s ideal world, every successful person’s LinkedIn would have their college on it, because that attracts more funding, more top-tier applicants, better professors, and everything else the college cares about.
+
+Therefore, the admissions office’s primary goal is predicting who will become successful from their application, which is very difficult given that (a) they spend very little time reviewing each application and (b) each application contains such a small amount of information about the applicant.
+
+Through this process, colleges have realized that a few traits in high school students tend to correlate to long-term success:
+
+\begin{itemize}
+  \item grades and test scores,
+  \item demonstrated interest and success related to their chosen major, and
+  \item “intellectual vitality.”
+\end{itemize}
+
+Fundamentally, these three things are what your application should demonstrate.
+
+\section{Interest and Success in a Major}
+
+This is relatively straightforward; they want to see through essays, the courses you chose in high school, and your extracurriculars that you care a lot about your major, and that you’ve explored it quite a bit.
+
+One thing to know is that you don’t actually have to do extracurriculars that are super related to your major, you just have to be able to explain why your extracurriculars are generally applicable to your chosen area of study. I mostly focused on debate in high school, but applied for engineering, so many of my essays were about the analytical thinking process that debate taught me and how that might be applicable to engineering.
+
+\section{Intellectual Vitality}
+
+Intellectual vitality (IV) is a trait coined by Stanford admissions that they look for in applicants. They effectively define it as “curiosity and the love of learning for the sake of knowledge.” In practice, this means you should both sound relatively humble and also incredibly (but very naturally) intelligent. They should read your essays and feel how smart you are. This is a bit blunt so let me go into a couple examples of what I mean.
+
+1. Try to write like a great author. You can pick your favorites, and spend some time rereading their books. One thing I really liked to do was pick a random classic off my shelf and just read the first page, paying the closest attention to how the author wrote the first line. I liked looking at Hemingway, James Joyce, and Camus in particular. Here is an example:
+
+\textbf{Common:} “An event that sparked a period of personal growth and new understanding for me was the first time I went to a bullfight with my cousins in Mexico.”
+
+\textbf{Compelling:} “At the first bullfight I ever went to I expected to be horrified and perhaps sickened by what I had been told would happen to the horses.” — Hemingway, \textit{Death in the Afternoon}
+
+2. Be really creative with how you introduce things. Try to seem very “real” and also very knowledgeable about what you’re interested in. You want to seem like the kind of student that’s both very humble and very smart and curious, in particular about your major.
+
+\section{Public-Private Caveats}
+
+Everything I just said about IV mostly goes for private universities. Public universities tend not to think exactly like this; the emphasis is much more on grades, test scores, and interest in a major. They are a bit more objective with admissions decisions, and you’ll probably want to write more straightforward essays.
+
+\section{How Does Admissions Work?}
+
+Most college admissions departments have a “regional” admissions officer that considers applicants from your region. This admissions officer will pick the top X\% of applications that they like. Then, all the admissions officers will have a meeting where your regional admissions officer will present that X\% of applicants and advocate for them in front of the committee. The admissions committee will then vote. For Stanford, the committee meeting has four AOs, and if you get at least three votes, you’re admitted.
+
+The implication of this is that your primary goal is convincing that regional AO to advocate for you. You’ll want to craft your application such that there is a core “thesis” that they can explain easily.
+
+Another thing to remember is that this process is very random. That regional AO might not pick you for many different reasons. Maybe they were just tired that day. They might also pick you for some very small reason, for example because they really liked a phrase you used in an essay.
+
+Another thing to remember is that most admissions officers studied liberal arts or another humanities-related major in college. They will usually really appreciate high-quality writing, especially for an engineering major where good writers are very scarce. Note that this is not true at every college (for example, I believe it’s not true at Cornell and CMU because they have engineering-specific admissions departments).

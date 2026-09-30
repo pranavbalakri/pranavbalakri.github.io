@@ -1,10 +1,19 @@
 [
   {
+    "slug": "what-are-colleges-looking-for",
+    "title": "What Are Colleges Looking For?",
+    "author": "Pranav Balakrishnan",
+    "date": "Sep 29, 2026",
+    "excerpt": "colleges are (sort of) businesses",
+    "hidden": false,
+    "file": "/articles/what-are-colleges-looking-for.txt"
+  },
+  {
     "slug": "my-top-9-games",
     "title": "My Top 9 Games",
     "author": "Pranav Balakrishnan",
     "date": "Sep 28, 2026",
-    "excerpt": "the definitive ranking",
+    "excerpt": "from elementary school to now",
     "hidden": false,
     "file": "/articles/my-top-9-games.txt"
   },
