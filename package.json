@@ -4,7 +4,13 @@
   "private": true,
   "scripts": {
     "build:articles": "node scripts/build-articles.js",
-    "build": "npm run build:articles",
-    "start": "npm run build:articles && npx serve public"
-  }
+    "build": "npm run build:articles && npm run build:algospeedruns",
+    "start": "npm run build:articles && npx serve public",
+    "build:algospeedruns": "npm run build --workspace algo-speedruns && node scripts/publish-algospeedruns.js",
+    "dev:algospeedruns": "npm run dev --workspace algo-speedruns",
+    "test:algospeedruns": "npm test --workspace algo-speedruns"
+  },
+  "workspaces": [
+    "apps/algospeedruns"
+  ]
 }

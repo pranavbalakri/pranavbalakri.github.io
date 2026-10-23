@@ -1,0 +1,5926 @@
+[
+  {
+    "id": 1,
+    "slug": "two-sum",
+    "title": "Two Sum",
+    "topic": "Arrays & hashing",
+    "difficulty": "Easy",
+    "method": "twoSum",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      }
+    ],
+    "returns": "List[int]",
+    "description": [
+      "You are given an integer array `nums` and an integer `target`. Find two different positions whose values add up to `target`, and return their zero-based indices as a list of two integers.",
+      "Exactly one pair of positions is guaranteed to work. You may return the indices in either order, but you cannot use the same position twice. Equal values at different positions may form a valid pair.",
+      "Return the positions in the original array, rather than the two values. The input is not necessarily sorted."
+    ],
+    "hints": [
+      "For each number, what other value would complete the target?",
+      "Remember values you have already visited, together with their indices."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            2,
+            7,
+            11,
+            15
+          ],
+          "target": 9
+        },
+        "expected": [
+          0,
+          1
+        ],
+        "explanation": "`nums[0] + nums[1]` is `2 + 7 = 9`, so `[0, 1]` is a valid answer. `[1, 0]` is also accepted."
+      },
+      {
+        "input": {
+          "nums": [
+            3,
+            2,
+            4
+          ],
+          "target": 6
+        },
+        "expected": [
+          1,
+          2
+        ],
+        "explanation": "The values at indices `1` and `2` are `2` and `4`. Their sum is `6`."
+      }
+    ],
+    "constraints": [
+      "2 ≤ len(nums) ≤ 10,000",
+      "−10⁹ ≤ nums[i], target ≤ 10⁹",
+      "Exactly one pair is guaranteed."
+    ],
+    "compare": "two-sum"
+  },
+  {
+    "id": 217,
+    "slug": "contains-duplicate",
+    "title": "Contains Duplicate",
+    "topic": "Arrays & hashing",
+    "difficulty": "Easy",
+    "method": "containsDuplicate",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given an integer array `nums`. Return `True` if there are two different indices containing the same value. Return `False` if every value appears at most once.",
+      "Repeated values can occur anywhere in the array; they do not need to be adjacent. Negative numbers and zero are treated like any other integer.",
+      "An empty array or an array containing one element has no duplicate, so its answer is `False`."
+    ],
+    "hints": [
+      "How could you track values that have already appeared?",
+      "Compare the number of distinct values with the array length."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            1,
+            2,
+            3,
+            1
+          ]
+        },
+        "expected": true,
+        "explanation": "The value `1` appears at indices `0` and `3`, so the array contains a duplicate."
+      },
+      {
+        "input": {
+          "nums": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "expected": false,
+        "explanation": "Each of the four values occurs exactly once."
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(nums) ≤ 100,000",
+      "Values may be negative or zero."
+    ]
+  },
+  {
+    "id": 242,
+    "slug": "valid-anagram",
+    "title": "Valid Anagram",
+    "topic": "Arrays & hashing",
+    "difficulty": "Easy",
+    "method": "isAnagram",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      },
+      {
+        "name": "t",
+        "type": "str"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given two strings, `s` and `t`, consisting of lowercase English letters. Return `True` if one string can be rearranged to form the other, and `False` otherwise.",
+      "Every occurrence of a letter must be used exactly once. Matching the set of letters is not enough: each letter must appear the same number of times in both strings.",
+      "The strings may already be identical. Two empty strings are anagrams of each other; strings of different lengths cannot be anagrams."
+    ],
+    "hints": [
+      "Order is irrelevant, but frequency matters.",
+      "A frequency table can represent each string."
+    ],
+    "examples": [
+      {
+        "input": {
+          "s": "anagram",
+          "t": "nagaram"
+        },
+        "expected": true,
+        "explanation": "Both strings contain three `a` characters and one each of `n`, `g`, `r`, and `m`. Rearranging those letters produces the other string."
+      },
+      {
+        "input": {
+          "s": "rat",
+          "t": "car"
+        },
+        "expected": false,
+        "explanation": "`s` contains `t` while `t` contains `c`, so their letter counts differ."
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(s), len(t) ≤ 50,000",
+      "Strings contain lowercase English letters."
+    ]
+  },
+  {
+    "id": 49,
+    "slug": "group-anagrams",
+    "title": "Group Anagrams",
+    "topic": "Arrays & hashing",
+    "difficulty": "Medium",
+    "method": "groupAnagrams",
+    "params": [
+      {
+        "name": "strs",
+        "type": "List[str]"
+      }
+    ],
+    "returns": "List[List[str]]",
+    "description": [
+      "You are given an array of lowercase words, `strs`. Partition the words into groups so that two words belong to the same group exactly when they are anagrams.",
+      "Two words are anagrams if their letters can be rearranged to match, using every letter exactly once. Both the letters and their frequencies must agree.",
+      "Return a list of groups. The groups may appear in any order, and the words inside each group may appear in any order. Preserve every occurrence from the input, including repeated words and empty strings. For an empty input array, return `[]`."
+    ],
+    "hints": [
+      "What representation is identical for all anagrams?",
+      "Use that representation as a dictionary key."
+    ],
+    "examples": [
+      {
+        "input": {
+          "strs": [
+            "eat",
+            "tea",
+            "tan",
+            "ate",
+            "nat",
+            "bat"
+          ]
+        },
+        "expected": [
+          [
+            "eat",
+            "tea",
+            "ate"
+          ],
+          [
+            "tan",
+            "nat"
+          ],
+          [
+            "bat"
+          ]
+        ],
+        "explanation": "`eat`, `tea`, and `ate` share the same letters; `tan` and `nat` form another group; `bat` has no anagram partner."
+      },
+      {
+        "input": {
+          "strs": [
+            ""
+          ]
+        },
+        "expected": [
+          [
+            ""
+          ]
+        ],
+        "explanation": "The single empty string belongs in its own group. The result contains one group with one word."
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(strs) ≤ 10,000",
+      "Each word contains up to 100 lowercase English letters."
+    ],
+    "compare": "nested-set"
+  },
+  {
+    "id": 238,
+    "slug": "product-of-array-except-self",
+    "title": "Product of Array Except Self",
+    "topic": "Arrays & hashing",
+    "difficulty": "Medium",
+    "method": "productExceptSelf",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "List[int]",
+    "description": [
+      "Given an integer array `nums`, return a new array `answer` of the same length. For each index `i`, `answer[i]` must equal the product of all elements of `nums` except `nums[i]`.",
+      "Exclude only that one position. If the same value appears elsewhere, its other occurrences still contribute to the product. Inputs may contain negative values and zero, including multiple zeros.",
+      "Your algorithm must run in `O(n)` time, where `n = len(nums)`, and must not use division. As an additional space goal, use `O(1)` extra space apart from the returned array."
+    ],
+    "hints": [
+      "Split each product into values to the left and to the right.",
+      "Can two passes accumulate prefix and suffix products?"
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "expected": [
+          24,
+          12,
+          8,
+          6
+        ],
+        "explanation": "Excluding the first element gives `2 × 3 × 4 = 24`. The remaining positions similarly produce `12`, `8`, and `6`."
+      },
+      {
+        "input": {
+          "nums": [
+            -1,
+            1,
+            0,
+            -3,
+            3
+          ]
+        },
+        "expected": [
+          0,
+          0,
+          9,
+          0,
+          0
+        ],
+        "explanation": "Only the position containing zero has a nonzero result: `(-1) × 1 × (-3) × 3 = 9`. Every other product includes zero."
+      }
+    ],
+    "constraints": [
+      "2 ≤ len(nums) ≤ 100,000",
+      "−30 ≤ nums[i] ≤ 30",
+      "Do not use division."
+    ]
+  },
+  {
+    "id": 128,
+    "slug": "longest-consecutive-sequence",
+    "title": "Longest Consecutive Sequence",
+    "topic": "Arrays & hashing",
+    "difficulty": "Medium",
+    "method": "longestConsecutive",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given an unsorted array of integers, `nums`. Return the length of the longest sequence of consecutive integer values present in the array.",
+      "Consecutive means that each value is exactly one larger than the previous value, such as `4, 5, 6, 7`. The values may appear in any order and at unrelated positions in the input. You are not looking for a contiguous subarray.",
+      "Repeated occurrences of a value do not increase the sequence length. Return `0` for an empty array. Aim for `O(n)` time, where `n = len(nums)`."
+    ],
+    "hints": [
+      "Only begin counting at the start of a sequence.",
+      "A value starts a sequence if its predecessor is absent."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            100,
+            4,
+            200,
+            1,
+            3,
+            2
+          ]
+        },
+        "expected": 4,
+        "explanation": "The values `1, 2, 3, 4` are all present, giving a sequence of length `4`. The values `100` and `200` do not extend it."
+      },
+      {
+        "input": {
+          "nums": [
+            0,
+            3,
+            7,
+            2,
+            5,
+            8,
+            4,
+            6,
+            0,
+            1
+          ]
+        },
+        "expected": 9,
+        "explanation": "Every integer from `0` through `8` is present, giving length `9`. The repeated `0` is counted only once."
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(nums) ≤ 100,000",
+      "Values fit in a signed 32-bit integer."
+    ]
+  },
+  {
+    "id": 560,
+    "slug": "subarray-sum-equals-k",
+    "title": "Subarray Sum Equals K",
+    "topic": "Arrays & hashing",
+    "difficulty": "Medium",
+    "method": "subarraySum",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given an integer array `nums` and an integer `k`. Return the number of nonempty contiguous subarrays whose elements sum to exactly `k`.",
+      "A contiguous subarray consists of all elements between a starting index and an ending index, inclusive. You cannot skip elements. Subarrays with different starting or ending indices count separately, even if they contain identical values, and matching subarrays may overlap.",
+      "Values in `nums` and the target `k` may be positive, negative, or zero. Return the number of matches, rather than the subarrays themselves."
+    ],
+    "hints": [
+      "Express a subarray sum as the difference of two prefix sums.",
+      "Count earlier prefix sums equal to the current prefix sum minus k."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            1,
+            1,
+            1
+          ],
+          "k": 2
+        },
+        "expected": 2,
+        "explanation": "The subarrays at indices `0..1` and `1..2` both sum to `2`. They overlap but count as two distinct subarrays."
+      },
+      {
+        "input": {
+          "nums": [
+            1,
+            2,
+            3
+          ],
+          "k": 3
+        },
+        "expected": 2,
+        "explanation": "The subarray `[1, 2]` and the single-element subarray `[3]` both sum to `3`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 20,000",
+      "−1,000 ≤ nums[i] ≤ 1,000",
+      "−10⁷ ≤ k ≤ 10⁷"
+    ]
+  },
+  {
+    "id": 347,
+    "slug": "top-k-frequent-elements",
+    "title": "Top K Frequent Elements",
+    "topic": "Arrays & hashing",
+    "difficulty": "Medium",
+    "method": "topKFrequent",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "List[int]",
+    "description": [
+      "You are given an integer array `nums` and an integer `k`. Return the `k` distinct values that occur most frequently in `nums`.",
+      "A value's frequency is the number of positions at which it appears. Each selected value must appear once in your answer, regardless of its frequency in the input. You may return the selected values in any order.",
+      "The answer set is guaranteed to be unique. When some distinct values are excluded, every selected value has a higher frequency than every excluded value. Ties among selected values are allowed. `k` is at least one and does not exceed the number of distinct input values."
+    ],
+    "hints": [
+      "Start by counting occurrences.",
+      "A heap or frequency buckets can avoid sorting all the input values."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            1,
+            1,
+            1,
+            2,
+            2,
+            3
+          ],
+          "k": 2
+        },
+        "expected": [
+          1,
+          2
+        ],
+        "explanation": "`1` appears three times, `2` appears twice, and `3` appears once. The two most frequent values are `1` and `2`."
+      },
+      {
+        "input": {
+          "nums": [
+            1
+          ],
+          "k": 1
+        },
+        "expected": [
+          1
+        ],
+        "explanation": "There is one distinct value, so selecting the most frequent one returns `[1]`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ k ≤ number of distinct values",
+      "1 ≤ len(nums) ≤ 100,000",
+      "The k most frequent values form a unique set."
+    ],
+    "compare": "unordered"
+  },
+  {
+    "id": 48,
+    "slug": "rotate-image",
+    "title": "Rotate Image",
+    "topic": "Arrays & hashing",
+    "difficulty": "Medium",
+    "method": "rotate",
+    "params": [
+      {
+        "name": "matrix",
+        "type": "List[List[int]]"
+      }
+    ],
+    "returns": "None",
+    "description": [
+      "You are given a square `n × n` matrix of integers, `matrix`. Rotate its contents by 90 degrees clockwise.",
+      "After rotation, the original top row becomes the rightmost column, read from top to bottom. More generally, a value originally at row `r`, column `c` moves to row `c`, column `n - 1 - r`, using zero-based indices.",
+      "Modify the provided matrix in place and return `None`. Do not replace it with a separately returned matrix. The output shown in each example is the state of `matrix` after your function finishes. The rotation must preserve every value, including duplicates."
+    ],
+    "hints": [
+      "Think about the effect of a transpose followed by a reflection.",
+      "Alternatively rotate four cells at a time, layer by layer."
+    ],
+    "examples": [
+      {
+        "input": {
+          "matrix": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              4,
+              5,
+              6
+            ],
+            [
+              7,
+              8,
+              9
+            ]
+          ]
+        },
+        "expected": [
+          [
+            7,
+            4,
+            1
+          ],
+          [
+            8,
+            5,
+            2
+          ],
+          [
+            9,
+            6,
+            3
+          ]
+        ],
+        "explanation": "The original first row `[1, 2, 3]` becomes the right column. Reading the rotated matrix by rows gives `[7, 4, 1]`, `[8, 5, 2]`, and `[9, 6, 3]`."
+      },
+      {
+        "input": {
+          "matrix": [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ]
+          ]
+        },
+        "expected": [
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            2
+          ]
+        ],
+        "explanation": "The top row `[1, 2]` becomes the right column, and the bottom row `[3, 4]` becomes the left column."
+      }
+    ],
+    "constraints": [
+      "matrix is square.",
+      "1 ≤ len(matrix) ≤ 20",
+      "Modify the existing matrix."
+    ],
+    "mutates": "matrix"
+  },
+  {
+    "id": 54,
+    "slug": "spiral-matrix",
+    "title": "Spiral Matrix",
+    "topic": "Arrays & hashing",
+    "difficulty": "Medium",
+    "method": "spiralOrder",
+    "params": [
+      {
+        "name": "matrix",
+        "type": "List[List[int]]"
+      }
+    ],
+    "returns": "List[int]",
+    "description": [
+      "You are given a rectangular integer matrix `matrix` with `m` rows and `n` columns. Return a one-dimensional list containing every value in clockwise spiral order.",
+      "Start at the top-left cell and move right along the top edge. Continue down the right edge, left along the bottom edge, and up the left edge, then continue inward through the remaining cells in the same clockwise direction.",
+      "Visit each cell exactly once, including when the remaining region is a single row, a single column, or one cell. The matrix may be rectangular rather than square. Return the visited values in traversal order."
+    ],
+    "hints": [
+      "Track the four boundaries of the unvisited rectangle.",
+      "After each side, shrink a boundary and check whether any cells remain."
+    ],
+    "examples": [
+      {
+        "input": {
+          "matrix": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              4,
+              5,
+              6
+            ],
+            [
+              7,
+              8,
+              9
+            ]
+          ]
+        },
+        "expected": [
+          1,
+          2,
+          3,
+          6,
+          9,
+          8,
+          7,
+          4,
+          5
+        ],
+        "explanation": "The outside ring is `1, 2, 3, 6, 9, 8, 7, 4`. The remaining center cell contributes `5`."
+      },
+      {
+        "input": {
+          "matrix": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              5,
+              6,
+              7,
+              8
+            ],
+            [
+              9,
+              10,
+              11,
+              12
+            ]
+          ]
+        },
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          8,
+          12,
+          11,
+          10,
+          9,
+          5,
+          6,
+          7
+        ],
+        "explanation": "The outside ring is `1, 2, 3, 4, 8, 12, 11, 10, 9, 5`. The remaining inner row is `6, 7`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ rows, columns ≤ 10",
+      "All rows have equal length."
+    ]
+  },
+  {
+    "id": 73,
+    "slug": "set-matrix-zeroes",
+    "title": "Set Matrix Zeroes",
+    "topic": "Arrays & hashing",
+    "difficulty": "Medium",
+    "method": "setZeroes",
+    "params": [
+      {
+        "name": "matrix",
+        "type": "List[List[int]]"
+      }
+    ],
+    "returns": "None",
+    "description": [
+      "You are given a rectangular integer matrix `matrix`. For every cell that is zero in the original matrix, set all cells in that cell's row and column to zero.",
+      "Apply the rule using only the zeros present before any changes. Zeros introduced by your changes must not cause additional rows or columns to be cleared. All other cells keep their original values.",
+      "Modify `matrix` in place and return `None`. The example output shows the modified matrix, rather than a return value. A matrix without any zero remains unchanged. As an additional space goal, use constant extra space."
+    ],
+    "hints": [
+      "Avoid letting newly written zeros trigger further changes.",
+      "The first row and first column can act as markers."
+    ],
+    "examples": [
+      {
+        "input": {
+          "matrix": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": [
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ]
+        ],
+        "explanation": "The original zero is at row `1`, column `1`. That entire row and column become zero; the four corner values remain `1`."
+      },
+      {
+        "input": {
+          "matrix": [
+            [
+              0,
+              1,
+              2,
+              0
+            ],
+            [
+              3,
+              4,
+              5,
+              2
+            ],
+            [
+              1,
+              3,
+              1,
+              5
+            ]
+          ]
+        },
+        "expected": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            4,
+            5,
+            0
+          ],
+          [
+            0,
+            3,
+            1,
+            0
+          ]
+        ],
+        "explanation": "The original zeros are at `(0, 0)` and `(0, 3)`. Clear row `0` and columns `0` and `3`; the middle entries of the other rows remain unchanged."
+      }
+    ],
+    "constraints": [
+      "1 ≤ rows, columns ≤ 200",
+      "Modify matrix in place."
+    ],
+    "mutates": "matrix"
+  },
+  {
+    "id": 125,
+    "slug": "valid-palindrome",
+    "title": "Valid Palindrome",
+    "topic": "Two pointers",
+    "difficulty": "Easy",
+    "method": "isPalindrome",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given a string `s` containing printable ASCII characters. Consider only its letters and digits, and treat uppercase and lowercase versions of a letter as equivalent.",
+      "Return `True` if this remaining sequence reads identically from left to right and right to left. Return `False` otherwise. Spaces, punctuation, and symbols do not participate in the comparison, but digits do.",
+      "The empty sequence is a palindrome. Therefore, an empty input or a string containing only ignored characters has answer `True`."
+    ],
+    "hints": [
+      "Compare the outermost relevant characters.",
+      "Skip non-alphanumeric characters as the two pointers move inward."
+    ],
+    "examples": [
+      {
+        "input": {
+          "s": "A man, a plan, a canal: Panama"
+        },
+        "expected": true,
+        "explanation": "After removing spaces and punctuation and ignoring case, the text is `amanaplanacanalpanama`, which reads the same in both directions."
+      },
+      {
+        "input": {
+          "s": "race a car"
+        },
+        "expected": false,
+        "explanation": "The remaining text is `raceacar`. It differs from its reversal."
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(s) ≤ 200,000",
+      "Input contains printable ASCII characters."
+    ]
+  },
+  {
+    "id": 15,
+    "slug": "3sum",
+    "title": "3Sum",
+    "topic": "Two pointers",
+    "difficulty": "Medium",
+    "method": "threeSum",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "List[List[int]]",
+    "description": [
+      "You are given an integer array `nums`. Return all distinct triplets of values whose sum is zero.",
+      "Each triplet must come from three different positions in the input. A value may be used more than once within a triplet only if enough separate occurrences exist in `nums`.",
+      "Return values, not indices. Two triplets containing the same three values are considered the same answer regardless of their order or the positions used to obtain them. Include each such triplet exactly once. The order of triplets and the order of values inside each triplet do not matter. Return `[]` if no triplet exists."
+    ],
+    "hints": [
+      "Sorting makes it easier to avoid duplicates.",
+      "Fix one value, then search for the other two with inward-moving pointers."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            -1,
+            0,
+            1,
+            2,
+            -1,
+            -4
+          ]
+        },
+        "expected": [
+          [
+            -1,
+            -1,
+            2
+          ],
+          [
+            -1,
+            0,
+            1
+          ]
+        ],
+        "explanation": "The unique value combinations are `-1 + -1 + 2 = 0` and `-1 + 0 + 1 = 0`. Choosing another occurrence of `-1` does not create a new triplet."
+      },
+      {
+        "input": {
+          "nums": [
+            0,
+            1,
+            1
+          ]
+        },
+        "expected": [],
+        "explanation": "The only three available values sum to `2`, so there is no valid triplet."
+      }
+    ],
+    "constraints": [
+      "3 ≤ len(nums) ≤ 3,000",
+      "−100,000 ≤ nums[i] ≤ 100,000"
+    ],
+    "compare": "nested-set"
+  },
+  {
+    "id": 11,
+    "slug": "container-with-most-water",
+    "title": "Container With Most Water",
+    "topic": "Two pointers",
+    "difficulty": "Medium",
+    "method": "maxArea",
+    "params": [
+      {
+        "name": "height",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "The nonnegative integers in `height` describe vertical lines at horizontal positions `0` through `len(height) - 1`. Line `i` extends from the x-axis up to height `height[i]`.",
+      "Choose two different lines to form the sides of a container, with the x-axis as its base. The water depth is limited by the shorter line, and the width is the distance between the chosen positions. The container must stay upright.",
+      "Return the maximum possible area of water, measured as `min(height[i], height[j]) × (j - i)` for `i < j`. Lines between the two selected sides do not reduce this capacity. Return the area, not the chosen indices."
+    ],
+    "hints": [
+      "Begin with the widest possible container.",
+      "Which pointer can move in a way that might improve the limiting height?"
+    ],
+    "examples": [
+      {
+        "input": {
+          "height": [
+            1,
+            8,
+            6,
+            2,
+            5,
+            4,
+            8,
+            3,
+            7
+          ]
+        },
+        "expected": 49,
+        "explanation": "Choose the lines at indices `1` and `8`, with heights `8` and `7`. Their width is `7` and water depth is `7`, giving area `49`."
+      },
+      {
+        "input": {
+          "height": [
+            1,
+            1
+          ]
+        },
+        "expected": 1,
+        "explanation": "The two lines are one unit apart and both have height `1`, so the area is `1`."
+      }
+    ],
+    "constraints": [
+      "2 ≤ len(height) ≤ 100,000",
+      "0 ≤ height[i] ≤ 10,000"
+    ]
+  },
+  {
+    "id": 42,
+    "slug": "trapping-rain-water",
+    "title": "Trapping Rain Water",
+    "topic": "Two pointers",
+    "difficulty": "Hard",
+    "method": "trap",
+    "params": [
+      {
+        "name": "height",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given a list of nonnegative column heights, `height`. Each column has width one, and the columns stand next to each other on a flat baseline in the order shown.",
+      "Imagine rain falling until the gaps hold as much water as possible. Water can collect above shorter columns when taller columns contain it on both sides. Water that can escape beyond either outer edge is not retained. The columns themselves occupy solid space.",
+      "Return the total amount of trapped water in square units across the entire arrangement. Count water in every enclosed gap, rather than choosing just one pair of columns. If no water can be held, return `0`."
+    ],
+    "hints": [
+      "The water above a column is limited by the tallest boundary on each side.",
+      "Track the smaller boundary while moving two pointers inward."
+    ],
+    "examples": [
+      {
+        "input": {
+          "height": [
+            0,
+            1,
+            0,
+            2,
+            1,
+            0,
+            1,
+            3,
+            2,
+            1,
+            2,
+            1
+          ]
+        },
+        "expected": 6,
+        "explanation": "Using zero-based positions, the retained amounts above columns `2`, `4`, `5`, `6`, and `9` are `1`, `1`, `2`, `1`, and `1`. Their total is `6`."
+      },
+      {
+        "input": {
+          "height": [
+            4,
+            2,
+            0,
+            3,
+            2,
+            5
+          ]
+        },
+        "expected": 9,
+        "explanation": "Columns at positions `1`, `2`, and `3` hold `2`, `4`, and `3` units respectively, for a total of `9`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(height) ≤ 20,000",
+      "0 ≤ height[i] ≤ 100,000"
+    ]
+  },
+  {
+    "id": 283,
+    "slug": "move-zeroes",
+    "title": "Move Zeroes",
+    "topic": "Two pointers",
+    "difficulty": "Easy",
+    "method": "moveZeroes",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "None",
+    "description": [
+      "You are given an integer array `nums`. Move every zero to the end of the same array while keeping all nonzero values in their original relative order.",
+      "The array must retain its original length and all of its values. In particular, the number of zeros must stay the same, and negative values count as nonzero values.",
+      "Modify `nums` in place and return `None`. Do not return a new array as your answer. The example output shows the contents of `nums` after the modification. Empty arrays and arrays that already have all zeros at the end remain valid."
+    ],
+    "hints": [
+      "Keep a write position for the next nonzero value.",
+      "After compacting the nonzero values, fill the remaining positions with zeros."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            0,
+            1,
+            0,
+            3,
+            12
+          ]
+        },
+        "expected": [
+          1,
+          3,
+          12,
+          0,
+          0
+        ],
+        "explanation": "The nonzero values occur in the order `1, 3, 12`. Keep that order, then place the two zeros after them."
+      },
+      {
+        "input": {
+          "nums": [
+            0
+          ]
+        },
+        "expected": [
+          0
+        ],
+        "explanation": "The only value is zero, so the array is already in the required form."
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(nums) ≤ 10,000",
+      "Modify nums in place; return nothing."
+    ],
+    "mutates": "nums"
+  },
+  {
+    "id": 3,
+    "slug": "longest-substring-without-repeating-characters",
+    "title": "Longest Substring Without Repeating Characters",
+    "topic": "Sliding window",
+    "difficulty": "Medium",
+    "method": "lengthOfLongestSubstring",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "Given a string `s`, return the length of its longest contiguous substring in which no character appears more than once.",
+      "A substring is a consecutive section of the original string. You may choose its starting and ending positions, but you cannot skip characters inside it. Repeated occurrences outside the chosen substring do not matter.",
+      "Character comparisons are case-sensitive. Spaces, digits, and punctuation are characters too and must obey the same no-repetition rule. Return the length, not the substring. For an empty string, return `0`."
+    ],
+    "hints": [
+      "Maintain a window whose characters are all unique.",
+      "When a duplicate arrives, move the left edge past its previous occurrence."
+    ],
+    "examples": [
+      {
+        "input": {
+          "s": "abcabcbb"
+        },
+        "expected": 3,
+        "explanation": "`abc` is a valid substring of length `3`. Every longer contiguous section contains a repeated character."
+      },
+      {
+        "input": {
+          "s": "bbbbb"
+        },
+        "expected": 1,
+        "explanation": "Any substring of length greater than `1` repeats `b`, so the longest valid length is `1`."
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(s) ≤ 50,000",
+      "Spaces and symbols count as characters."
+    ]
+  },
+  {
+    "id": 424,
+    "slug": "longest-repeating-character-replacement",
+    "title": "Longest Repeating Character Replacement",
+    "topic": "Sliding window",
+    "difficulty": "Medium",
+    "method": "characterReplacement",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given an uppercase English string `s` and a nonnegative integer `k`. You may replace at most `k` characters, changing each selected position to any uppercase English letter.",
+      "Return the greatest length of a contiguous substring that can consist entirely of one repeated letter after those replacements. You may choose both the substring and the letter it will contain. Characters outside the chosen substring do not have to match it.",
+      "Each changed position costs one replacement, and you do not have to use all `k` replacements. You cannot insert or delete characters, rearrange the string, or combine separate sections into one substring."
+    ],
+    "hints": [
+      "A window is feasible when its length minus its most frequent character count is at most k.",
+      "Track counts while adjusting the window boundaries."
+    ],
+    "examples": [
+      {
+        "input": {
+          "s": "ABAB",
+          "k": 2
+        },
+        "expected": 4,
+        "explanation": "Replace the two `B` characters with `A` to obtain `AAAA`. The entire string has length `4`."
+      },
+      {
+        "input": {
+          "s": "AABABBA",
+          "k": 1
+        },
+        "expected": 4,
+        "explanation": "The first four characters are `AABA`. Replacing its `B` with `A` gives a matching substring of length `4`; one replacement cannot produce a longer one."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(s) ≤ 100,000",
+      "0 ≤ k ≤ len(s)",
+      "s contains uppercase English letters."
+    ]
+  },
+  {
+    "id": 76,
+    "slug": "minimum-window-substring",
+    "title": "Minimum Window Substring",
+    "topic": "Sliding window",
+    "difficulty": "Hard",
+    "method": "minWindow",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      },
+      {
+        "name": "t",
+        "type": "str"
+      }
+    ],
+    "returns": "str",
+    "description": [
+      "You are given strings `s` and `t`. Return the shortest contiguous substring of `s` that contains every character required by `t`, including repeated occurrences.",
+      "For example, if `t` contains two `A` characters, a valid window must contain at least two `A` characters. The characters may appear in any order in the window, and the window may also contain extra characters. Matching is case-sensitive.",
+      "Return the actual substring from `s`, with its original order and spelling. If no such substring exists, return the empty string `\"\"`. When a valid answer exists, the shortest answer is guaranteed to be unique."
+    ],
+    "hints": [
+      "Count the characters still missing from the window.",
+      "Once the window covers t, shrink its left edge as far as possible."
+    ],
+    "examples": [
+      {
+        "input": {
+          "s": "ADOBECODEBANC",
+          "t": "ABC"
+        },
+        "expected": "BANC",
+        "explanation": "`BANC` contains `A`, `B`, and `C`. No shorter contiguous part of `s` contains all three."
+      },
+      {
+        "input": {
+          "s": "a",
+          "t": "a"
+        },
+        "expected": "a",
+        "explanation": "The only character of `s` supplies the only character required by `t`, so the answer is `a`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(s), len(t) ≤ 100,000",
+      "Character matching is case-sensitive.",
+      "The shortest valid window is unique."
+    ]
+  },
+  {
+    "id": 567,
+    "slug": "permutation-in-string",
+    "title": "Permutation in String",
+    "topic": "Sliding window",
+    "difficulty": "Medium",
+    "method": "checkInclusion",
+    "params": [
+      {
+        "name": "s1",
+        "type": "str"
+      },
+      {
+        "name": "s2",
+        "type": "str"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given two lowercase English strings, `s1` and `s2`. Return `True` if some contiguous substring of `s2` is a permutation of `s1`; otherwise return `False`.",
+      "A permutation rearranges all the characters of `s1` without adding or removing any. The matching substring must therefore have exactly `len(s1)` characters and exactly the same number of occurrences of each letter.",
+      "The original order of `s1` is allowed as a permutation. Letters elsewhere in `s2` do not count toward the match, and you cannot skip characters within the chosen substring. If `s1` is longer than `s2`, no match is possible."
+    ],
+    "hints": [
+      "The candidate window must have exactly len(s1) characters.",
+      "Compare the window character frequencies with those of s1."
+    ],
+    "examples": [
+      {
+        "input": {
+          "s1": "ab",
+          "s2": "eidbaooo"
+        },
+        "expected": true,
+        "explanation": "`s2` contains the consecutive letters `ba`, which are a rearrangement of `ab`."
+      },
+      {
+        "input": {
+          "s1": "ab",
+          "s2": "eidboaoo"
+        },
+        "expected": false,
+        "explanation": "Although `a` and `b` both appear, there is no length-two substring containing one of each."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(s1), len(s2) ≤ 10,000",
+      "Strings contain lowercase English letters."
+    ]
+  },
+  {
+    "id": 239,
+    "slug": "sliding-window-maximum",
+    "title": "Sliding Window Maximum",
+    "topic": "Sliding window",
+    "difficulty": "Hard",
+    "method": "maxSlidingWindow",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "List[int]",
+    "description": [
+      "You are given an integer array `nums` and a window size `k`. A window covers exactly `k` consecutive positions. It starts at index `0` and moves one position right at a time until it reaches the end of the array.",
+      "Return an array containing the largest value in each window, ordered by the window's starting position. There are `len(nums) - k + 1` windows, so the answer must have that many entries.",
+      "Values may repeat and may be negative. Report maximum values, not their indices. A window of size one reports each original value, while a window covering the whole array produces one result. Aim for `O(n)` time."
+    ],
+    "hints": [
+      "Keep only indices that can still become a future maximum.",
+      "A decreasing deque discards smaller values at the back and expired indices at the front."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            1,
+            3,
+            -1,
+            -3,
+            5,
+            3,
+            6,
+            7
+          ],
+          "k": 3
+        },
+        "expected": [
+          3,
+          3,
+          5,
+          5,
+          6,
+          7
+        ],
+        "explanation": "The six windows have maxima `3, 3, 5, 5, 6, 7`. For example, the first window `[1, 3, -1]` has maximum `3`."
+      },
+      {
+        "input": {
+          "nums": [
+            1
+          ],
+          "k": 1
+        },
+        "expected": [
+          1
+        ],
+        "explanation": "There is one window containing the single value `1`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ k ≤ len(nums) ≤ 100,000",
+      "Values may be negative."
+    ]
+  },
+  {
+    "id": 20,
+    "slug": "valid-parentheses",
+    "title": "Valid Parentheses",
+    "topic": "Stacks",
+    "difficulty": "Easy",
+    "method": "isValid",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given a string `s` containing only the six bracket characters `(`, `)`, `[`, `]`, `{`, and `}`. Return whether the brackets form a valid sequence.",
+      "Every opening bracket must have a closing bracket of the same type, and every closing bracket must match an earlier opening bracket. Pairs must be correctly nested: a pair opened inside another pair must close before the outer pair closes.",
+      "Several complete groups may appear next to each other. For example, `([])` and `()[]` are valid, while `(]` and `([)]` are invalid. A sequence with any unmatched bracket is invalid. The empty string is valid."
+    ],
+    "hints": [
+      "The most recent unclosed bracket must close first.",
+      "Use a stack, and ensure it is empty at the end."
+    ],
+    "examples": [
+      {
+        "input": {
+          "s": "()"
+        },
+        "expected": true,
+        "explanation": "The opening parenthesis is followed by its matching closing parenthesis."
+      },
+      {
+        "input": {
+          "s": "()[]{}"
+        },
+        "expected": true,
+        "explanation": "The parentheses, square brackets, and braces form three complete groups next to each other."
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(s) ≤ 10,000",
+      "Only parentheses, square brackets, and braces appear."
+    ]
+  },
+  {
+    "id": 739,
+    "slug": "daily-temperatures",
+    "title": "Daily Temperatures",
+    "topic": "Stacks",
+    "difficulty": "Medium",
+    "method": "dailyTemperatures",
+    "params": [
+      {
+        "name": "temperatures",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "List[int]",
+    "description": [
+      "The array `temperatures` gives the temperature on each day, in chronological order. For every index `i`, find the first later day with a temperature strictly greater than `temperatures[i]`.",
+      "Return an integer array of the same length. Its entry at index `i` is the number of days between day `i` and that first warmer day. If no warmer day occurs later, use `0` for that entry.",
+      "An equally warm day does not qualify. Count the distance in days, not the increase in temperature, and do not wrap from the end of the array back to the beginning."
+    ],
+    "hints": [
+      "Store indices of days still waiting for a warmer temperature.",
+      "A new temperature resolves the colder days at the top of a monotonic stack."
+    ],
+    "examples": [
+      {
+        "input": {
+          "temperatures": [
+            73,
+            74,
+            75,
+            71,
+            69,
+            72,
+            76,
+            73
+          ]
+        },
+        "expected": [
+          1,
+          1,
+          4,
+          2,
+          1,
+          1,
+          0,
+          0
+        ],
+        "explanation": "Day `2` has temperature `75`; its next warmer day is day `6` at `76`, so the wait is `4`. The final two days have no later warmer day."
+      },
+      {
+        "input": {
+          "temperatures": [
+            30,
+            40,
+            50,
+            60
+          ]
+        },
+        "expected": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "explanation": "Each day except the last is followed immediately by a warmer day, giving waits `1, 1, 1, 0`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(temperatures) ≤ 100,000",
+      "30 ≤ temperatures[i] ≤ 100"
+    ]
+  },
+  {
+    "id": 503,
+    "slug": "next-greater-element-ii",
+    "title": "Next Greater Element II",
+    "topic": "Stacks",
+    "difficulty": "Medium",
+    "method": "nextGreaterElements",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "List[int]",
+    "description": [
+      "You are given an integer array `nums`, treated as circular. After its last position, traversal continues at its first position.",
+      "For each index, move forward from the next position and find the first value strictly greater than the value at that index. You may wrap around the array, but stop after considering the other positions once. Equal values do not qualify.",
+      "Return an array of these next greater values in the original index order. If an index has no strictly greater value anywhere in the circular traversal, its result is `-1`. Return values rather than indices or distances; the first greater value need not be the largest value."
+    ],
+    "hints": [
+      "Simulate a second pass to account for wrapping.",
+      "Use a stack of unresolved indices, adding each index only once."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            1,
+            2,
+            1
+          ]
+        },
+        "expected": [
+          2,
+          -1,
+          2
+        ],
+        "explanation": "The first `1` is followed by `2`. The value `2` has no greater value. For the final `1`, wrapping past the first `1` reaches `2`."
+      },
+      {
+        "input": {
+          "nums": [
+            1,
+            2,
+            3,
+            4,
+            3
+          ]
+        },
+        "expected": [
+          2,
+          3,
+          4,
+          -1,
+          4
+        ],
+        "explanation": "The last `3` wraps around and first encounters a greater value at the `4`. The `4` itself has no greater value."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 10,000",
+      "Values may be negative or repeated."
+    ]
+  },
+  {
+    "id": 84,
+    "slug": "largest-rectangle-in-histogram",
+    "title": "Largest Rectangle in Histogram",
+    "topic": "Stacks",
+    "difficulty": "Hard",
+    "method": "largestRectangleArea",
+    "params": [
+      {
+        "name": "heights",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "The nonnegative integers in `heights` describe adjacent histogram bars. Each bar is one unit wide and stands on the same horizontal baseline.",
+      "Find the greatest area of a rectangle that fits entirely inside the histogram. Its sides must be parallel to the axes, and it must span a contiguous range of bars. Its height cannot exceed any bar within that range.",
+      "Return the rectangle's area, not its coordinates. A rectangle may span just one bar or several bars. It may be shorter than some of the bars it covers, but it cannot include space above a shorter bar. If every height is zero, the answer is `0`."
+    ],
+    "hints": [
+      "For each bar, locate the nearest smaller bar on either side.",
+      "An increasing stack determines a bar’s full width when a shorter bar arrives."
+    ],
+    "examples": [
+      {
+        "input": {
+          "heights": [
+            2,
+            1,
+            5,
+            6,
+            2,
+            3
+          ]
+        },
+        "expected": 10,
+        "explanation": "The adjacent bars of heights `5` and `6` can contain a rectangle of height `5` and width `2`, giving area `10`."
+      },
+      {
+        "input": {
+          "heights": [
+            2,
+            4
+          ]
+        },
+        "expected": 4,
+        "explanation": "A width-two rectangle of height `2` has area `4`. The single bar of height `4` also gives area `4`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(heights) ≤ 100,000",
+      "0 ≤ heights[i] ≤ 10,000"
+    ]
+  },
+  {
+    "id": 85,
+    "slug": "maximal-rectangle",
+    "title": "Maximal Rectangle",
+    "topic": "Stacks",
+    "difficulty": "Hard",
+    "method": "maximalRectangle",
+    "params": [
+      {
+        "name": "matrix",
+        "type": "List[List[str]]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given a rectangular binary matrix `matrix`. Each cell contains the string `\"0\"` or `\"1\"`, rather than an integer.",
+      "Find the largest axis-aligned rectangle made entirely of `\"1\"` cells and return its area, measured in number of cells. A rectangle uses a consecutive range of rows and a consecutive range of columns; every cell where those ranges intersect must be `\"1\"`.",
+      "The rectangle may be one cell, one row, one column, or a larger block. It does not have to be a square. Cells connected in an irregular shape cannot be counted together as a rectangle. Return `0` if the matrix contains no `\"1\"` cells."
+    ],
+    "hints": [
+      "Treat each row as the base of a histogram of consecutive ones.",
+      "Solve a histogram rectangle problem after updating each row’s heights."
+    ],
+    "examples": [
+      {
+        "input": {
+          "matrix": [
+            [
+              "1",
+              "0",
+              "1",
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "0",
+              "1",
+              "1",
+              "1"
+            ],
+            [
+              "1",
+              "1",
+              "1",
+              "1",
+              "1"
+            ],
+            [
+              "1",
+              "0",
+              "0",
+              "1",
+              "0"
+            ]
+          ]
+        },
+        "expected": 6,
+        "explanation": "Using zero-based indices, rows `1..2` and columns `2..4` form an all-ones rectangle with `2 × 3 = 6` cells."
+      },
+      {
+        "input": {
+          "matrix": [
+            [
+              "0"
+            ]
+          ]
+        },
+        "expected": 0,
+        "explanation": "The only cell is `\"0\"`, so there is no all-ones rectangle."
+      }
+    ],
+    "constraints": [
+      "1 ≤ rows, columns ≤ 200",
+      "Cells are strings: \"0\" or \"1\"."
+    ]
+  },
+  {
+    "id": 704,
+    "slug": "binary-search",
+    "title": "Binary Search",
+    "topic": "Binary search",
+    "difficulty": "Easy",
+    "method": "search",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given an integer array `nums` sorted in strictly increasing order, along with an integer `target`. Return the zero-based index at which `target` appears.",
+      "If `target` is not present, return `-1`. Every value in `nums` is distinct, so there can be at most one matching position. The target may be smaller than every element or larger than every element.",
+      "Your algorithm must run in `O(log n)` time, where `n = len(nums)`. Return the index in the provided array, rather than the matching value or the position where an absent target could be inserted."
+    ],
+    "hints": [
+      "Each comparison can discard half the remaining search interval.",
+      "Keep your inclusive or exclusive boundary convention consistent."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            -1,
+            0,
+            3,
+            5,
+            9,
+            12
+          ],
+          "target": 9
+        },
+        "expected": 4,
+        "explanation": "The value `9` appears at index `4`, counting from zero."
+      },
+      {
+        "input": {
+          "nums": [
+            -1,
+            0,
+            3,
+            5,
+            9,
+            12
+          ],
+          "target": 2
+        },
+        "expected": -1,
+        "explanation": "The array contains no `2`, so the answer is `-1`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 10,000",
+      "nums is strictly increasing."
+    ]
+  },
+  {
+    "id": 74,
+    "slug": "search-a-2d-matrix",
+    "title": "Search a 2D Matrix",
+    "topic": "Binary search",
+    "difficulty": "Medium",
+    "method": "searchMatrix",
+    "params": [
+      {
+        "name": "matrix",
+        "type": "List[List[int]]"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given an integer matrix `matrix` with `m` rows and `n` columns, and an integer `target`.",
+      "Each row is sorted from left to right in nondecreasing order. In addition, the first value of each row after the first is strictly greater than the final value of the previous row. Thus reading complete rows from top to bottom gives a sorted sequence.",
+      "Return `True` if any cell equals `target`, or `False` if it is absent. Return a Boolean, not a row or column index. Your algorithm must run in `O(log(m × n))` time."
+    ],
+    "hints": [
+      "The matrix behaves like one sorted array.",
+      "Convert a flat index into a row and column with division and remainder."
+    ],
+    "examples": [
+      {
+        "input": {
+          "matrix": [
+            [
+              1,
+              3,
+              5,
+              7
+            ],
+            [
+              10,
+              11,
+              16,
+              20
+            ],
+            [
+              23,
+              30,
+              34,
+              60
+            ]
+          ],
+          "target": 3
+        },
+        "expected": true,
+        "explanation": "`3` occurs in the first row at column `1`, so the answer is `True`."
+      },
+      {
+        "input": {
+          "matrix": [
+            [
+              1,
+              3,
+              5,
+              7
+            ],
+            [
+              10,
+              11,
+              16,
+              20
+            ],
+            [
+              23,
+              30,
+              34,
+              60
+            ]
+          ],
+          "target": 13
+        },
+        "expected": false,
+        "explanation": "`13` does not appear in any row of the matrix."
+      }
+    ],
+    "constraints": [
+      "1 ≤ rows, columns ≤ 100",
+      "All rows have equal length and are sorted in nondecreasing order.",
+      "Each row after the first starts above the previous row’s final value."
+    ]
+  },
+  {
+    "id": 33,
+    "slug": "search-in-rotated-sorted-array",
+    "title": "Search in Rotated Sorted Array",
+    "topic": "Binary search",
+    "difficulty": "Medium",
+    "method": "search",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given an integer array `nums` and an integer `target`. Before it reached you, the array was sorted in strictly increasing order and may have been rotated. All its values are distinct.",
+      "A rotation moves a prefix of the sorted array to the end, keeping the order within both parts. For example, `[0, 1, 2, 4, 5, 6, 7]` can become `[4, 5, 6, 7, 0, 1, 2]`. The rotation point is unknown, and an unchanged sorted array is also a valid input.",
+      "Return the zero-based index of `target` in the provided, possibly rotated array. If it is absent, return `-1`.",
+      "Your algorithm must run in `O(log n)` time, where `n = len(nums)`."
+    ],
+    "hints": [
+      "At least one half around the middle is sorted.",
+      "Decide whether the target falls inside that sorted half before choosing a side."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            4,
+            5,
+            6,
+            7,
+            0,
+            1,
+            2
+          ],
+          "target": 0
+        },
+        "expected": 4,
+        "explanation": "`target` is `0`, which appears at index `4` in the provided array."
+      },
+      {
+        "input": {
+          "nums": [
+            4,
+            5,
+            6,
+            7,
+            0,
+            1,
+            2
+          ],
+          "target": 3
+        },
+        "expected": -1,
+        "explanation": "The value `3` is absent, so return `-1`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 5,000",
+      "−10,000 ≤ nums[i], target ≤ 10,000",
+      "All array values are distinct.",
+      "nums is an increasing array with a possible rotation."
+    ]
+  },
+  {
+    "id": 153,
+    "slug": "find-minimum-in-rotated-sorted-array",
+    "title": "Find Minimum in Rotated Sorted Array",
+    "topic": "Binary search",
+    "difficulty": "Medium",
+    "method": "findMin",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given an array `nums` that originally contained distinct integers in strictly increasing order. It may have been rotated by moving a prefix to the end while preserving the order within both parts.",
+      "For example, `[1, 2, 3, 4, 5]` may become `[3, 4, 5, 1, 2]`. You are not given the rotation point. The input may also remain fully sorted, and a one-element array is valid.",
+      "Return the smallest value in `nums`, rather than its index. Your algorithm must run in `O(log n)` time, where `n = len(nums)`."
+    ],
+    "hints": [
+      "Compare the middle value with the rightmost value.",
+      "Determine which side must contain the rotation boundary."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            3,
+            4,
+            5,
+            1,
+            2
+          ]
+        },
+        "expected": 1,
+        "explanation": "The sorted values were `1, 2, 3, 4, 5`. Rotation changes their positions but the minimum value is still `1`."
+      },
+      {
+        "input": {
+          "nums": [
+            4,
+            5,
+            6,
+            7,
+            0,
+            1,
+            2
+          ]
+        },
+        "expected": 0,
+        "explanation": "The smallest value in the provided array is `0`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 5,000",
+      "All values are distinct."
+    ]
+  },
+  {
+    "id": 34,
+    "slug": "find-first-and-last-position",
+    "title": "Find First and Last Position",
+    "topic": "Binary search",
+    "difficulty": "Medium",
+    "method": "searchRange",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      }
+    ],
+    "returns": "List[int]",
+    "description": [
+      "You are given an integer array `nums` sorted in nondecreasing order and an integer `target`. Values may repeat.",
+      "Return a two-element list containing the zero-based indices of the first and last occurrences of `target`. If it occurs once, both indices are the same. If it does not occur, return `[-1, -1]`.",
+      "The input array may be empty, in which case the target is absent. Return positions in the original array, not occurrence counts or insertion positions. Your algorithm must run in `O(log n)` time for a nonempty input of length `n`."
+    ],
+    "hints": [
+      "Finding any occurrence is not enough; search for both boundaries.",
+      "Use two binary searches with slightly different equality rules."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            5,
+            7,
+            7,
+            8,
+            8,
+            10
+          ],
+          "target": 8
+        },
+        "expected": [
+          3,
+          4
+        ],
+        "explanation": "The value `8` occupies indices `3` and `4`, which are its first and last positions."
+      },
+      {
+        "input": {
+          "nums": [
+            5,
+            7,
+            7,
+            8,
+            8,
+            10
+          ],
+          "target": 6
+        },
+        "expected": [
+          -1,
+          -1
+        ],
+        "explanation": "There is no `6` in the array, so both returned positions are `-1`."
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(nums) ≤ 100,000",
+      "nums is sorted in nondecreasing order."
+    ]
+  },
+  {
+    "id": 206,
+    "slug": "reverse-linked-list",
+    "title": "Reverse Linked List",
+    "topic": "Linked lists",
+    "difficulty": "Easy",
+    "method": "reverseList",
+    "params": [
+      {
+        "name": "head",
+        "type": "Optional[ListNode]"
+      }
+    ],
+    "returns": "Optional[ListNode]",
+    "description": [
+      "You are given `head`, the first node of a singly linked list. Reverse the order of its nodes and return the head of the resulting list.",
+      "Each node has a value `val` and a reference `next` to the following node. After reversal, the original last node is first, the original first node is last, and the final node's `next` must be `None`. Preserve all node values and do not create a cycle.",
+      "An empty list is represented by `head = None` and should return `None`. A one-node list stays unchanged.",
+      "Your function receives `ListNode` objects with `val` and `next` fields, not Python arrays. The examples display node values as arrays; `[]` represents an empty list whose head is `None`."
+    ],
+    "hints": [
+      "Keep track of the previous node and the unprocessed suffix.",
+      "Save the next pointer before changing the current one."
+    ],
+    "examples": [
+      {
+        "input": {
+          "head": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "expected": [
+          5,
+          4,
+          3,
+          2,
+          1
+        ],
+        "explanation": "Following `next` in the reversed list visits `5 → 4 → 3 → 2 → 1`, then reaches `None`."
+      },
+      {
+        "input": {
+          "head": [
+            1,
+            2
+          ]
+        },
+        "expected": [
+          2,
+          1
+        ],
+        "explanation": "The node containing `2` becomes the head and points to the node containing `1`."
+      }
+    ],
+    "constraints": [
+      "0 ≤ number of nodes ≤ 5,000",
+      "Each node exposes val and next."
+    ]
+  },
+  {
+    "id": 21,
+    "slug": "merge-two-sorted-lists",
+    "title": "Merge Two Sorted Lists",
+    "topic": "Linked lists",
+    "difficulty": "Easy",
+    "method": "mergeTwoLists",
+    "params": [
+      {
+        "name": "list1",
+        "type": "Optional[ListNode]"
+      },
+      {
+        "name": "list2",
+        "type": "Optional[ListNode]"
+      }
+    ],
+    "returns": "Optional[ListNode]",
+    "description": [
+      "You are given the heads of two singly linked lists, `list1` and `list2`. Each list is sorted in nondecreasing order, meaning equal values may appear next to each other.",
+      "Combine their nodes into one singly linked list sorted in the same order, and return its head. Every value occurrence from both inputs must be included exactly once, including duplicates. Reuse the existing nodes where possible.",
+      "Either list may be empty. If one is empty, the result contains the other list's values; if both are empty, return `None`.",
+      "Your function receives `ListNode` objects with `val` and `next` fields, not Python arrays. The examples display node values as arrays; `[]` represents an empty list whose head is `None`."
+    ],
+    "hints": [
+      "A dummy head simplifies appending the next smaller node.",
+      "Once one list is exhausted, attach the other list’s remainder."
+    ],
+    "examples": [
+      {
+        "input": {
+          "list1": [
+            1,
+            2,
+            4
+          ],
+          "list2": [
+            1,
+            3,
+            4
+          ]
+        },
+        "expected": [
+          1,
+          1,
+          2,
+          3,
+          4,
+          4
+        ],
+        "explanation": "Combining the values from both lists in sorted order gives `1 → 1 → 2 → 3 → 4 → 4`. Both occurrences of `1` and `4` are kept."
+      },
+      {
+        "input": {
+          "list1": [],
+          "list2": []
+        },
+        "expected": [],
+        "explanation": "There are no nodes in either input, so the returned head is `None`, displayed as `[]`."
+      }
+    ],
+    "constraints": [
+      "0 ≤ length of each list ≤ 50",
+      "Each input list is sorted."
+    ]
+  },
+  {
+    "id": 141,
+    "slug": "linked-list-cycle",
+    "title": "Linked List Cycle",
+    "topic": "Linked lists",
+    "difficulty": "Easy",
+    "method": "hasCycle",
+    "params": [
+      {
+        "name": "head",
+        "type": "Optional[ListNode]"
+      },
+      {
+        "name": "pos",
+        "type": "int"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given `head`, the first node of a singly linked list. Determine whether following its `next` references can eventually revisit the same node. Return `True` if a cycle exists, and `False` if traversal instead reaches `None`.",
+      "A cycle is about revisiting a node object. Two separate nodes with equal values do not by themselves form a cycle. An empty list has no cycle; a node that points to itself does.",
+      "The test input includes `pos` to describe how the list is connected. If `pos` is nonnegative, the final node points back to the node at that zero-based position. If `pos = -1`, the final node points to `None`. Your method receives only `head`; `pos` is not a function argument.",
+      "Your function receives `ListNode` objects with `val` and `next` fields, not Python arrays. The examples display node values as arrays; `[]` represents an empty list whose head is `None`."
+    ],
+    "hints": [
+      "A set can remember visited nodes, but can you avoid extra memory?",
+      "Move two pointers at different speeds and look for a meeting."
+    ],
+    "examples": [
+      {
+        "input": {
+          "head": [
+            3,
+            2,
+            0,
+            -4
+          ],
+          "pos": 1
+        },
+        "expected": true,
+        "explanation": "The last node, with value `-4`, points to the node at index `1`, whose value is `2`. Continuing through `next` revisits that node."
+      },
+      {
+        "input": {
+          "head": [
+            1,
+            2
+          ],
+          "pos": 0
+        },
+        "expected": true,
+        "explanation": "The node containing `2` points back to index `0`, creating the repeating path `1 → 2 → 1 → …`."
+      }
+    ],
+    "constraints": [
+      "0 ≤ number of nodes ≤ 10,000",
+      "pos is −1 or a valid zero-based node index."
+    ],
+    "adapter": "cycle"
+  },
+  {
+    "id": 19,
+    "slug": "remove-nth-node-from-end-of-list",
+    "title": "Remove Nth Node From End of List",
+    "topic": "Linked lists",
+    "difficulty": "Medium",
+    "method": "removeNthFromEnd",
+    "params": [
+      {
+        "name": "head",
+        "type": "Optional[ListNode]"
+      },
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "Optional[ListNode]",
+    "description": [
+      "You are given the head of a nonempty singly linked list and an integer `n`. Remove the node that is `n` positions from the end, and return the head of the remaining list.",
+      "Counting from the end is one-based: `n = 1` removes the last node, `n = 2` removes the node just before it, and `n` equal to the list length removes the first node. The supplied `n` is always valid.",
+      "Preserve the values and relative order of all remaining nodes. The returned head may differ from the original head. If the only node is removed, return `None`.",
+      "Your function receives `ListNode` objects with `val` and `next` fields, not Python arrays. The examples display node values as arrays; `[]` represents an empty list whose head is `None`."
+    ],
+    "hints": [
+      "Maintain a gap of n nodes between two pointers.",
+      "A dummy node handles removing the original head."
+    ],
+    "examples": [
+      {
+        "input": {
+          "head": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "n": 2
+        },
+        "expected": [
+          1,
+          2,
+          3,
+          5
+        ],
+        "explanation": "Counting backward gives `5` first and `4` second. Remove the node containing `4`, leaving `1 → 2 → 3 → 5`."
+      },
+      {
+        "input": {
+          "head": [
+            1
+          ],
+          "n": 1
+        },
+        "expected": [],
+        "explanation": "The only node is also the first node from the end. Removing it leaves an empty list."
+      }
+    ],
+    "constraints": [
+      "1 ≤ number of nodes ≤ 30",
+      "1 ≤ n ≤ number of nodes"
+    ]
+  },
+  {
+    "id": 143,
+    "slug": "reorder-list",
+    "title": "Reorder List",
+    "topic": "Linked lists",
+    "difficulty": "Medium",
+    "method": "reorderList",
+    "params": [
+      {
+        "name": "head",
+        "type": "Optional[ListNode]"
+      }
+    ],
+    "returns": "None",
+    "description": [
+      "You are given the head of a singly linked list. Label its nodes in their current order as `L0 → L1 → … → Ln`.",
+      "Rearrange them into `L0 → Ln → L1 → Ln-1 → L2 → Ln-2 → …`: first take the original first node, then the original last node, then the second node, then the second-to-last, continuing inward until every node appears once.",
+      "Change the existing `next` references in place. You must not produce the order by changing or exchanging node values. The original first node remains the head, and the resulting list must end at `None`. Return `None`; the examples show the list reachable from `head` after your changes. A one-node list stays unchanged.",
+      "Your function receives `ListNode` objects with `val` and `next` fields, not Python arrays. The examples display node values as arrays; `[]` represents an empty list whose head is `None`."
+    ],
+    "hints": [
+      "Find the midpoint, then reverse the second half.",
+      "Weave the two halves together one node at a time."
+    ],
+    "examples": [
+      {
+        "input": {
+          "head": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "expected": [
+          1,
+          4,
+          2,
+          3
+        ],
+        "explanation": "Take the nodes in original index order `0, 3, 1, 2`, giving values `1 → 4 → 2 → 3`."
+      },
+      {
+        "input": {
+          "head": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "expected": [
+          1,
+          5,
+          2,
+          4,
+          3
+        ],
+        "explanation": "Take original indices `0, 4, 1, 3, 2`. The middle node appears once at the end."
+      }
+    ],
+    "constraints": [
+      "1 ≤ number of nodes ≤ 50,000",
+      "Modify links in place; do not replace values."
+    ],
+    "mutates": "head"
+  },
+  {
+    "id": 2,
+    "slug": "add-two-numbers",
+    "title": "Add Two Numbers",
+    "topic": "Linked lists",
+    "difficulty": "Medium",
+    "method": "addTwoNumbers",
+    "params": [
+      {
+        "name": "l1",
+        "type": "Optional[ListNode]"
+      },
+      {
+        "name": "l2",
+        "type": "Optional[ListNode]"
+      }
+    ],
+    "returns": "Optional[ListNode]",
+    "description": [
+      "You are given two nonempty singly linked lists, `l1` and `l2`, representing nonnegative integers. Each node stores one decimal digit, with the least significant digit at the head.",
+      "For example, the list `2 → 4 → 3` represents `342`, not `243`. Add the two represented integers and return a linked list representing their sum in the same least-significant-digit-first format.",
+      "The lists can have different lengths. The result must include any additional digit needed by the sum. Inputs have no leading zeros in their usual written form, except that zero itself is represented by a single node containing `0`. Return the head of the sum list.",
+      "Your function receives `ListNode` objects with `val` and `next` fields, not Python arrays. The examples display node values as arrays; `[]` represents an empty list whose head is `None`."
+    ],
+    "hints": [
+      "Process matching digits while carrying overflow to the next position.",
+      "Continue while either list has nodes or a carry remains."
+    ],
+    "examples": [
+      {
+        "input": {
+          "l1": [
+            2,
+            4,
+            3
+          ],
+          "l2": [
+            5,
+            6,
+            4
+          ]
+        },
+        "expected": [
+          7,
+          0,
+          8
+        ],
+        "explanation": "The input lists represent `342` and `465`. Their sum is `807`, so the result stores digits as `7 → 0 → 8`."
+      },
+      {
+        "input": {
+          "l1": [
+            0
+          ],
+          "l2": [
+            0
+          ]
+        },
+        "expected": [
+          0
+        ],
+        "explanation": "Both lists represent zero. Their sum is represented by one node with value `0`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ length of each list ≤ 100",
+      "Node values are decimal digits.",
+      "Numbers have no leading zeros except for zero itself."
+    ]
+  },
+  {
+    "id": 226,
+    "slug": "invert-binary-tree",
+    "title": "Invert Binary Tree",
+    "topic": "Trees",
+    "difficulty": "Easy",
+    "method": "invertTree",
+    "params": [
+      {
+        "name": "root",
+        "type": "Optional[TreeNode]"
+      }
+    ],
+    "returns": "Optional[TreeNode]",
+    "description": [
+      "You are given the root of a binary tree. Return the root of its mirror image.",
+      "In the mirrored tree, every node's original left subtree appears on its right, and its original right subtree appears on its left. This change applies throughout the tree, not just to the root's immediate children. Node values stay the same.",
+      "A node with only one child has that child on the opposite side after inversion. An empty tree stays empty, so return `None` when `root` is `None`.",
+      "The provided `TreeNode` class has `val`, `left`, and `right` fields. Example trees use level-order arrays, with `null` for missing children and trailing `null` entries omitted. At runtime, tree inputs are node objects with `None` for missing children."
+    ],
+    "hints": [
+      "Each node performs the same local operation.",
+      "Apply that operation recursively or with an explicit queue."
+    ],
+    "examples": [
+      {
+        "input": {
+          "root": [
+            4,
+            2,
+            7,
+            1,
+            3,
+            6,
+            9
+          ]
+        },
+        "expected": [
+          4,
+          7,
+          2,
+          9,
+          6,
+          3,
+          1
+        ],
+        "explanation": "The root `4` has children `7` and `2` after inversion. The children below `7` are `9, 6`, and those below `2` are `3, 1`."
+      },
+      {
+        "input": {
+          "root": [
+            2,
+            1,
+            3
+          ]
+        },
+        "expected": [
+          2,
+          3,
+          1
+        ],
+        "explanation": "The root stays `2`, while its left child `1` and right child `3` exchange sides."
+      }
+    ],
+    "constraints": [
+      "0 ≤ number of nodes ≤ 100",
+      "Missing nodes are represented by null."
+    ]
+  },
+  {
+    "id": 104,
+    "slug": "maximum-depth-of-binary-tree",
+    "title": "Maximum Depth of Binary Tree",
+    "topic": "Trees",
+    "difficulty": "Easy",
+    "method": "maxDepth",
+    "params": [
+      {
+        "name": "root",
+        "type": "Optional[TreeNode]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given the root of a binary tree. Return its maximum depth: the largest number of nodes on any path that starts at the root and ends at a leaf.",
+      "A leaf is a node with no left or right child. Depth is counted in nodes, so a tree consisting only of its root has depth `1`. Different branches can have different depths; return the greatest one.",
+      "For an empty tree, `root` is `None` and the depth is `0`.",
+      "The provided `TreeNode` class has `val`, `left`, and `right` fields. Example trees use level-order arrays, with `null` for missing children and trailing `null` entries omitted. At runtime, tree inputs are node objects with `None` for missing children."
+    ],
+    "hints": [
+      "A node’s depth depends on the greater depth of its children.",
+      "An empty child contributes zero."
+    ],
+    "examples": [
+      {
+        "input": {
+          "root": [
+            3,
+            9,
+            20,
+            null,
+            null,
+            15,
+            7
+          ]
+        },
+        "expected": 3,
+        "explanation": "The path `3 → 20 → 15`, or `3 → 20 → 7`, contains three nodes. The path ending at `9` is shorter."
+      },
+      {
+        "input": {
+          "root": [
+            1,
+            null,
+            2
+          ]
+        },
+        "expected": 2,
+        "explanation": "The root `1` has right child `2`. This root-to-leaf path contains two nodes."
+      }
+    ],
+    "constraints": [
+      "0 ≤ number of nodes ≤ 10,000",
+      "The root may be None."
+    ]
+  },
+  {
+    "id": 110,
+    "slug": "balanced-binary-tree",
+    "title": "Balanced Binary Tree",
+    "topic": "Trees",
+    "difficulty": "Easy",
+    "method": "isBalanced",
+    "params": [
+      {
+        "name": "root",
+        "type": "Optional[TreeNode]"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given the root of a binary tree. Return `True` if the tree is height-balanced, and `False` otherwise.",
+      "A node is balanced when the heights of its left and right subtrees differ by at most one. Subtree height is the number of nodes on its longest downward path to a leaf; an empty subtree has height zero.",
+      "This condition must hold at every node in the tree, including nodes far below the root. Having similarly sized root subtrees alone is not enough. An empty tree and a one-node tree are both balanced.",
+      "The provided `TreeNode` class has `val`, `left`, and `right` fields. Example trees use level-order arrays, with `null` for missing children and trailing `null` entries omitted. At runtime, tree inputs are node objects with `None` for missing children."
+    ],
+    "hints": [
+      "Compute heights from the leaves upward.",
+      "Use a special result to propagate an unbalanced subtree immediately."
+    ],
+    "examples": [
+      {
+        "input": {
+          "root": [
+            3,
+            9,
+            20,
+            null,
+            null,
+            15,
+            7
+          ]
+        },
+        "expected": true,
+        "explanation": "At the root, the left subtree has height `1` and the right subtree has height `2`. Their difference is one, and all other nodes also satisfy the condition."
+      },
+      {
+        "input": {
+          "root": [
+            1,
+            2,
+            2,
+            3,
+            3,
+            null,
+            null,
+            4,
+            4
+          ]
+        },
+        "expected": false,
+        "explanation": "At the root, the left subtree has height `3` while the right subtree has height `1`. The difference exceeds one."
+      }
+    ],
+    "constraints": [
+      "0 ≤ number of nodes ≤ 5,000",
+      "Balance is required at every node."
+    ]
+  },
+  {
+    "id": 543,
+    "slug": "diameter-of-binary-tree",
+    "title": "Diameter of Binary Tree",
+    "topic": "Trees",
+    "difficulty": "Easy",
+    "method": "diameterOfBinaryTree",
+    "params": [
+      {
+        "name": "root",
+        "type": "Optional[TreeNode]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given the root of a binary tree. Return its diameter: the maximum number of edges on a path between any two nodes.",
+      "A path follows parent-child connections and cannot visit the same node twice. It may go upward from one node to a shared ancestor and then downward to another node. The longest path does not have to pass through the root.",
+      "Measure length in edges rather than nodes. A path containing four nodes has length three. An empty tree or a tree with just one node has diameter `0`.",
+      "The provided `TreeNode` class has `val`, `left`, and `right` fields. Example trees use level-order arrays, with `null` for missing children and trailing `null` entries omitted. At runtime, tree inputs are node objects with `None` for missing children."
+    ],
+    "hints": [
+      "At a node, a path through both children joins their subtree heights.",
+      "Keep a global best while returning only the height to the parent."
+    ],
+    "examples": [
+      {
+        "input": {
+          "root": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "expected": 3,
+        "explanation": "One longest path is `4 → 2 → 1 → 3`, which has three edges. The path starting at `5` and ending at `3` is equally long."
+      },
+      {
+        "input": {
+          "root": [
+            1,
+            2
+          ]
+        },
+        "expected": 1,
+        "explanation": "The only connection is the edge from `1` to `2`, so the diameter is `1`."
+      }
+    ],
+    "constraints": [
+      "0 ≤ number of nodes ≤ 10,000",
+      "Measure diameter in edges, not nodes."
+    ]
+  },
+  {
+    "id": 100,
+    "slug": "same-tree",
+    "title": "Same Tree",
+    "topic": "Trees",
+    "difficulty": "Easy",
+    "method": "isSameTree",
+    "params": [
+      {
+        "name": "p",
+        "type": "Optional[TreeNode]"
+      },
+      {
+        "name": "q",
+        "type": "Optional[TreeNode]"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given the roots of two binary trees, `p` and `q`. Return `True` if they are exactly the same tree in both structure and values, or `False` otherwise.",
+      "Corresponding nodes must have equal values, and their left and right children must match in the same positions. Swapping a left child with a right child changes the structure even when the node values are unchanged.",
+      "Two empty trees are the same. If exactly one tree is empty, they are different. Matching just the values encountered in a traversal is not sufficient if the shapes differ.",
+      "The provided `TreeNode` class has `val`, `left`, and `right` fields. Example trees use level-order arrays, with `null` for missing children and trailing `null` entries omitted. At runtime, tree inputs are node objects with `None` for missing children."
+    ],
+    "hints": [
+      "Handle empty nodes before comparing values.",
+      "Both pairs of children must also match."
+    ],
+    "examples": [
+      {
+        "input": {
+          "p": [
+            1,
+            2,
+            3
+          ],
+          "q": [
+            1,
+            2,
+            3
+          ]
+        },
+        "expected": true,
+        "explanation": "Both trees have root `1`, left child `2`, and right child `3`, with no additional nodes."
+      },
+      {
+        "input": {
+          "p": [
+            1,
+            2
+          ],
+          "q": [
+            1,
+            null,
+            2
+          ]
+        },
+        "expected": false,
+        "explanation": "In `p`, the node containing `2` is a left child. In `q`, it is a right child, so the structures differ."
+      }
+    ],
+    "constraints": [
+      "0 ≤ number of nodes in each tree ≤ 100",
+      "Both structure and values must match."
+    ]
+  },
+  {
+    "id": 572,
+    "slug": "subtree-of-another-tree",
+    "title": "Subtree of Another Tree",
+    "topic": "Trees",
+    "difficulty": "Easy",
+    "method": "isSubtree",
+    "params": [
+      {
+        "name": "root",
+        "type": "Optional[TreeNode]"
+      },
+      {
+        "name": "subRoot",
+        "type": "Optional[TreeNode]"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given the roots of two nonempty binary trees, `root` and `subRoot`. Return whether `subRoot` appears as an entire subtree inside `root`.",
+      "A subtree consists of a chosen node and every descendant below it, preserving all left and right child connections. Its shape and each corresponding node value must match `subRoot` exactly.",
+      "The chosen node may be `root` itself, so a tree is a subtree of itself. You cannot omit extra descendants or move children to make a match. Matching a sequence of values or just the upper part of a larger subtree is not enough.",
+      "The provided `TreeNode` class has `val`, `left`, and `right` fields. Example trees use level-order arrays, with `null` for missing children and trailing `null` entries omitted. At runtime, tree inputs are node objects with `None` for missing children."
+    ],
+    "hints": [
+      "At each node, either this subtree matches or a descendant might match.",
+      "Separate equality checking from searching for a candidate root."
+    ],
+    "examples": [
+      {
+        "input": {
+          "root": [
+            3,
+            4,
+            5,
+            1,
+            2
+          ],
+          "subRoot": [
+            4,
+            1,
+            2
+          ]
+        },
+        "expected": true,
+        "explanation": "The subtree rooted at the node with value `4` has left child `1` and right child `2`, exactly matching `subRoot`."
+      },
+      {
+        "input": {
+          "root": [
+            3,
+            4,
+            5,
+            1,
+            2,
+            null,
+            null,
+            null,
+            null,
+            0
+          ],
+          "subRoot": [
+            4,
+            1,
+            2
+          ]
+        },
+        "expected": false,
+        "explanation": "The subtree rooted at `4` has an additional node `0` below its `2`. That extra descendant prevents an exact match."
+      }
+    ],
+    "constraints": [
+      "1 ≤ nodes in root ≤ 2,000",
+      "1 ≤ nodes in subRoot ≤ 1,000"
+    ]
+  },
+  {
+    "id": 102,
+    "slug": "binary-tree-level-order-traversal",
+    "title": "Binary Tree Level Order Traversal",
+    "topic": "Trees",
+    "difficulty": "Medium",
+    "method": "levelOrder",
+    "params": [
+      {
+        "name": "root",
+        "type": "Optional[TreeNode]"
+      }
+    ],
+    "returns": "List[List[int]]",
+    "description": [
+      "You are given the root of a binary tree. Return a list of lists containing its node values grouped by depth.",
+      "The first inner list contains the root's value, the next contains the existing nodes one level below it, and so on. Within each level, list nodes from left to right according to their positions in the tree.",
+      "Do not include placeholders for missing children in the returned groups. Every existing node should appear exactly once. If the tree is empty, return `[]`.",
+      "The provided `TreeNode` class has `val`, `left`, and `right` fields. Example trees use level-order arrays, with `null` for missing children and trailing `null` entries omitted. At runtime, tree inputs are node objects with `None` for missing children."
+    ],
+    "hints": [
+      "Breadth-first search naturally processes depth layers.",
+      "Capture the queue length before processing a level."
+    ],
+    "examples": [
+      {
+        "input": {
+          "root": [
+            3,
+            9,
+            20,
+            null,
+            null,
+            15,
+            7
+          ]
+        },
+        "expected": [
+          [
+            3
+          ],
+          [
+            9,
+            20
+          ],
+          [
+            15,
+            7
+          ]
+        ],
+        "explanation": "The levels contain root `3`, then children `9, 20`, then grandchildren `15, 7`."
+      },
+      {
+        "input": {
+          "root": [
+            1
+          ]
+        },
+        "expected": [
+          [
+            1
+          ]
+        ],
+        "explanation": "Only the root exists, so there is one level containing the value `1`."
+      }
+    ],
+    "constraints": [
+      "0 ≤ number of nodes ≤ 2,000",
+      "Preserve left-to-right order within each level."
+    ]
+  },
+  {
+    "id": 98,
+    "slug": "validate-binary-search-tree",
+    "title": "Validate Binary Search Tree",
+    "topic": "Trees",
+    "difficulty": "Medium",
+    "method": "isValidBST",
+    "params": [
+      {
+        "name": "root",
+        "type": "Optional[TreeNode]"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given the root of a binary tree. Determine whether it satisfies the strict binary search tree property.",
+      "For every node, all values anywhere in its left subtree must be smaller than that node's value, and all values anywhere in its right subtree must be larger. Both subtrees must obey the same rule recursively.",
+      "Equal values are not allowed in a valid tree. A node must satisfy the restrictions imposed by every ancestor, not only its immediate parent. Return `True` if all nodes satisfy the property, and `False` otherwise.",
+      "The provided `TreeNode` class has `val`, `left`, and `right` fields. Example trees use level-order arrays, with `null` for missing children and trailing `null` entries omitted. At runtime, tree inputs are node objects with `None` for missing children."
+    ],
+    "hints": [
+      "Checking only immediate children misses deeper violations.",
+      "Carry valid lower and upper bounds down the tree."
+    ],
+    "examples": [
+      {
+        "input": {
+          "root": [
+            2,
+            1,
+            3
+          ]
+        },
+        "expected": true,
+        "explanation": "The left value `1` is smaller than root `2`, and the right value `3` is larger. Both children are leaves."
+      },
+      {
+        "input": {
+          "root": [
+            5,
+            1,
+            4,
+            null,
+            null,
+            3,
+            6
+          ]
+        },
+        "expected": false,
+        "explanation": "The node `4` is in the right subtree of root `5` but is smaller than `5`, which violates the property."
+      }
+    ],
+    "constraints": [
+      "1 ≤ number of nodes ≤ 10,000",
+      "Node values fit in a signed 32-bit integer.",
+      "Duplicate values violate the BST property."
+    ]
+  },
+  {
+    "id": 230,
+    "slug": "kth-smallest-element-in-a-bst",
+    "title": "Kth Smallest Element in a BST",
+    "topic": "Trees",
+    "difficulty": "Medium",
+    "method": "kthSmallest",
+    "params": [
+      {
+        "name": "root",
+        "type": "Optional[TreeNode]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given the root of a valid binary search tree with distinct integer values and an integer `k`. Return the kth smallest node value in the entire tree.",
+      "The rank `k` is one-based: `k = 1` asks for the minimum value, and `k` equal to the number of nodes asks for the maximum value. The supplied rank is always valid.",
+      "The search tree property means every value in a node's left subtree is smaller than its value and every value in its right subtree is larger. Return the selected integer value, not a node reference or an index.",
+      "The provided `TreeNode` class has `val`, `left`, and `right` fields. Example trees use level-order arrays, with `null` for missing children and trailing `null` entries omitted. At runtime, tree inputs are node objects with `None` for missing children."
+    ],
+    "hints": [
+      "Inorder traversal visits a BST in sorted order.",
+      "Stop when you have visited k nodes."
+    ],
+    "examples": [
+      {
+        "input": {
+          "root": [
+            3,
+            1,
+            4,
+            null,
+            2
+          ],
+          "k": 1
+        },
+        "expected": 1,
+        "explanation": "The tree contains values `1, 2, 3, 4` in increasing order. Rank `1` selects `1`."
+      },
+      {
+        "input": {
+          "root": [
+            5,
+            3,
+            6,
+            2,
+            4,
+            null,
+            null,
+            1
+          ],
+          "k": 3
+        },
+        "expected": 3,
+        "explanation": "The values in increasing order are `1, 2, 3, 4, 5, 6`. The third is `3`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ k ≤ number of nodes ≤ 10,000",
+      "root is a valid binary search tree."
+    ]
+  },
+  {
+    "id": 236,
+    "slug": "lowest-common-ancestor",
+    "title": "Lowest Common Ancestor",
+    "topic": "Trees",
+    "difficulty": "Medium",
+    "method": "lowestCommonAncestor",
+    "params": [
+      {
+        "name": "root",
+        "type": "Optional[TreeNode]"
+      },
+      {
+        "name": "p",
+        "type": "TreeNode"
+      },
+      {
+        "name": "q",
+        "type": "TreeNode"
+      }
+    ],
+    "returns": "TreeNode",
+    "description": [
+      "You are given the root of a binary tree and two distinct existing nodes, `p` and `q`. Return their lowest common ancestor: the deepest node that is an ancestor of both targets.",
+      "A node counts as an ancestor of itself. Therefore, if one target lies below the other, the higher target can be the answer. This is a general binary tree; its values do not imply a binary search tree ordering.",
+      "All node values are unique. The examples identify `p` and `q` by their values, but your function receives references to the actual nodes in the tree. Return the ancestor's `TreeNode` object, not its integer value or a newly created replacement. The example output displays that returned node's value.",
+      "The provided `TreeNode` class has `val`, `left`, and `right` fields. Example trees use level-order arrays, with `null` for missing children and trailing `null` entries omitted. At runtime, tree inputs are node objects with `None` for missing children."
+    ],
+    "hints": [
+      "Ask whether each child subtree contains either target.",
+      "The first node connecting both sides is the answer; a target can also be the ancestor."
+    ],
+    "examples": [
+      {
+        "input": {
+          "root": [
+            3,
+            5,
+            1,
+            6,
+            2,
+            0,
+            8,
+            null,
+            null,
+            7,
+            4
+          ],
+          "p": 5,
+          "q": 1
+        },
+        "expected": 3,
+        "explanation": "Nodes `5` and `1` are in different subtrees of root `3`. Their deepest shared ancestor is `3`."
+      },
+      {
+        "input": {
+          "root": [
+            3,
+            5,
+            1,
+            6,
+            2,
+            0,
+            8,
+            null,
+            null,
+            7,
+            4
+          ],
+          "p": 5,
+          "q": 4
+        },
+        "expected": 5,
+        "explanation": "Node `4` is below node `5`. Because a node is its own ancestor, the common ancestor is node `5`."
+      }
+    ],
+    "constraints": [
+      "2 ≤ number of nodes ≤ 100,000",
+      "p and q are distinct existing nodes.",
+      "All node values are unique."
+    ],
+    "adapter": "lca"
+  },
+  {
+    "id": 199,
+    "slug": "binary-tree-right-side-view",
+    "title": "Binary Tree Right Side View",
+    "topic": "Trees",
+    "difficulty": "Medium",
+    "method": "rightSideView",
+    "params": [
+      {
+        "name": "root",
+        "type": "Optional[TreeNode]"
+      }
+    ],
+    "returns": "List[int]",
+    "description": [
+      "You are given the root of a binary tree. Imagine looking at the tree from its right side, so that at each depth the rightmost existing node hides the other nodes at that depth.",
+      "Return the visible node values in order from the root downward. Include exactly one value for each depth that contains at least one node.",
+      "A visible node may belong to a left subtree if no node farther right exists at that depth. The answer is therefore not necessarily obtained by following only right-child references. Return `[]` for an empty tree.",
+      "The provided `TreeNode` class has `val`, `left`, and `right` fields. Example trees use level-order arrays, with `null` for missing children and trailing `null` entries omitted. At runtime, tree inputs are node objects with `None` for missing children."
+    ],
+    "hints": [
+      "Find the rightmost node on every level.",
+      "Use breadth-first levels or visit right children first in depth-first search."
+    ],
+    "examples": [
+      {
+        "input": {
+          "root": [
+            1,
+            2,
+            3,
+            null,
+            5,
+            null,
+            4
+          ]
+        },
+        "expected": [
+          1,
+          3,
+          4
+        ],
+        "explanation": "The visible values are root `1`, then `3` on the next level, then `4` on the deepest level. The node `5` is hidden behind `4`."
+      },
+      {
+        "input": {
+          "root": [
+            1,
+            null,
+            3
+          ]
+        },
+        "expected": [
+          1,
+          3
+        ],
+        "explanation": "The tree has root `1` and its right child `3`, both visible from the right."
+      }
+    ],
+    "constraints": [
+      "0 ≤ number of nodes ≤ 100",
+      "Return values in order of increasing depth."
+    ]
+  },
+  {
+    "id": 105,
+    "slug": "construct-binary-tree-from-traversals",
+    "title": "Construct Binary Tree from Traversals",
+    "topic": "Trees",
+    "difficulty": "Medium",
+    "method": "buildTree",
+    "params": [
+      {
+        "name": "preorder",
+        "type": "List[int]"
+      },
+      {
+        "name": "inorder",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "Optional[TreeNode]",
+    "description": [
+      "You are given two integer arrays, `preorder` and `inorder`, describing the same binary tree. Build that tree and return its root.",
+      "In a preorder traversal, a node is visited before all nodes in its left subtree and then all nodes in its right subtree. In an inorder traversal, the left subtree is visited first, then the node, then the right subtree.",
+      "All node values are distinct. The arrays have the same length, contain the same values, and are guaranteed to describe a valid tree, so the answer is unique. Preserve the exact left and right child structure implied by both traversals. Return a `TreeNode` root rather than an array of values.",
+      "Create nodes with the provided `TreeNode(val, left, right)` class; omitted children default to `None`. The returned tree is displayed as a level-order array, using `null` for missing children and omitting trailing `null` entries."
+    ],
+    "hints": [
+      "The first preorder value is the current root.",
+      "Its position in inorder separates the left and right subtrees."
+    ],
+    "examples": [
+      {
+        "input": {
+          "preorder": [
+            3,
+            9,
+            20,
+            15,
+            7
+          ],
+          "inorder": [
+            9,
+            3,
+            15,
+            20,
+            7
+          ]
+        },
+        "expected": [
+          3,
+          9,
+          20,
+          null,
+          null,
+          15,
+          7
+        ],
+        "explanation": "The resulting root is `3`, with left child `9` and right child `20`. Node `20` has children `15` and `7`; this tree produces both given traversals."
+      },
+      {
+        "input": {
+          "preorder": [
+            -1
+          ],
+          "inorder": [
+            -1
+          ]
+        },
+        "expected": [
+          -1
+        ],
+        "explanation": "Each traversal contains only `-1`, so the result is one node with that value."
+      }
+    ],
+    "constraints": [
+      "1 ≤ number of nodes ≤ 3,000",
+      "All node values are distinct.",
+      "Both traversals describe the same tree."
+    ]
+  },
+  {
+    "id": 215,
+    "slug": "kth-largest-element-in-an-array",
+    "title": "Kth Largest Element in an Array",
+    "topic": "Heaps",
+    "difficulty": "Medium",
+    "method": "findKthLargest",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given an integer array `nums` and an integer `k`. Return the kth largest element, counting every occurrence separately.",
+      "The rank is one-based: `k = 1` asks for the largest element. Imagine ordering all input elements from largest to smallest; the requested value is the element in position `k` of that ordering.",
+      "Repeated values occupy separate positions. For example, in `[5, 5, 3]`, the second largest element is `5`. The input need not be sorted, and `k` is guaranteed to be valid. Return the value itself, not its original index."
+    ],
+    "hints": [
+      "Maintain only the largest k values seen so far.",
+      "The smallest element in a size-k min-heap is the current kth largest."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            3,
+            2,
+            1,
+            5,
+            6,
+            4
+          ],
+          "k": 2
+        },
+        "expected": 5,
+        "explanation": "Descending order is `6, 5, 4, 3, 2, 1`. The second value is `5`."
+      },
+      {
+        "input": {
+          "nums": [
+            3,
+            2,
+            3,
+            1,
+            2,
+            4,
+            5,
+            5,
+            6
+          ],
+          "k": 4
+        },
+        "expected": 4,
+        "explanation": "Descending order starts `6, 5, 5, 4`. Counting both copies of `5`, the fourth largest element is `4`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ k ≤ len(nums) ≤ 100,000",
+      "Duplicates count as separate elements."
+    ]
+  },
+  {
+    "id": 973,
+    "slug": "k-closest-points-to-origin",
+    "title": "K Closest Points to Origin",
+    "topic": "Heaps",
+    "difficulty": "Medium",
+    "method": "kClosest",
+    "params": [
+      {
+        "name": "points",
+        "type": "List[List[int]]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "List[List[int]]",
+    "description": [
+      "You are given an array `points`, where each entry `[x, y]` is a point in the plane, and an integer `k`. Return exactly `k` input points closest to the origin `(0, 0)` under Euclidean distance.",
+      "The distance of `[x, y]` is `sqrt(x² + y²)`. Coordinates may be positive, negative, or zero. Return the selected coordinate pairs in any order, rather than their indices or distances.",
+      "If several points tie at the cutoff distance, any selection of the required number of tied points is accepted, provided all strictly closer points are included. Repeated coordinates represent separate input occurrences; do not return a point more times than it occurs in the input."
+    ],
+    "hints": [
+      "Squared distance preserves the ordering without a square root.",
+      "A bounded heap or quickselect can isolate the closest k points."
+    ],
+    "examples": [
+      {
+        "input": {
+          "points": [
+            [
+              1,
+              3
+            ],
+            [
+              -2,
+              2
+            ]
+          ],
+          "k": 1
+        },
+        "expected": [
+          [
+            -2,
+            2
+          ]
+        ],
+        "explanation": "The squared distances are `10` for `[1, 3]` and `8` for `[-2, 2]`, so `[-2, 2]` is closer."
+      },
+      {
+        "input": {
+          "points": [
+            [
+              3,
+              3
+            ],
+            [
+              5,
+              -1
+            ],
+            [
+              -2,
+              4
+            ]
+          ],
+          "k": 2
+        },
+        "expected": [
+          [
+            3,
+            3
+          ],
+          [
+            -2,
+            4
+          ]
+        ],
+        "explanation": "The squared distances are `18`, `26`, and `20`. The points with distances squared `18` and `20` are the closest two."
+      }
+    ],
+    "constraints": [
+      "1 ≤ k ≤ len(points) ≤ 10,000",
+      "Each point has two integer coordinates.",
+      "Tied distances may have multiple valid answers."
+    ],
+    "compare": "closest"
+  },
+  {
+    "id": 23,
+    "slug": "merge-k-sorted-lists",
+    "title": "Merge K Sorted Lists",
+    "topic": "Heaps",
+    "difficulty": "Hard",
+    "method": "mergeKLists",
+    "params": [
+      {
+        "name": "lists",
+        "type": "List[Optional[ListNode]]"
+      }
+    ],
+    "returns": "Optional[ListNode]",
+    "description": [
+      "You are given `lists`, an array of heads of singly linked lists. Each individual list is sorted in nondecreasing order.",
+      "Merge all nodes into one nondecreasing singly linked list and return its head. Include each value occurrence from every input list exactly once, including duplicate values within a list or across different lists.",
+      "Some input lists may be empty, and the array of lists itself may be empty. If no nodes exist in any input, return `None`. The displayed nested arrays describe the separate lists; at runtime, `lists` contains `ListNode` heads or `None`, not arrays of integers.",
+      "The provided `ListNode` class exposes `val` and `next`. An empty input list is represented by `None`; the final merged list is displayed as an array of its node values."
+    ],
+    "hints": [
+      "Only the current head of each list can be the next output node.",
+      "Use a heap to choose the smallest head, or merge lists in pairs."
+    ],
+    "examples": [
+      {
+        "input": {
+          "lists": [
+            [
+              1,
+              4,
+              5
+            ],
+            [
+              1,
+              3,
+              4
+            ],
+            [
+              2,
+              6
+            ]
+          ]
+        },
+        "expected": [
+          1,
+          1,
+          2,
+          3,
+          4,
+          4,
+          5,
+          6
+        ],
+        "explanation": "Combining the three lists gives sorted values `1, 1, 2, 3, 4, 4, 5, 6`. Repeated values from different lists are all retained."
+      },
+      {
+        "input": {
+          "lists": []
+        },
+        "expected": [],
+        "explanation": "There are no lists to merge, so return `None`, displayed as `[]`."
+      }
+    ],
+    "constraints": [
+      "0 ≤ number of lists ≤ 10,000",
+      "At most 10,000 nodes in total.",
+      "Every input list is sorted."
+    ]
+  },
+  {
+    "id": 78,
+    "slug": "subsets",
+    "title": "Subsets",
+    "topic": "Backtracking",
+    "difficulty": "Medium",
+    "method": "subsets",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "List[List[int]]",
+    "description": [
+      "You are given an array `nums` of distinct integers. Return its power set: a collection containing every possible subset exactly once.",
+      "A subset chooses any number of the input values, from zero values to all values. Each input value can be included at most once within a subset. Values need not be adjacent in the original array.",
+      "Include both the empty subset and the full set. The order of the subsets and the order of values within each subset do not matter. When `nums` is empty, its only subset is the empty subset, so return `[[]]`."
+    ],
+    "hints": [
+      "At each position, choose whether to include the value.",
+      "Represent the current partial subset and backtrack after exploring a choice."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            1,
+            2,
+            3
+          ]
+        },
+        "expected": [
+          [],
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "explanation": "Three values have eight subsets: the empty subset, three singletons, three pairs, and the full set."
+      },
+      {
+        "input": {
+          "nums": [
+            0
+          ]
+        },
+        "expected": [
+          [],
+          [
+            0
+          ]
+        ],
+        "explanation": "The possible choices are to take no values or to take `0`, giving `[[], [0]]`."
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(nums) ≤ 10",
+      "All values are distinct."
+    ],
+    "compare": "nested-set"
+  },
+  {
+    "id": 46,
+    "slug": "permutations",
+    "title": "Permutations",
+    "topic": "Backtracking",
+    "difficulty": "Medium",
+    "method": "permute",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "List[List[int]]",
+    "description": [
+      "You are given an array `nums` of distinct integers. Return every possible ordering of those integers exactly once.",
+      "Each permutation must contain every input value once and have the same length as `nums`. Changing the order of values creates a different permutation.",
+      "You may return the collection of permutations in any order, but the ordering within each permutation is meaningful. A one-element input has exactly one permutation: that element by itself."
+    ],
+    "hints": [
+      "Build one position at a time using values not already chosen.",
+      "Undo each choice before exploring the next one."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            1,
+            2,
+            3
+          ]
+        },
+        "expected": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            3,
+            2
+          ],
+          [
+            2,
+            1,
+            3
+          ],
+          [
+            2,
+            3,
+            1
+          ],
+          [
+            3,
+            1,
+            2
+          ],
+          [
+            3,
+            2,
+            1
+          ]
+        ],
+        "explanation": "The three distinct values can be arranged in the six displayed orders. Each uses `1`, `2`, and `3` exactly once."
+      },
+      {
+        "input": {
+          "nums": [
+            0,
+            1
+          ]
+        },
+        "expected": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "explanation": "The two possible orders are `[0, 1]` and `[1, 0]`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 6",
+      "All values are distinct."
+    ],
+    "compare": "unordered"
+  },
+  {
+    "id": 39,
+    "slug": "combination-sum",
+    "title": "Combination Sum",
+    "topic": "Backtracking",
+    "difficulty": "Medium",
+    "method": "combinationSum",
+    "params": [
+      {
+        "name": "candidates",
+        "type": "List[int]"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      }
+    ],
+    "returns": "List[List[int]]",
+    "description": [
+      "You are given distinct positive integers in `candidates` and a positive integer `target`. Return every distinct combination of candidate values whose sum is exactly `target`.",
+      "You may reuse each candidate any number of times, including zero times. Only values present in `candidates` may be used. A combination is determined by how many copies of each value it contains, so `[2, 2, 3]` and `[3, 2, 2]` represent the same combination.",
+      "Include each combination once. The order of combinations and the order of numbers within a combination do not matter. Return `[]` if the target cannot be formed."
+    ],
+    "hints": [
+      "Keep a starting index so you do not generate different orderings of the same combination.",
+      "Recurse with the same index when reusing a value."
+    ],
+    "examples": [
+      {
+        "input": {
+          "candidates": [
+            2,
+            3,
+            6,
+            7
+          ],
+          "target": 7
+        },
+        "expected": [
+          [
+            2,
+            2,
+            3
+          ],
+          [
+            7
+          ]
+        ],
+        "explanation": "The target `7` can be formed as `2 + 2 + 3` or as `7`. Reusing `2` is allowed."
+      },
+      {
+        "input": {
+          "candidates": [
+            2,
+            3,
+            5
+          ],
+          "target": 8
+        },
+        "expected": [
+          [
+            2,
+            2,
+            2,
+            2
+          ],
+          [
+            2,
+            3,
+            3
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "explanation": "The combinations are `2 + 2 + 2 + 2`, `2 + 3 + 3`, and `3 + 5`. Rearrangements of them are not additional answers."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(candidates) ≤ 30",
+      "All candidate values are distinct and positive.",
+      "1 ≤ target ≤ 500"
+    ],
+    "compare": "nested-set"
+  },
+  {
+    "id": 22,
+    "slug": "generate-parentheses",
+    "title": "Generate Parentheses",
+    "topic": "Backtracking",
+    "difficulty": "Medium",
+    "method": "generateParenthesis",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "List[str]",
+    "description": [
+      "You are given a positive integer `n`. Return every distinct valid string consisting of exactly `n` opening parentheses and `n` closing parentheses.",
+      "A valid string has correctly matched and nested pairs: no closing parenthesis appears before the opening parenthesis it closes, and every opening parenthesis is eventually closed. The result strings therefore each contain `2 × n` characters.",
+      "Pairs may be nested, placed next to each other, or combined in both ways. Include each valid string once and return the collection in any order. Do not include spaces or other bracket types."
+    ],
+    "hints": [
+      "Never add a closing bracket unless an unmatched opening bracket exists.",
+      "Track how many opening and closing brackets have been used."
+    ],
+    "examples": [
+      {
+        "input": {
+          "n": 3
+        },
+        "expected": [
+          "((()))",
+          "(()())",
+          "(())()",
+          "()(())",
+          "()()()"
+        ],
+        "explanation": "There are five valid arrangements of three pairs, ranging from fully nested `((()))` to adjacent pairs `()()()`."
+      },
+      {
+        "input": {
+          "n": 1
+        },
+        "expected": [
+          "()"
+        ],
+        "explanation": "With one pair, the only valid arrangement is `()`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ n ≤ 8"
+    ],
+    "compare": "unordered"
+  },
+  {
+    "id": 79,
+    "slug": "word-search",
+    "title": "Word Search",
+    "topic": "Backtracking",
+    "difficulty": "Medium",
+    "method": "exist",
+    "params": [
+      {
+        "name": "board",
+        "type": "List[List[str]]"
+      },
+      {
+        "name": "word",
+        "type": "str"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given a rectangular grid of single-character strings, `board`, and a nonempty string `word`. Return whether the word can be formed by following a path of cells in the grid.",
+      "The first cell may be anywhere. Each subsequent character must come from a cell immediately above, below, to the left, or to the right of the previous cell. Diagonal moves and jumps over cells are not allowed.",
+      "The path must spell `word` in order, with case-sensitive matches. A cell can be used at most once in a single path, even if its character is needed again. Different cells containing the same character may be used. Return a Boolean, not the path."
+    ],
+    "hints": [
+      "Try each matching start cell and explore its neighbors.",
+      "Mark the current path’s visited cells, then undo the mark when backtracking."
+    ],
+    "examples": [
+      {
+        "input": {
+          "board": [
+            [
+              "A",
+              "B",
+              "C",
+              "E"
+            ],
+            [
+              "S",
+              "F",
+              "C",
+              "S"
+            ],
+            [
+              "A",
+              "D",
+              "E",
+              "E"
+            ]
+          ],
+          "word": "ABCCED"
+        },
+        "expected": true,
+        "explanation": "A valid path uses zero-based cells `(0,0) → (0,1) → (0,2) → (1,2) → (2,2) → (2,1)`, spelling `ABCCED` without reusing a cell."
+      },
+      {
+        "input": {
+          "board": [
+            [
+              "A",
+              "B",
+              "C",
+              "E"
+            ],
+            [
+              "S",
+              "F",
+              "C",
+              "S"
+            ],
+            [
+              "A",
+              "D",
+              "E",
+              "E"
+            ]
+          ],
+          "word": "SEE"
+        },
+        "expected": true,
+        "explanation": "The cells `(1,3) → (2,3) → (2,2)` spell `SEE` using only edge-adjacent moves."
+      }
+    ],
+    "constraints": [
+      "1 ≤ rows, columns ≤ 6",
+      "1 ≤ len(word) ≤ 15",
+      "Matching is case-sensitive."
+    ]
+  },
+  {
+    "id": 200,
+    "slug": "number-of-islands",
+    "title": "Number of Islands",
+    "topic": "Graphs",
+    "difficulty": "Medium",
+    "method": "numIslands",
+    "params": [
+      {
+        "name": "grid",
+        "type": "List[List[str]]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given a rectangular grid `grid` containing the strings `\"1\"` for land and `\"0\"` for water. Return the number of separate islands.",
+      "An island is a maximal group of land cells joined by horizontal or vertical steps through other land cells. Diagonally touching cells do not connect. Treat the area outside the grid as water.",
+      "Every land cell belongs to exactly one island. Count each connected group once, regardless of its size or shape. A grid containing only water has `0` islands. The cells are strings, so compare with `\"1\"` and `\"0\"` rather than integer values."
+    ],
+    "hints": [
+      "Every unvisited land cell starts a new component.",
+      "Flood-fill its connected land before looking for another component."
+    ],
+    "examples": [
+      {
+        "input": {
+          "grid": [
+            [
+              "1",
+              "1",
+              "1",
+              "1",
+              "0"
+            ],
+            [
+              "1",
+              "1",
+              "0",
+              "1",
+              "0"
+            ],
+            [
+              "1",
+              "1",
+              "0",
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "expected": 1,
+        "explanation": "All land cells in the upper-left area connect through horizontal or vertical neighbors, so they form one island."
+      },
+      {
+        "input": {
+          "grid": [
+            [
+              "1",
+              "1",
+              "0",
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "1",
+              "0",
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "0",
+              "1",
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "0",
+              "0",
+              "1",
+              "1"
+            ]
+          ]
+        },
+        "expected": 3,
+        "explanation": "There are three islands: the upper-left block, the single land cell at `(2,2)`, and the two adjacent land cells in the last row."
+      }
+    ],
+    "constraints": [
+      "1 ≤ rows, columns ≤ 300",
+      "Cells are strings: \"0\" or \"1\".",
+      "Only horizontal and vertical neighbors connect."
+    ]
+  },
+  {
+    "id": 695,
+    "slug": "max-area-of-island",
+    "title": "Max Area of Island",
+    "topic": "Graphs",
+    "difficulty": "Medium",
+    "method": "maxAreaOfIsland",
+    "params": [
+      {
+        "name": "grid",
+        "type": "List[List[int]]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given a rectangular integer grid `grid`, with `1` representing land and `0` representing water. Return the area of its largest island.",
+      "An island is a maximal group of land cells connected horizontally or vertically. A diagonal touch alone does not connect two cells. An island's area is the number of land cells in that connected group, regardless of its shape.",
+      "Return the largest such count, not the number of islands or a bounding rectangle's area. If the grid has no land, return `0`. Each land cell is counted once in its island."
+    ],
+    "hints": [
+      "Count the size of each connected component.",
+      "Mark cells when visiting so each contributes only once."
+    ],
+    "examples": [
+      {
+        "input": {
+          "grid": [
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": 5,
+        "explanation": "All five land cells connect through the middle row, so they form one island of area `5`."
+      },
+      {
+        "input": {
+          "grid": [
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": 0,
+        "explanation": "Every cell is water, so the largest island area is `0`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ rows, columns ≤ 50",
+      "Cells are integers: 0 or 1."
+    ]
+  },
+  {
+    "id": 207,
+    "slug": "course-schedule",
+    "title": "Course Schedule",
+    "topic": "Graphs",
+    "difficulty": "Medium",
+    "method": "canFinish",
+    "params": [
+      {
+        "name": "numCourses",
+        "type": "int"
+      },
+      {
+        "name": "prerequisites",
+        "type": "List[List[int]]"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "There are `numCourses` courses with integer labels from `0` through `numCourses - 1`. You are given a list of prerequisite pairs, `prerequisites`.",
+      "A pair `[a, b]` means that course `b` must be completed before course `a`. A course may have several prerequisites, all of which must be completed first. Courses absent from the prerequisite list still belong to the set you must complete.",
+      "Return `True` if there is some order in which you can complete every course while respecting every pair. Return `False` if the requirements make that impossible. With no prerequisite pairs, all courses can be completed. Return only feasibility, not an ordering."
+    ],
+    "hints": [
+      "A valid schedule exists exactly when the directed prerequisite graph has no cycle.",
+      "Process nodes with zero incoming edges, or use DFS visitation states."
+    ],
+    "examples": [
+      {
+        "input": {
+          "numCourses": 2,
+          "prerequisites": [
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": true,
+        "explanation": "Complete course `0`, then course `1`. This satisfies the sole prerequisite."
+      },
+      {
+        "input": {
+          "numCourses": 2,
+          "prerequisites": [
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": false,
+        "explanation": "Course `0` requires `1` first, while course `1` requires `0` first. Neither can be completed before the other."
+      }
+    ],
+    "constraints": [
+      "1 ≤ numCourses ≤ 2,000",
+      "Course labels range from 0 to numCourses − 1.",
+      "Prerequisite pairs are distinct."
+    ]
+  },
+  {
+    "id": 210,
+    "slug": "course-schedule-ii",
+    "title": "Course Schedule II",
+    "topic": "Graphs",
+    "difficulty": "Medium",
+    "method": "findOrder",
+    "params": [
+      {
+        "name": "numCourses",
+        "type": "int"
+      },
+      {
+        "name": "prerequisites",
+        "type": "List[List[int]]"
+      }
+    ],
+    "returns": "List[int]",
+    "description": [
+      "There are `numCourses` courses labeled from `0` through `numCourses - 1`. Each pair `[a, b]` in `prerequisites` says that course `b` must appear before course `a` in a valid completion order.",
+      "Return a list containing every course exactly once in an order that satisfies all prerequisite pairs. Include courses with no prerequisites and courses that are not mentioned in any pair.",
+      "Several valid orders may exist; any of them is accepted. If the prerequisites make it impossible to complete all courses, return `[]`. If there are no prerequisites, any ordering of all course labels is valid."
+    ],
+    "hints": [
+      "This is a topological ordering of a directed graph.",
+      "Repeatedly remove a zero-indegree node and update its outgoing neighbors."
+    ],
+    "examples": [
+      {
+        "input": {
+          "numCourses": 2,
+          "prerequisites": [
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": [
+          0,
+          1
+        ],
+        "explanation": "Course `0` must precede course `1`, giving the order `[0, 1]`."
+      },
+      {
+        "input": {
+          "numCourses": 4,
+          "prerequisites": [
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ]
+        },
+        "expected": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "explanation": "Course `0` precedes both `1` and `2`, which must both precede `3`. Either `[0, 1, 2, 3]` or `[0, 2, 1, 3]` is valid."
+      }
+    ],
+    "constraints": [
+      "1 ≤ numCourses ≤ 2,000",
+      "Return each course exactly once when feasible.",
+      "Any valid ordering is accepted."
+    ],
+    "compare": "topological"
+  },
+  {
+    "id": 547,
+    "slug": "number-of-provinces",
+    "title": "Number of Provinces",
+    "topic": "Graphs",
+    "difficulty": "Medium",
+    "method": "findCircleNum",
+    "params": [
+      {
+        "name": "isConnected",
+        "type": "List[List[int]]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given a square matrix `isConnected` describing connections among `n` cities, labeled `0` through `n - 1`. An entry `isConnected[i][j] = 1` means cities `i` and `j` are directly connected; `0` means there is no direct connection.",
+      "Connections are undirected, so the matrix is symmetric, and each city is connected to itself. Cities also belong together when a chain of direct connections links them through intermediate cities.",
+      "A province is a maximal group of cities connected directly or indirectly. Return the number of such groups. An isolated city forms its own province; a diagonal `1` does not create an extra province."
+    ],
+    "hints": [
+      "A province is a connected component.",
+      "Traverse from each unvisited node, or use a disjoint-set structure."
+    ],
+    "examples": [
+      {
+        "input": {
+          "isConnected": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": 2,
+        "explanation": "Cities `0` and `1` form one connected group. City `2` is isolated from them, giving two provinces."
+      },
+      {
+        "input": {
+          "isConnected": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": 3,
+        "explanation": "There are no connections between different cities. Each of the three cities forms a separate province."
+      }
+    ],
+    "constraints": [
+      "1 ≤ number of nodes ≤ 200",
+      "The matrix is square and symmetric.",
+      "Diagonal entries are 1."
+    ]
+  },
+  {
+    "id": 684,
+    "slug": "redundant-connection",
+    "title": "Redundant Connection",
+    "topic": "Graphs",
+    "difficulty": "Medium",
+    "method": "findRedundantConnection",
+    "params": [
+      {
+        "name": "edges",
+        "type": "List[List[int]]"
+      }
+    ],
+    "returns": "List[int]",
+    "description": [
+      "You are given `edges`, a list of undirected connections between nodes labeled `1` through `n`. The graph started as a tree on those nodes, and then one extra edge was added between a pair of distinct nodes that did not already have a direct edge.",
+      "A tree is connected and has no cycle. The supplied graph remains connected but has exactly one cycle. Remove one edge so that the remaining graph is again a tree containing all the original nodes.",
+      "Return the edge to remove as `[u, v]`. If several edges could be removed successfully, choose the one appearing latest in the provided `edges` list. Preserve the endpoint order used for that edge in the input. The input has `n` nodes and `n` edges."
+    ],
+    "hints": [
+      "An edge closes a cycle if its endpoints are already connected.",
+      "Use disjoint sets while processing the edges in input order."
+    ],
+    "examples": [
+      {
+        "input": {
+          "edges": [
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        },
+        "expected": [
+          2,
+          3
+        ],
+        "explanation": "All three edges form a triangle. Removing any one breaks the cycle, and `[2, 3]` occurs last in the input."
+      },
+      {
+        "input": {
+          "edges": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              1,
+              5
+            ]
+          ]
+        },
+        "expected": [
+          1,
+          4
+        ],
+        "explanation": "The cycle uses nodes `1, 2, 3, 4`. Its latest listed edge is `[1, 4]`. The later edge `[1, 5]` is not on that cycle and cannot be removed instead."
+      }
+    ],
+    "constraints": [
+      "3 ≤ number of edges ≤ 1,000",
+      "Node labels range from 1 to n.",
+      "The input has exactly one cycle."
+    ]
+  },
+  {
+    "id": 1091,
+    "slug": "shortest-path-in-binary-matrix",
+    "title": "Shortest Path in Binary Matrix",
+    "topic": "Graphs",
+    "difficulty": "Medium",
+    "method": "shortestPathBinaryMatrix",
+    "params": [
+      {
+        "name": "grid",
+        "type": "List[List[int]]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given a square integer matrix `grid`. A cell containing `0` is open, and a cell containing `1` is blocked.",
+      "Find the shortest path from the top-left cell `(0, 0)` to the bottom-right cell `(n - 1, n - 1)`. Every visited cell, including both endpoints, must be open. Each move may go to any of the eight neighboring cells sharing an edge or corner, and must stay inside the grid.",
+      "Return the path length measured in visited cells, including the starting cell. If no valid path exists, return `-1`. A one-cell grid containing `0` has path length `1`; a blocked endpoint makes a path impossible."
+    ],
+    "hints": [
+      "All moves have the same cost, so breadth-first search finds a shortest path.",
+      "Check both endpoints and mark cells when enqueuing them."
+    ],
+    "examples": [
+      {
+        "input": {
+          "grid": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": 2,
+        "explanation": "Move diagonally from `(0,0)` to `(1,1)`. Both cells are open, so the path visits two cells."
+      },
+      {
+        "input": {
+          "grid": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": 4,
+        "explanation": "One shortest path is `(0,0) → (0,1) → (1,2) → (2,2)`, visiting four open cells."
+      }
+    ],
+    "constraints": [
+      "1 ≤ grid size ≤ 100",
+      "The matrix is square.",
+      "Cells are integers: 0 or 1."
+    ]
+  },
+  {
+    "id": 70,
+    "slug": "climbing-stairs",
+    "title": "Climbing Stairs",
+    "topic": "Dynamic programming",
+    "difficulty": "Easy",
+    "method": "climbStairs",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "A staircase has `n` steps. You begin on the ground below the first step, and each move takes you upward by either one step or two steps.",
+      "Return the number of distinct sequences of moves that land exactly on step `n`. You cannot overshoot the top. The order of moves matters: taking one step and then two steps is a different sequence from taking two steps and then one step.",
+      "Return the count, not the sequences themselves. For a staircase of one step, the only possible sequence is a single one-step move."
+    ],
+    "hints": [
+      "Your final move comes from one step below or two steps below.",
+      "The two previous counts are enough to compute the next count."
+    ],
+    "examples": [
+      {
+        "input": {
+          "n": 2
+        },
+        "expected": 2,
+        "explanation": "There are two sequences: `1 + 1` and `2`."
+      },
+      {
+        "input": {
+          "n": 3
+        },
+        "expected": 3,
+        "explanation": "There are three sequences: `1 + 1 + 1`, `1 + 2`, and `2 + 1`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ n ≤ 45"
+    ]
+  },
+  {
+    "id": 198,
+    "slug": "house-robber",
+    "title": "House Robber",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "rob",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "The nonnegative integers in `nums` describe the amount of money in houses arranged in a straight line. You may take money from any set of houses, provided you do not choose two adjacent houses.",
+      "Return the greatest total amount you can take. Houses at consecutive indices are adjacent, so choosing index `i` prevents choosing `i - 1` and `i + 1` when those positions exist. Each house can be chosen at most once.",
+      "The first and last houses are not neighbors unless they are next to each other in the line. You may skip any number of houses. Return the maximum amount, not the selected house indices."
+    ],
+    "hints": [
+      "At each position, compare skipping it with taking it plus the best result two positions earlier.",
+      "Only the previous two best results are needed."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            1,
+            2,
+            3,
+            1
+          ]
+        },
+        "expected": 4,
+        "explanation": "Choose houses at indices `0` and `2`, with amounts `1` and `3`. They are not adjacent and total `4`."
+      },
+      {
+        "input": {
+          "nums": [
+            2,
+            7,
+            9,
+            3,
+            1
+          ]
+        },
+        "expected": 12,
+        "explanation": "Choose indices `0`, `2`, and `4`, giving `2 + 9 + 1 = 12`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 100",
+      "0 ≤ nums[i] ≤ 400"
+    ]
+  },
+  {
+    "id": 213,
+    "slug": "house-robber-ii",
+    "title": "House Robber II",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "rob",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "The nonnegative integers in `nums` describe money in houses arranged in a circle. You may take money from houses as long as no two chosen houses are adjacent.",
+      "Consecutive indices are neighbors, and the final house is also next to the first house. For two or more houses, you therefore cannot choose both the first and last. Each chosen house contributes its amount once.",
+      "Return the largest total amount possible. With just one house, you may choose that house; it does not conflict with itself. You may leave any house unchosen, and a circle containing only zero amounts has answer `0`."
+    ],
+    "hints": [
+      "A valid choice cannot include both endpoints.",
+      "Compare the best answer excluding the first value with the best answer excluding the last."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            2,
+            3,
+            2
+          ]
+        },
+        "expected": 3,
+        "explanation": "The first and last houses are neighbors, so their two amounts of `2` cannot both be taken. Choosing the middle house gives the best total, `3`."
+      },
+      {
+        "input": {
+          "nums": [
+            1,
+            2,
+            3,
+            1
+          ]
+        },
+        "expected": 4,
+        "explanation": "Choose indices `0` and `2` for `1 + 3 = 4`. These houses are not adjacent in the circle."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 100",
+      "0 ≤ nums[i] ≤ 1,000"
+    ]
+  },
+  {
+    "id": 322,
+    "slug": "coin-change",
+    "title": "Coin Change",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "coinChange",
+    "params": [
+      {
+        "name": "coins",
+        "type": "List[int]"
+      },
+      {
+        "name": "amount",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given positive coin denominations in `coins` and a nonnegative integer `amount`. You have an unlimited supply of coins of each listed denomination.",
+      "Return the smallest number of coins whose values sum to exactly `amount`. You may use a denomination repeatedly and may ignore other denominations. If no collection of the available coins can form the exact amount, return `-1`.",
+      "The order of chosen coins does not affect the result; you are minimizing the total number of coins. When `amount` is zero, no coins are needed, so return `0`."
+    ],
+    "hints": [
+      "Build the best answer for smaller amounts.",
+      "For each amount, try every possible final coin."
+    ],
+    "examples": [
+      {
+        "input": {
+          "coins": [
+            1,
+            2,
+            5
+          ],
+          "amount": 11
+        },
+        "expected": 3,
+        "explanation": "Use coins `5 + 5 + 1 = 11`, for three coins. No choice of fewer coins reaches `11`."
+      },
+      {
+        "input": {
+          "coins": [
+            2
+          ],
+          "amount": 3
+        },
+        "expected": -1,
+        "explanation": "Any sum of coins worth `2` is even, so the amount `3` cannot be formed."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(coins) ≤ 12",
+      "Coin values are positive.",
+      "0 ≤ amount ≤ 10,000"
+    ]
+  },
+  {
+    "id": 518,
+    "slug": "coin-change-ii",
+    "title": "Coin Change II",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "change",
+    "params": [
+      {
+        "name": "amount",
+        "type": "int"
+      },
+      {
+        "name": "coins",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given a nonnegative integer `amount` and distinct positive denominations in `coins`. An unlimited supply of each denomination is available.",
+      "Return the number of different combinations of coins that add up to exactly `amount`. A combination is determined by the number of coins of each denomination, so choosing the same coins in a different order does not create another combination.",
+      "You may use any denomination zero or more times. Return `0` when the positive amount cannot be formed. For `amount = 0`, return `1`: choosing no coins is the single valid combination."
+    ],
+    "hints": [
+      "Process denominations in the outer loop to count combinations instead of sequences.",
+      "Each denomination adds ways to amounts that can use it."
+    ],
+    "examples": [
+      {
+        "input": {
+          "amount": 5,
+          "coins": [
+            1,
+            2,
+            5
+          ]
+        },
+        "expected": 4,
+        "explanation": "The four combinations are `5`, `2 + 2 + 1`, `2 + 1 + 1 + 1`, and `1 + 1 + 1 + 1 + 1`."
+      },
+      {
+        "input": {
+          "amount": 3,
+          "coins": [
+            2
+          ]
+        },
+        "expected": 0,
+        "explanation": "Using only coins of value `2` cannot produce `3`, so there are zero combinations."
+      }
+    ],
+    "constraints": [
+      "0 ≤ amount ≤ 5,000",
+      "Coin values are positive and distinct."
+    ]
+  },
+  {
+    "id": 300,
+    "slug": "longest-increasing-subsequence",
+    "title": "Longest Increasing Subsequence",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "lengthOfLIS",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given an integer array `nums`. Return the length of its longest strictly increasing subsequence.",
+      "A subsequence is formed by deleting zero or more elements while preserving the relative order of the elements that remain. The selected values do not have to be adjacent, but they cannot be rearranged.",
+      "Strictly increasing means every selected value after the first is greater than the previous selected value; equal values cannot extend the sequence. Return only the maximum length. A nonempty array always has a subsequence of length one."
+    ],
+    "hints": [
+      "Track the best subsequence ending at each position.",
+      "For an O(n log n) approach, maintain the smallest possible tail for each length."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            10,
+            9,
+            2,
+            5,
+            3,
+            7,
+            101,
+            18
+          ]
+        },
+        "expected": 4,
+        "explanation": "One longest subsequence is `[2, 3, 7, 101]`, of length `4`. `[2, 3, 7, 18]` is another with the same length."
+      },
+      {
+        "input": {
+          "nums": [
+            0,
+            1,
+            0,
+            3,
+            2,
+            3
+          ]
+        },
+        "expected": 4,
+        "explanation": "The values at indices `0, 1, 4, 5` form `[0, 1, 2, 3]`, a strictly increasing subsequence of length `4`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 2,500",
+      "An increase must be strict."
+    ]
+  },
+  {
+    "id": 1143,
+    "slug": "longest-common-subsequence",
+    "title": "Longest Common Subsequence",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "longestCommonSubsequence",
+    "params": [
+      {
+        "name": "text1",
+        "type": "str"
+      },
+      {
+        "name": "text2",
+        "type": "str"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given two lowercase strings, `text1` and `text2`. Return the length of the longest sequence of characters that is a subsequence of both strings.",
+      "A subsequence may skip characters, but it preserves the relative order of every character it keeps. The characters need not be consecutive. Each occurrence in an input can be used at most once in that string's subsequence.",
+      "The selected sequence must be identical in both strings. Return its maximum possible length, rather than the sequence itself. If the strings have no common character, return `0`."
+    ],
+    "hints": [
+      "When the current characters match, they can extend a shorter common subsequence.",
+      "Otherwise compare skipping a character from either string."
+    ],
+    "examples": [
+      {
+        "input": {
+          "text1": "abcde",
+          "text2": "ace"
+        },
+        "expected": 3,
+        "explanation": "`ace` appears in order in both strings. It has length `3`, and no longer sequence can fit in `text2`."
+      },
+      {
+        "input": {
+          "text1": "abc",
+          "text2": "abc"
+        },
+        "expected": 3,
+        "explanation": "The strings are identical, so their entire length-three text is a common subsequence."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(text1), len(text2) ≤ 1,000",
+      "Strings contain lowercase English letters."
+    ]
+  },
+  {
+    "id": 139,
+    "slug": "word-break",
+    "title": "Word Break",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "wordBreak",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      },
+      {
+        "name": "wordDict",
+        "type": "List[str]"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given a nonempty lowercase string `s` and an array of nonempty dictionary words, `wordDict`. Return whether `s` can be divided into one or more consecutive pieces, each of which is a dictionary word.",
+      "Every character of `s` must be covered exactly once, in its original order. Pieces must meet without gaps or overlap. You may reuse a dictionary word any number of times, and you do not have to use every dictionary entry.",
+      "Return `True` if at least one complete segmentation exists, and `False` otherwise. A dictionary word matching all of `s` is a valid one-piece segmentation."
+    ],
+    "hints": [
+      "Mark which prefixes can be fully segmented.",
+      "A reachable prefix can be extended by any matching dictionary word."
+    ],
+    "examples": [
+      {
+        "input": {
+          "s": "leetcode",
+          "wordDict": [
+            "leet",
+            "code"
+          ]
+        },
+        "expected": true,
+        "explanation": "Split the text into `leet` followed by `code`; both pieces are dictionary words."
+      },
+      {
+        "input": {
+          "s": "applepenapple",
+          "wordDict": [
+            "apple",
+            "pen"
+          ]
+        },
+        "expected": true,
+        "explanation": "The split `apple` + `pen` + `apple` covers the whole string. Reusing `apple` is allowed."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(s) ≤ 300",
+      "Dictionary entries are nonempty lowercase words.",
+      "A dictionary word may be used more than once."
+    ]
+  },
+  {
+    "id": 62,
+    "slug": "unique-paths",
+    "title": "Unique Paths",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "uniquePaths",
+    "params": [
+      {
+        "name": "m",
+        "type": "int"
+      },
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are on the top-left cell of a rectangular grid with `m` rows and `n` columns. The destination is the bottom-right cell.",
+      "On each move, you may travel exactly one cell to the right or one cell downward. You cannot move left or up, leave the grid, or skip cells. There are no blocked cells.",
+      "Return the number of distinct paths from the start to the destination. Paths are different when their sequences of moves differ. A grid with one row or one column has exactly one path; a one-cell grid also has one path, requiring no moves."
+    ],
+    "hints": [
+      "A cell can be reached only from above or from the left.",
+      "The top row and left column each have exactly one path."
+    ],
+    "examples": [
+      {
+        "input": {
+          "m": 3,
+          "n": 7
+        },
+        "expected": 28,
+        "explanation": "Reaching the destination requires two downward moves and six rightward moves. There are `28` different orders for those moves."
+      },
+      {
+        "input": {
+          "m": 3,
+          "n": 2
+        },
+        "expected": 3,
+        "explanation": "The paths use the move sequences down-down-right, down-right-down, and right-down-down, giving `3`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ m, n ≤ 100",
+      "The answer fits in a signed 32-bit integer."
+    ]
+  },
+  {
+    "id": 91,
+    "slug": "decode-ways",
+    "title": "Decode Ways",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "numDecodings",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "The numbers `1` through `26` encode the letters `A` through `Z`, respectively. You are given a nonempty string `s` containing only decimal digits. Return how many ways it can be decoded into letters.",
+      "A decoding splits the entire string into consecutive one- or two-digit codes. Each code must represent a number from `1` to `26`. Every digit must be used once, in order, and a code must not start with `0`.",
+      "Thus `10` and `20` are valid codes, but `0`, `06`, and `30` are not. Different valid splits count as different decodings. Return `0` if no complete decoding exists."
+    ],
+    "hints": [
+      "A valid final code uses either one digit or two digits.",
+      "Handle zero carefully: it is never a valid one-digit code."
+    ],
+    "examples": [
+      {
+        "input": {
+          "s": "12"
+        },
+        "expected": 2,
+        "explanation": "`12` can be split as `1 | 2` to give `AB`, or kept as `12` to give `L`, for two decodings."
+      },
+      {
+        "input": {
+          "s": "226"
+        },
+        "expected": 3,
+        "explanation": "The valid splits are `2 | 2 | 6` (`BBF`), `22 | 6` (`VF`), and `2 | 26` (`BZ`)."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(s) ≤ 100",
+      "s contains digits only.",
+      "Leading zeros cannot form a valid code."
+    ]
+  },
+  {
+    "id": 72,
+    "slug": "edit-distance",
+    "title": "Edit Distance",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "minDistance",
+    "params": [
+      {
+        "name": "word1",
+        "type": "str"
+      },
+      {
+        "name": "word2",
+        "type": "str"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given two strings, `word1` and `word2`. Return the minimum number of operations needed to transform `word1` into `word2` exactly.",
+      "One operation may insert a single character at any position, delete a single character, or replace a single character with another character. Each operation costs one. Swapping adjacent characters is not a separate allowed operation.",
+      "Both strings may be empty. If they are already identical, the cost is zero. Transforming an empty string into a nonempty one requires inserting every character, and transforming a nonempty string into an empty one requires deleting every character. Return only the minimum cost."
+    ],
+    "hints": [
+      "Define the cost of converting each prefix of one word into a prefix of the other.",
+      "A mismatch offers three operations; take the cheapest predecessor state."
+    ],
+    "examples": [
+      {
+        "input": {
+          "word1": "horse",
+          "word2": "ros"
+        },
+        "expected": 3,
+        "explanation": "One three-operation transformation is `horse → rorse → rose → ros`: replace `h`, delete the extra `r`, then delete `e`."
+      },
+      {
+        "input": {
+          "word1": "intention",
+          "word2": "execution"
+        },
+        "expected": 5,
+        "explanation": "One five-operation transformation is `intention → inention → enention → exention → exection → execution`: one deletion, three replacements, and one insertion."
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(word1), len(word2) ≤ 500",
+      "Each allowed operation has unit cost."
+    ]
+  },
+  {
+    "id": 152,
+    "slug": "maximum-product-subarray",
+    "title": "Maximum Product Subarray",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "maxProduct",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given an integer array `nums`. Return the largest product obtainable by multiplying the elements of one nonempty contiguous subarray.",
+      "A subarray is a consecutive section of the input; you cannot skip elements inside it or combine separated sections. It may consist of a single element or the entire array.",
+      "Values may be positive, negative, or zero. Multiplication uses their signed values, and an empty product is not an allowed answer. Return the product itself, rather than the subarray or its indices."
+    ],
+    "hints": [
+      "A negative value can turn the smallest product into the largest.",
+      "Track both the maximum and minimum product ending at the current position."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            2,
+            3,
+            -2,
+            4
+          ]
+        },
+        "expected": 6,
+        "explanation": "The contiguous subarray `[2, 3]` has product `6`, the greatest possible product for this input."
+      },
+      {
+        "input": {
+          "nums": [
+            -2,
+            0,
+            -1
+          ]
+        },
+        "expected": 0,
+        "explanation": "The subarray `[0]` has product `0`. The two negative values cannot be combined without also including the zero between them."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 20,000",
+      "−10 ≤ nums[i] ≤ 10"
+    ]
+  },
+  {
+    "id": 5,
+    "slug": "longest-palindromic-substring",
+    "title": "Longest Palindromic Substring",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "longestPalindrome",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "str",
+    "description": [
+      "You are given a nonempty string `s`. Return a longest contiguous substring of `s` that is a palindrome.",
+      "A palindrome reads identically forward and backward. A substring consists of consecutive characters from the original string, so you cannot skip or rearrange characters. Comparisons are exact and case-sensitive; no characters are removed before checking.",
+      "Return the substring itself. If several palindromic substrings tie for the greatest length, any one of them is accepted. A single character is always a palindrome, so every allowed input has an answer."
+    ],
+    "hints": [
+      "Every palindrome has a center: either a character or a gap.",
+      "Expand around each possible center while the two sides match."
+    ],
+    "examples": [
+      {
+        "input": {
+          "s": "babad"
+        },
+        "expected": "bab",
+        "explanation": "Both `bab` and `aba` are palindromic substrings of length `3`. Either is accepted, and no longer palindrome exists."
+      },
+      {
+        "input": {
+          "s": "cbbd"
+        },
+        "expected": "bb",
+        "explanation": "`bb` is the longest palindromic substring, with length `2`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(s) ≤ 1,000",
+      "Return any longest palindrome if there is a tie."
+    ],
+    "compare": "palindrome"
+  },
+  {
+    "id": 647,
+    "slug": "palindromic-substrings",
+    "title": "Palindromic Substrings",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "countSubstrings",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "Given a nonempty string `s`, return the number of its nonempty contiguous substrings that are palindromes.",
+      "A palindrome reads identically forward and backward using exact, case-sensitive character comparisons. Single-character substrings qualify. You cannot skip characters when choosing a substring.",
+      "Count occurrences by their starting and ending positions. Two occurrences with the same text count separately if they occupy different positions, and overlapping occurrences are allowed. Return the total count, rather than the distinct palindrome texts."
+    ],
+    "hints": [
+      "Expand around every possible odd and even center.",
+      "Each successful expansion contributes one palindrome."
+    ],
+    "examples": [
+      {
+        "input": {
+          "s": "abc"
+        },
+        "expected": 3,
+        "explanation": "The three one-character substrings `a`, `b`, and `c` are palindromes. No longer substring qualifies."
+      },
+      {
+        "input": {
+          "s": "aaa"
+        },
+        "expected": 6,
+        "explanation": "There are three occurrences of `a`, two occurrences of `aa`, and one occurrence of `aaa`, totaling `6`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(s) ≤ 1,000",
+      "Overlapping occurrences count separately."
+    ]
+  },
+  {
+    "id": 416,
+    "slug": "partition-equal-subset-sum",
+    "title": "Partition Equal Subset Sum",
+    "topic": "Dynamic programming",
+    "difficulty": "Medium",
+    "method": "canPartition",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given an array of positive integers, `nums`. Return whether all its elements can be split into two groups with equal total sums.",
+      "Every input occurrence must belong to exactly one group. You cannot discard elements, use an occurrence twice, or split a value. Values at different positions count as separate occurrences even when they are equal.",
+      "The groups do not need to be contiguous and may contain different numbers of elements. Return `True` if any equal-sum partition exists, or `False` otherwise. Return a Boolean, not the groups themselves."
+    ],
+    "hints": [
+      "An odd total makes a partition impossible.",
+      "Otherwise, ask whether a subset can reach half of the total."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            1,
+            5,
+            11,
+            5
+          ]
+        },
+        "expected": true,
+        "explanation": "One group contains `[1, 5, 5]` and the other contains `[11]`. Both sum to `11`."
+      },
+      {
+        "input": {
+          "nums": [
+            1,
+            2,
+            3,
+            5
+          ]
+        },
+        "expected": false,
+        "explanation": "The values sum to `11`, so they cannot be divided into two groups with equal integer sums."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 200",
+      "1 ≤ nums[i] ≤ 100"
+    ]
+  },
+  {
+    "id": 53,
+    "slug": "maximum-subarray",
+    "title": "Maximum Subarray",
+    "topic": "Greedy",
+    "difficulty": "Medium",
+    "method": "maxSubArray",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given an integer array `nums`. Return the greatest sum obtainable from one nonempty contiguous subarray.",
+      "A subarray is a consecutive section of the input. It may contain one element, several neighboring elements, or the entire array, but you cannot skip values inside it.",
+      "Values may be negative or zero, and the input may contain only negative numbers. You must still select at least one element in that case; choosing an empty subarray with sum zero is not allowed. Return the maximum sum rather than the selected elements or their indices."
+    ],
+    "hints": [
+      "At each position, either extend the previous subarray or start a new one.",
+      "Keep the best answer seen separately from the best answer ending here."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            -2,
+            1,
+            -3,
+            4,
+            -1,
+            2,
+            1,
+            -5,
+            4
+          ]
+        },
+        "expected": 6,
+        "explanation": "The contiguous section `[4, -1, 2, 1]` has sum `6`, which is the greatest possible sum."
+      },
+      {
+        "input": {
+          "nums": [
+            1
+          ]
+        },
+        "expected": 1,
+        "explanation": "The only nonempty subarray is `[1]`, so the result is `1`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 100,000",
+      "−10,000 ≤ nums[i] ≤ 10,000"
+    ]
+  },
+  {
+    "id": 55,
+    "slug": "jump-game",
+    "title": "Jump Game",
+    "topic": "Greedy",
+    "difficulty": "Medium",
+    "method": "canJump",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "bool",
+    "description": [
+      "You are given a nonempty array of nonnegative integers, `nums`, and start at index `0`. From index `i`, you may jump forward by any whole number of positions from `1` through `nums[i]`, provided you remain within the array.",
+      "The value is a maximum jump length; you do not have to jump the full amount. A zero permits no forward move from that position. You may jump over positions without visiting them.",
+      "Return `True` if you can reach the final index, and `False` otherwise. If the array has one element, you already occupy the final index and the answer is `True`, even when that element is zero."
+    ],
+    "hints": [
+      "Track the farthest position reachable so far.",
+      "If the current index exceeds that frontier, progress is impossible."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            2,
+            3,
+            1,
+            1,
+            4
+          ]
+        },
+        "expected": true,
+        "explanation": "Jump from index `0` to `1`, then from index `1` to `4`. The jump lengths `1` and `3` are permitted."
+      },
+      {
+        "input": {
+          "nums": [
+            3,
+            2,
+            1,
+            0,
+            4
+          ]
+        },
+        "expected": false,
+        "explanation": "Every route from the start is confined to indices `0..3`. The zero at index `3` cannot move you to the last index `4`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 10,000",
+      "0 ≤ nums[i] ≤ 100,000"
+    ]
+  },
+  {
+    "id": 45,
+    "slug": "jump-game-ii",
+    "title": "Jump Game II",
+    "topic": "Greedy",
+    "difficulty": "Medium",
+    "method": "jump",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You start at index `0` of a nonempty array of nonnegative integers, `nums`. At index `i`, you may jump forward by any integer distance from `1` through `nums[i]`, landing on an index inside the array.",
+      "Return the minimum number of jumps needed to reach the final index. A jump may be shorter than the maximum allowed distance, and each jump counts as one regardless of its length.",
+      "The input guarantees that the last index is reachable. With one element, you are already there and must return `0`. Return only the number of jumps, not the visited positions."
+    ],
+    "hints": [
+      "Think of positions reachable with the same number of jumps as a layer.",
+      "When the current layer ends, advance to the farthest next frontier."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            2,
+            3,
+            1,
+            1,
+            4
+          ]
+        },
+        "expected": 2,
+        "explanation": "Jump from index `0` to `1`, then to index `4`. This takes two jumps; the first position cannot reach index `4` directly."
+      },
+      {
+        "input": {
+          "nums": [
+            2,
+            3,
+            0,
+            1,
+            4
+          ]
+        },
+        "expected": 2,
+        "explanation": "The route `0 → 1 → 4` still works in two jumps, so the zero at index `2` does not need to be visited."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 10,000",
+      "0 ≤ nums[i] ≤ 1,000",
+      "The last position is reachable."
+    ]
+  },
+  {
+    "id": 56,
+    "slug": "merge-intervals",
+    "title": "Merge Intervals",
+    "topic": "Intervals",
+    "difficulty": "Medium",
+    "method": "merge",
+    "params": [
+      {
+        "name": "intervals",
+        "type": "List[List[int]]"
+      }
+    ],
+    "returns": "List[List[int]]",
+    "description": [
+      "You are given an array of closed intervals, `intervals`, where `[start, end]` includes both endpoints. The intervals are not necessarily sorted.",
+      "Merge all overlapping intervals so that the result contains mutually nonoverlapping intervals covering exactly the same set of points as the input. Intervals that share an endpoint overlap: `[1, 4]` and `[4, 5]` must merge into `[1, 5]`.",
+      "Overlaps can connect a chain of several intervals, and an interval fully contained in another does not create an extra output interval. Return the merged intervals in any order, with each interval's start before or equal to its end."
+    ],
+    "hints": [
+      "Sort intervals by starting position.",
+      "Compare the next start with the end of the current merged interval."
+    ],
+    "examples": [
+      {
+        "input": {
+          "intervals": [
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              8,
+              10
+            ],
+            [
+              15,
+              18
+            ]
+          ]
+        },
+        "expected": [
+          [
+            1,
+            6
+          ],
+          [
+            8,
+            10
+          ],
+          [
+            15,
+            18
+          ]
+        ],
+        "explanation": "`[1, 3]` and `[2, 6]` overlap and combine into `[1, 6]`. The intervals `[8, 10]` and `[15, 18]` remain separate."
+      },
+      {
+        "input": {
+          "intervals": [
+            [
+              1,
+              4
+            ],
+            [
+              4,
+              5
+            ]
+          ]
+        },
+        "expected": [
+          [
+            1,
+            5
+          ]
+        ],
+        "explanation": "Both intervals contain the endpoint `4`, so they merge into `[1, 5]`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ number of intervals ≤ 10,000",
+      "Each interval has start ≤ end.",
+      "Touching closed intervals overlap."
+    ],
+    "compare": "unordered"
+  },
+  {
+    "id": 57,
+    "slug": "insert-interval",
+    "title": "Insert Interval",
+    "topic": "Intervals",
+    "difficulty": "Medium",
+    "method": "insert",
+    "params": [
+      {
+        "name": "intervals",
+        "type": "List[List[int]]"
+      },
+      {
+        "name": "newInterval",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "List[List[int]]",
+    "description": [
+      "You are given closed intervals in `intervals`, already sorted by their starting values and mutually nonoverlapping. You are also given one closed interval, `newInterval`.",
+      "Add `newInterval` to the covered range and merge every overlap it creates, so the result is again sorted by start and nonoverlapping. Closed intervals that meet at an endpoint overlap and must merge.",
+      "Return the resulting list of intervals. You do not have to modify the original list in place. Existing intervals that remain disjoint must keep their original endpoints. If `intervals` is empty, return a list containing only `newInterval`."
+    ],
+    "hints": [
+      "Separate intervals before, overlapping, and after the new interval.",
+      "Expand the new interval as you encounter overlaps."
+    ],
+    "examples": [
+      {
+        "input": {
+          "intervals": [
+            [
+              1,
+              3
+            ],
+            [
+              6,
+              9
+            ]
+          ],
+          "newInterval": [
+            2,
+            5
+          ]
+        },
+        "expected": [
+          [
+            1,
+            5
+          ],
+          [
+            6,
+            9
+          ]
+        ],
+        "explanation": "`[2, 5]` overlaps `[1, 3]`, creating `[1, 5]`. It does not reach `[6, 9]`, which stays separate."
+      },
+      {
+        "input": {
+          "intervals": [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              8,
+              10
+            ],
+            [
+              12,
+              16
+            ]
+          ],
+          "newInterval": [
+            4,
+            8
+          ]
+        },
+        "expected": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            10
+          ],
+          [
+            12,
+            16
+          ]
+        ],
+        "explanation": "`[4, 8]` overlaps `[3, 5]` and `[6, 7]`, and meets `[8, 10]`. Together they form `[3, 10]`; the outside intervals remain unchanged."
+      }
+    ],
+    "constraints": [
+      "0 ≤ number of intervals ≤ 10,000",
+      "Existing intervals are sorted and nonoverlapping.",
+      "Each interval has start ≤ end."
+    ]
+  },
+  {
+    "id": 435,
+    "slug": "non-overlapping-intervals",
+    "title": "Non-overlapping Intervals",
+    "topic": "Intervals",
+    "difficulty": "Medium",
+    "method": "eraseOverlapIntervals",
+    "params": [
+      {
+        "name": "intervals",
+        "type": "List[List[int]]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given a collection of intervals, `intervals`, each written as `[start, end]` with `start < end`. Return the minimum number of intervals that must be removed so the remaining intervals do not overlap.",
+      "For this problem, intervals that only share an endpoint are compatible. For example, `[1, 2]` and `[2, 3]` can both remain. Intervals overlap when they share a range of positive length.",
+      "You may remove whole intervals, but cannot shorten or move them. Repeated identical intervals count as separate input entries, so overlapping duplicates may need to be removed. Return the number removed, not the number retained or the intervals themselves."
+    ],
+    "hints": [
+      "Prefer keeping the interval that finishes earliest.",
+      "This leaves the most room for future intervals."
+    ],
+    "examples": [
+      {
+        "input": {
+          "intervals": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        },
+        "expected": 1,
+        "explanation": "Remove `[1, 3]`. The remaining `[1, 2]`, `[2, 3]`, and `[3, 4]` touch only at endpoints, so one removal is enough."
+      },
+      {
+        "input": {
+          "intervals": [
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        "expected": 2,
+        "explanation": "At most one of the three identical intervals can remain. Remove the other two."
+      }
+    ],
+    "constraints": [
+      "1 ≤ number of intervals ≤ 100,000",
+      "Each interval has start < end.",
+      "Intervals that only touch do not overlap."
+    ]
+  },
+  {
+    "id": 136,
+    "slug": "single-number",
+    "title": "Single Number",
+    "topic": "Bit manipulation",
+    "difficulty": "Easy",
+    "method": "singleNumber",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given a nonempty integer array `nums`. Exactly one value occurs once, while every other distinct value occurs exactly twice.",
+      "Return the value that occurs once. The repeated occurrences may be anywhere in the array, and values may be negative or zero. The input is not necessarily sorted.",
+      "Your algorithm must run in `O(n)` time and use `O(1)` extra space, where `n = len(nums)`. Return the unique value itself, not its index. For a one-element array, that element is the answer."
+    ],
+    "hints": [
+      "Which bitwise operation cancels a value with itself?",
+      "The order of XOR operations does not affect the result."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            2,
+            2,
+            1
+          ]
+        },
+        "expected": 1,
+        "explanation": "`2` appears twice and `1` appears once, so return `1`."
+      },
+      {
+        "input": {
+          "nums": [
+            4,
+            1,
+            2,
+            1,
+            2
+          ]
+        },
+        "expected": 4,
+        "explanation": "`1` and `2` each appear twice. The value `4` is the only value appearing once."
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 30,000",
+      "One value occurs once; every other value occurs twice."
+    ]
+  },
+  {
+    "id": 338,
+    "slug": "counting-bits",
+    "title": "Counting Bits",
+    "topic": "Bit manipulation",
+    "difficulty": "Easy",
+    "method": "countBits",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "List[int]",
+    "description": [
+      "You are given a nonnegative integer `n`. Return an array `answer` of length `n + 1`, where `answer[i]` is the number of `1` digits in the binary representation of `i`.",
+      "Include every integer from `0` through `n`, inclusive, in that order. Leading zeros do not affect a bit count. In particular, the value zero has no set bits, so `answer[0]` is `0`.",
+      "Return the individual counts, not their sum or the binary strings. For example, `5` is written `101` in binary and has two set bits."
+    ],
+    "hints": [
+      "Relate a number’s bits to those of the number shifted right once.",
+      "Alternatively, remove its lowest set bit and reuse that earlier count."
+    ],
+    "examples": [
+      {
+        "input": {
+          "n": 2
+        },
+        "expected": [
+          0,
+          1,
+          1
+        ],
+        "explanation": "The values `0, 1, 2` have binary representations `0, 1, 10`, with counts `0, 1, 1`."
+      },
+      {
+        "input": {
+          "n": 5
+        },
+        "expected": [
+          0,
+          1,
+          1,
+          2,
+          1,
+          2
+        ],
+        "explanation": "The representations for `0..5` are `0, 1, 10, 11, 100, 101`, producing counts `0, 1, 1, 2, 1, 2`."
+      }
+    ],
+    "constraints": [
+      "0 ≤ n ≤ 100,000",
+      "Return exactly n + 1 counts."
+    ]
+  },
+  {
+    "id": 191,
+    "slug": "number-of-1-bits",
+    "title": "Number of 1 Bits",
+    "topic": "Bit manipulation",
+    "difficulty": "Easy",
+    "method": "hammingWeight",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given an integer `n` in the unsigned 32-bit range, from `0` through `2³² - 1`. Return how many of its binary digits are `1`; this count is also called its Hamming weight.",
+      "Treat `n` as a numeric value, not a string of decimal digits. Leading zero bits do not contribute to the answer. For example, decimal `11` has binary representation `1011` and contains three `1` bits.",
+      "Zero has no set bits, so its answer is `0`. Return the count as an integer."
+    ],
+    "hints": [
+      "Check the lowest bit, then shift.",
+      "The expression n & (n − 1) removes the lowest set bit."
+    ],
+    "examples": [
+      {
+        "input": {
+          "n": 11
+        },
+        "expected": 3,
+        "explanation": "Decimal `11` is `1011` in binary. Three positions contain a `1`."
+      },
+      {
+        "input": {
+          "n": 128
+        },
+        "expected": 1,
+        "explanation": "Decimal `128` is `10000000` in binary, which contains one `1`."
+      }
+    ],
+    "constraints": [
+      "0 ≤ n < 2³²"
+    ]
+  },
+  {
+    "id": 268,
+    "slug": "missing-number",
+    "title": "Missing Number",
+    "topic": "Bit manipulation",
+    "difficulty": "Easy",
+    "method": "missingNumber",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "returns": "int",
+    "description": [
+      "You are given an array `nums` of length `n` containing distinct integers selected from the inclusive range `0` through `n`. Exactly one value from that range is missing.",
+      "Return the missing value. The array need not be sorted, and the missing value may be `0`, `n`, or any value between them. No input value is duplicated or outside the stated range.",
+      "The range contains `n + 1` possible values while the input contains `n` of them. For an empty array, `n = 0`, the range consists only of zero, and the answer is `0`."
+    ],
+    "hints": [
+      "Compare the expected aggregate of 0 through n with the actual values.",
+      "Either an arithmetic sum or XOR can use constant extra space."
+    ],
+    "examples": [
+      {
+        "input": {
+          "nums": [
+            3,
+            0,
+            1
+          ]
+        },
+        "expected": 2,
+        "explanation": "With three input values, the full range is `0, 1, 2, 3`. The missing value is `2`."
+      },
+      {
+        "input": {
+          "nums": [
+            0,
+            1
+          ]
+        },
+        "expected": 2,
+        "explanation": "With two input values, the full range is `0, 1, 2`. The array contains `0` and `1`, so return `2`."
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(nums) ≤ 10,000",
+      "Values are distinct and in [0, len(nums)]."
+    ]
+  },
+  {
+    "id": 208,
+    "slug": "implement-trie",
+    "title": "Implement Trie",
+    "topic": "Tries",
+    "difficulty": "Medium",
+    "method": "trie",
+    "params": [
+      {
+        "name": "operations",
+        "type": "List[str]"
+      },
+      {
+        "name": "arguments",
+        "type": "List[List[str]]"
+      }
+    ],
+    "returns": "List[Optional[bool]]",
+    "description": [
+      "Implement the class `Trie` to store lowercase English words and answer word and prefix queries. A newly constructed `Trie()` starts empty, and the same instance must retain inserted words across subsequent method calls.",
+      "`insert(word)` adds the complete word to the trie and returns `None`. Inserting an already stored word leaves it stored; it does not change the meaning of searches.",
+      "`search(word)` returns `True` only when that exact complete word has previously been inserted. A word that is merely a prefix of a longer stored word does not count as inserted.",
+      "`startsWith(prefix)` returns `True` when at least one inserted word begins with every character of `prefix`, in order. A complete stored word is also a prefix of itself. Return `False` when no stored word matches.",
+      "Each test supplies parallel arrays `operations` and `arguments`. The runner creates one empty `Trie`, then invokes `operations[i]` with `arguments[i]` in sequence. Implement the class methods, not a function taking these arrays. The displayed output records each method's return value; `null` represents Python `None`."
+    ],
+    "hints": [
+      "Share nodes for words with a common prefix.",
+      "A node needs children and a marker distinguishing a complete word from a prefix."
+    ],
+    "examples": [
+      {
+        "input": {
+          "operations": [
+            "insert",
+            "search",
+            "search",
+            "startsWith",
+            "insert",
+            "search"
+          ],
+          "arguments": [
+            [
+              "apple"
+            ],
+            [
+              "apple"
+            ],
+            [
+              "app"
+            ],
+            [
+              "app"
+            ],
+            [
+              "app"
+            ],
+            [
+              "app"
+            ]
+          ]
+        },
+        "expected": [
+          null,
+          true,
+          false,
+          true,
+          null,
+          true
+        ],
+        "explanation": "After inserting `apple`, searching `apple` succeeds, searching `app` fails, and checking prefix `app` succeeds. Inserting `app` makes the final exact search succeed. The insert calls return `None`."
+      },
+      {
+        "input": {
+          "operations": [
+            "insert",
+            "search",
+            "startsWith"
+          ],
+          "arguments": [
+            [
+              "cat"
+            ],
+            [
+              "dog"
+            ],
+            [
+              "ca"
+            ]
+          ]
+        },
+        "expected": [
+          null,
+          false,
+          true
+        ],
+        "explanation": "After inserting `cat`, `dog` is not a stored word, while `ca` is a prefix of `cat`."
+      }
+    ],
+    "constraints": [
+      "1 ≤ length of each word or prefix ≤ 2,000",
+      "All arguments contain lowercase English letters.",
+      "At most 30,000 operations per test."
+    ],
+    "adapter": "trie"
+  }
+]

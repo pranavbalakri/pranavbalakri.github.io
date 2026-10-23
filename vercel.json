@@ -1,9 +1,23 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run build:articles",
+  "buildCommand": "npm run build",
   "outputDirectory": "public",
   "rewrites": [
-    { "source": "/blog", "destination": "/index.html" },
-    { "source": "/blog/(.*)", "destination": "/index.html" }
+    {
+      "source": "/blog",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/blog/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/algospeedruns",
+      "destination": "/algospeedruns/index.html"
+    },
+    {
+      "source": "/algospeedruns/",
+      "destination": "/algospeedruns/index.html"
+    }
   ]
 }
