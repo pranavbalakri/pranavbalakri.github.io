@@ -37,7 +37,8 @@
   --muted: #767676;
   --border: #e5e5e5;
   --subtle: #f4f4f4;
-  --active-line: #f4f4f4;
+  /* CodeMirror draws selections underneath the active line. */
+  --active-line: #0000000b;
   --selection-bg: #b3d4ff;
   --selection-text: #111;
   --hover: #ededed;
@@ -61,7 +62,7 @@
   --muted: #8b8b8b;
   --border: #262626;
   --subtle: #0a0a0a;
-  --active-line: #101010;
+  --active-line: #ffffff10;
   --selection-bg: #356db5;
   --selection-text: #fff;
   --hover: #171717;
