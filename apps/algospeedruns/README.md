@@ -29,6 +29,9 @@ npm run preview
 - Linked list, cyclic list, binary tree, LCA, in-place mutation, and Trie adapters. Order-insensitive answers and valid alternate answers are handled where applicable.
 - A paused timer conceals the workspace. Reloading preserves code, elapsed time, hints, and attempts. Time continues across a reload unless explicitly paused.
 - Completed and skipped runs are saved in this browser. Revealing a hint is recorded immediately. Random selection prefers unsolved problems and avoids an immediate repeat when alternatives exist.
+- Custom menus support multiple difficulties and topics, both on the start screen and in Problems. Start-screen selections are remembered; an empty selection means all. Skip records the current run and starts a different matching problem, with a fresh timer and editor.
+- Accepted submissions play a short original chime. The speaker button toggles the sound and remembers the preference. Runs, failed submissions, and skips stay silent.
+- Menus and dialogs use brief fade transitions with reduced-motion support. The tab title stays “Algo Speedruns,” and the favicon matches the main personal website.
 - Space starts; Escape pauses/resumes; Cmd/Ctrl+Enter submits; Cmd/Ctrl+Shift+Enter runs examples. Platform-specific shortcut labels appear on the Run and Submit buttons, their tooltips, and in keyboard help. Both shortcuts work with the editor focused.
 
 ## Runtime and limits

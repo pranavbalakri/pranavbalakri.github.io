@@ -16,7 +16,7 @@ export default function History({ history, onClose, onSelect, onClear }: { histo
         const p = problemBySlug.get(l.problemSlug)!;
         return <button key={l.id} className="history-row" onClick={() => onSelect(p)}>
           <span className={`history-status ${l.status}`} aria-label={l.status}>{l.status === 'accepted' ? <Check size={15}/> : <span>—</span>}</span>
-          <div className="history-detail"><strong>{p.title}</strong><span>{new Date(l.completedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} · {l.status === 'skipped' ? 'Skipped' : `${l.attempts} submission${l.attempts === 1 ? '' : 's'}`} · {l.hints ? `${l.hints} hint${l.hints === 1 ? '' : 's'}` : 'No hints'}</span></div>
+          <div className="history-detail"><strong>{p.title}</strong><span className="history-meta"><span>{new Date(l.completedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span><span>{l.status === 'skipped' ? 'Skipped' : `${l.attempts} submission${l.attempts === 1 ? '' : 's'}`}</span><span>{l.hints ? `${l.hints} hint${l.hints === 1 ? '' : 's'}` : 'No hints'}</span></span></div>
           <span className="history-duration">{formatTime(l.duration)}</span><ArrowUpRight size={15}/>
         </button>;
       }) : <div className="empty-state"><HistoryIcon size={28}/><h3>No runs yet.</h3><p>Completed runs and hint usage will appear here.</p><button className="button primary" onClick={onClose}>Back to practice</button></div>}
