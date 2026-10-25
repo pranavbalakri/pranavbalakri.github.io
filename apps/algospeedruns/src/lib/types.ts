@@ -19,8 +19,10 @@ export type Lap = {
 export type CaseResult = {
   passed: boolean; input?: Record<string, unknown>; expected?: unknown; actual?: unknown;
   error?: string; hidden: boolean; stdout: string;
+  stress?: string; workUsed?: number; workLimit?: number;
 };
 export type JudgeResult = {
   passed: boolean; total: number; passedCount: number; duration: number;
   cases: CaseResult[]; error?: string; mode: 'run' | 'submit';
+  correctnessPassed?: boolean; performanceError?: string;
 };

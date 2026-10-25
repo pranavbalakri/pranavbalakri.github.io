@@ -1,4 +1,5 @@
 import type { JudgeResult, Problem, TestCase } from './types';
+import { timeoutMs } from '../data/judge-config.json';
 type Status = 'loading' | 'ready' | 'error';
 let worker: Worker | null = null;
 let ready: Promise<void> | null = null;
@@ -38,14 +39,26 @@ export async function judge(problem: Problem, code: string, mode: 'run' | 'submi
   const instance = worker;
   const id = ++counter;
   return new Promise((resolve, reject) => {
+    let performance: { label: string; total: number; passedCount: number } | null = null;
     const clean = () => { clearTimeout(timer); instance.removeEventListener('message', onMessage); pending = null; };
-    const timer = setTimeout(() => {
+    const timeout = () => {
       clean(); instance.terminate(); worker = null; ready = null; setStatus('loading');
-      reject(new Error('Time limit exceeded (5 seconds). Check for an infinite loop or an inefficient algorithm.'));
+      if (performance) resolve({ passed: false, correctnessPassed: true, performanceError: `Your solution passed the correctness tests, but exceeded the ${timeoutMs / 1000}-second performance limit on: ${performance.label}.`, total: performance.total, passedCount: performance.passedCount, cases: [], duration: timeoutMs, mode });
+      else reject(new Error(`Time limit exceeded (${timeoutMs / 1000} seconds). Check for an infinite loop or an inefficient algorithm.`));
       warmJudge().catch(() => {});
-    }, 5000);
+    };
+    let timer = setTimeout(timeout, timeoutMs);
     const onMessage = (event: MessageEvent) => {
       if (event.data.id !== id) return;
+      if (event.data.type === 'performance') {
+        if (!performance) {
+          clearTimeout(timer);
+          timer = setTimeout(timeout, timeoutMs);
+          if (pending) pending.timer = timer;
+        }
+        performance = event.data;
+        return;
+      }
       clean();
       if (event.data.error) reject(new Error(event.data.error));
       else resolve({ ...event.data.result, mode });

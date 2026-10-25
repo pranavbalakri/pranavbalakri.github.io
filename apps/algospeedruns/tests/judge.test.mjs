@@ -161,3 +161,85 @@ test('LCA receives object references and returns a node', () => {
         return root if a and b else a or b
 `).passed, true);
 });
+
+// The work guard uses the same runtime as the adapter tests.
+runtime.runPython(await readFile(new URL('../src/lib/work_budget.py',import.meta.url),'utf8'));
+
+test('work counting is stable for one-line loops, nested comprehensions, helpers, and lambdas',()=>{
+  const result=JSON.parse(runtime.runPython(`
+def _count_test(source):
+    budget=_WorkBudget(1000,'test')
+    namespace={'__algo_speedruns_tick__':budget.tick}
+    exec(_compile_counted(source),namespace)
+    return budget.used
+_json.dumps([
+    _count_test('for i in range(5): x=i'),
+    _count_test('for i in range(5):\\n    x=i'),
+    _count_test('x=[(i,j) for i in range(3) for j in range(4)]'),
+    _count_test('def f(): return 1\\nx=[f() for _ in range(5)]'),
+    _count_test('f=lambda x:x+1\\nx=[f(i) for i in range(5)]')
+])`));
+  assert.deepEqual(result,[5,5,15,10,10]);
+});
+
+test('instrumentation preserves docstrings and solution line numbers',()=>{
+  const result=JSON.parse(runtime.runPython(`
+_budget=_WorkBudget(100,'test')
+_namespace={'__algo_speedruns_tick__':_budget.tick}
+exec(_compile_counted('def f():\\n    "a docstring"\\n    raise ValueError("oops")'),_namespace)
+try:
+    _namespace['f']()
+except ValueError as _exc:
+    _line=[frame.lineno for frame in _traceback.extract_tb(_exc.__traceback__) if frame.filename=='<solution>'][-1]
+_json.dumps([_namespace['f'].__doc__,_line])`));
+  assert.deepEqual(result,['a docstring',3]);
+});
+
+test('input probes retain list slicing, negative indices, bisect, and constant-time tail mutations',()=>{
+  const result=JSON.parse(runtime.runPython(`
+import bisect as _bisect
+_budget=_WorkBudget(1000,'test')
+_values=_track_input([1,3,5,7],_budget)
+_before=[_values[-1],_values[::-1],_values.index(5,-3),_bisect.bisect_left(_values,4)]
+_values.insert(len(_values),9)
+del _values[-1]
+_values.pop()
+_json.dumps([_before,list(_values),_budget.used])`));
+  assert.deepEqual(result[0],[7,[7,5,3,1],2,2]);
+  assert.deepEqual(result[1],[1,3,5]);
+  assert.ok(result[2]<30);
+});
+
+test('list built-ins cannot hide a linear scan behind logarithmic input-access limits',()=>{
+  for (const expression of ['min(values)','values.index(9999)','9999 in values','values[:]','list(values)','values.copy()','sorted(values)','values.count(0)','list(reversed(values))']) {
+    runtime.globals.set('_probe_expression',expression);
+    assert.equal(runtime.runPython(`
+_budget=_WorkBudget(100,'O(log n)')
+values=_track_input(list(range(10000)),_budget)
+try:
+    eval(_probe_expression)
+except ComplexityLimitExceeded:
+    pass
+_budget.exceeded`),true,expression);
+  }
+});
+
+test('input probes preserve iteration when a solution changes list length',()=>{
+  const result=JSON.parse(runtime.runPython(`
+def _mutating_iteration(factory):
+    values=factory([1,2,3])
+    seen=[]
+    for value in values:
+        seen.append(value)
+        if value==1: values.append(4)
+        if value==2: values.pop()
+    reverse=reversed(values)
+    first=next(reverse)
+    values.clear()
+    return [seen,first,list(reverse)]
+_json.dumps([
+    _mutating_iteration(list),
+    _mutating_iteration(lambda values:_track_input(values,_WorkBudget(100,'test')))
+])`));
+  assert.deepEqual(result[0],result[1]);
+});

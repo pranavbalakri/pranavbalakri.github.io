@@ -25,7 +25,7 @@ npm run preview
 - Original, self-contained problem statements covering input/output contracts, definitions, edge cases, and runtime data representations. Two explained examples per problem and 512 additional submission fixtures. No editorials or solutions in the interface.
 - CodeMirror Python editor with indentation, syntax highlighting, undo, bracket matching, and completion.
 - Drag the question divider or the divider above the test window to resize the panes. Sizes are remembered locally; narrow screens use a separate question-height preference. Focus a divider and use arrow keys (Shift for larger steps), Home, or End. Double-click a divider to reset its size.
-- Run executes examples and optional custom cases. Submit uses the original examples and the additional fixtures. A failed hidden test is revealed after submission for debugging.
+- Run executes examples and optional custom cases. Submit first checks the original examples and hidden correctness fixtures, then runs large-input performance tests with deterministic work budgets. A failed hidden test is revealed after submission for debugging.
 - Linked list, cyclic list, binary tree, LCA, in-place mutation, and Trie adapters. Order-insensitive answers and valid alternate answers are handled where applicable.
 - A paused timer conceals the workspace. Reloading preserves code, elapsed time, hints, and attempts. Time continues across a reload unless explicitly paused.
 - Completed and skipped runs are saved in this browser. Revealing a hint is recorded immediately. Random selection prefers unsolved problems and avoids an immediate repeat when alternatives exist.
@@ -36,9 +36,9 @@ npm run preview
 
 ## Runtime and limits
 
-Python 3.12 runs using a pinned, locally hosted Pyodide 0.27.7 runtime in a Web Worker. There is no code execution on the host server. A five-second wall-clock timeout terminates the worker, then initializes a fresh one. Standard-library imports are available; arbitrary third-party package installation is not part of the app.
+Python 3.12 runs using a pinned, locally hosted Pyodide 0.27.7 runtime in a Web Worker. There is no code execution on the host server. Correctness and performance stages each have a five-second watchdog that terminates the worker, then initializes a fresh one. Performance tests also count algorithmic work independently of machine speed. Standard-library imports are available; arbitrary third-party package installation is not part of the app.
 
-This is a personal practice app, not a secure contest judge. Additional fixtures are hidden from the practice UI but are shipped in the worker bundle, so a determined user can inspect them. Timing, history, and scores are browser-local and are not authoritative. There are no accounts, cloud sync, analytics, or leaderboards. The fixtures test correctness; they do not certify an algorithm's asymptotic complexity.
+This is a personal practice app, not a secure contest judge. Additional fixtures are hidden from the practice UI but are shipped in the worker bundle, so a determined user can inspect them. Timing, history, and scores are browser-local and are not authoritative. There are no accounts, cloud sync, analytics, or leaderboards. Every problem has adversarial performance fixtures. Solutions that pass correctness but exceed a work or time budget receive “Correct, but too slow.” These checks reject common inefficient approaches; they cannot prove asymptotic optimality. See [PERFORMANCE.md](PERFORMANCE.md) for coverage, expected complexities, and limits.
 
 The Python assets are copied from the npm package on installation. They total roughly 15 MB and are served from the app's own origin. The deployment does not depend on a third-party Python CDN.
 

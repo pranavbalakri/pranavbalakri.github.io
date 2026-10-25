@@ -4,6 +4,7 @@ import time as _time
 import traceback as _traceback
 import contextlib as _contextlib
 import io as _io
+import sys as _sys
 from collections import deque as _deque, Counter as _Counter
 
 
@@ -152,9 +153,24 @@ inf = float("inf")
 '''
 
 
+def _preview(value, depth=0):
+    if isinstance(value, dict):
+        return {k: _preview(v, depth+1) for k,v in value.items()}
+    if isinstance(value, (list, tuple)):
+        limit = 8 if depth < 3 else 3
+        return [_preview(v, depth+1) for v in value[:limit]] + ([f'… {len(value)-limit:,} more items'] if len(value)>limit else [])
+    if isinstance(value, str) and len(value)>240:
+        return value[:240] + f'… ({len(value):,} characters)'
+    return value
+
+
 def _lap_judge(payload):
     data = _json.loads(payload)
-    problem, cases = data['problem'], data['cases']
+    problem, regular = data['problem'], data['cases']
+    stress = _lap_stress_cases(problem['slug']) if data.get('performance') else []
+    cases = regular + stress
+    # Graph/tree DFS and memoized DP should not fail at the default 1,000 frames.
+    _sys.setrecursionlimit(10000)
     started = _time.perf_counter()
     results, passed_count = [], 0
     try:
@@ -162,16 +178,27 @@ def _lap_judge(payload):
     except BaseException as error:
         return _json.dumps({'passed': False, 'total': len(cases), 'passedCount': 0, 'duration': 0, 'cases': [], 'error': ''.join(_traceback.format_exception_only(type(error), error))})
     first_hidden_failure = False
-    for case in cases:
+    performance_error = None
+    correctness_passed = False
+    counted = None
+    for index, case in enumerate(cases):
+        if index == len(regular):
+            if passed_count != len(regular): break
+            correctness_passed = True
+            counted = _compile_counted(data['code'])
+        if case.get('stress') and '_lap_progress' in globals():
+            _lap_progress(case['stress'], len(cases), passed_count)
+        budget = _WorkBudget(*_stress_work_spec(problem['slug'], case)) if case.get('stress') else None
         output = _Output()
         actual, error = None, None
         try:
             namespace = {'ListNode': ListNode, 'TreeNode': TreeNode, '__name__': '__solution__'}
             exec(_PRELUDE, namespace)
+            if budget: namespace['__algo_speedruns_tick__'] = budget.tick
             raw = case['input']
             inputs = _json.loads(_json.dumps(raw))
             with _contextlib.redirect_stdout(output), _contextlib.redirect_stderr(output):
-                exec(compiled, namespace)
+                exec(counted if budget else compiled, namespace)
                 if problem.get('adapter') == 'trie':
                     trie = namespace['Trie']()
                     actual = [getattr(trie, op)(*args) for op, args in zip(inputs['operations'], inputs['arguments'])]
@@ -189,6 +216,10 @@ def _lap_judge(payload):
                     if problem.get('adapter') == 'lca':
                         inputs['p'] = _find_node(inputs['root'], inputs['p'])
                         inputs['q'] = _find_node(inputs['root'], inputs['q'])
+                    if budget:
+                        for param in problem['params']:
+                            if 'List[' in param['type'] and 'Node' not in param['type']:
+                                inputs[param['name']] = _track_input(inputs[param['name']], budget)
                     args = [inputs[p['name']] for p in problem['params'] if not (problem.get('adapter') == 'cycle' and p['name'] == 'pos')]
                     result = getattr(namespace['Solution'](), problem['method'])(*args)
                     if problem.get('mutates'):
@@ -201,10 +232,13 @@ def _lap_judge(payload):
                         actual = result.val
                     else:
                         actual = _serialize(result, problem['returns'])
+                if budget and budget.exceeded: budget.tick()
                 passed = _matches(actual, case['expected'], problem, raw)
         except BaseException as exc:
             frames = [f'Line {frame.lineno}, in {frame.name}' for frame in _traceback.extract_tb(exc.__traceback__) if frame.filename == '<solution>']
-            error = '\n'.join(frames + [f'{type(exc).__name__}: {exc}'])
+            error = '\n'.join(frames[-8:] + [f'{type(exc).__name__}: {exc}'])
+            if budget and budget.exceeded:
+                performance_error = f'Your solution passed the correctness tests, but exceeded the work limit on: {case["stress"]}. Expected {budget.target}.'
             passed = False
         if passed:
             passed_count += 1
@@ -212,7 +246,10 @@ def _lap_judge(payload):
         # the first failing fixture to make a rejected submission debuggable.
         if not case['hidden'] or (not passed and not first_hidden_failure):
             row = {'passed': passed, 'input': raw, 'expected': case['expected'], 'actual': actual, 'error': error, 'hidden': case['hidden'], 'stdout': output.getvalue()}
+            if case.get('stress'):
+                row.update({'stress': case['stress'], 'workUsed': budget.used, 'workLimit': budget.limit, 'input': _preview(raw), 'expected': _preview(case['expected']), 'actual': _preview(actual)})
             results.append(row)
             if case['hidden']:
                 first_hidden_failure = True
-    return _json.dumps({'passed': passed_count == len(cases), 'total': len(cases), 'passedCount': passed_count, 'duration': round((_time.perf_counter()-started)*1000, 2), 'cases': results}, default=str)
+        if case.get('stress') and not passed: break
+    return _json.dumps({'passed': passed_count == len(cases), 'total': len(cases), 'passedCount': passed_count, 'duration': round((_time.perf_counter()-started)*1000, 2), 'cases': results, 'correctnessPassed': correctness_passed, 'performanceError': performance_error}, default=str)

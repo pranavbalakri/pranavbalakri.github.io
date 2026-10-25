@@ -4681,11 +4681,11 @@
     "description": [
       "You are given an integer array `nums`. Return the length of its longest strictly increasing subsequence.",
       "A subsequence is formed by deleting zero or more elements while preserving the relative order of the elements that remain. The selected values do not have to be adjacent, but they cannot be rearranged.",
-      "Strictly increasing means every selected value after the first is greater than the previous selected value; equal values cannot extend the sequence. Return only the maximum length. A nonempty array always has a subsequence of length one."
+      "Strictly increasing means every selected value after the first is greater than the previous selected value; equal values cannot extend the sequence. Return only the maximum length. A nonempty array always has a subsequence of length one. Use O(n log n) time for this speedrun."
     ],
     "hints": [
-      "Track the best subsequence ending at each position.",
-      "For an O(n log n) approach, maintain the smallest possible tail for each length."
+      "For subsequences of the same length, a smaller ending value leaves more room for future elements.",
+      "Maintain the smallest possible tail for each length. These tails stay sorted, so use binary search to find where each new value belongs."
     ],
     "examples": [
       {
