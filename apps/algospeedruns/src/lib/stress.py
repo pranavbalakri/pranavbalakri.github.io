@@ -150,7 +150,21 @@ def _lap_stress_cases(slug):
         # Leave headroom for recursive solutions while exposing repeated slicing.
         return [_stress('900-node right spine', {'preorder': list(range(900)), 'inorder': list(range(900))}, [v for i in range(900) for v in (i,None)][:-1])]
     if slug == 'kth-largest-element-in-an-array':
-        return [_stress('100,000 permuted values; middle rank', {'nums': [(i*7919)%100000 for i in range(100000)], 'k': 50000}, 50000)]
+        # A fixed shuffle avoids Timsort's fast path on preordered runs. Small
+        # k distinguishes a bounded heap from fully sorting the entire input.
+        from random import Random
+        values = [i%20000-10000 for i in range(100000)]
+        Random(215).shuffle(values)
+        fixtures = [
+            _stress('100,000 shuffled values; find the fifth largest without sorting', {'nums': values, 'k': 5}, 9999),
+            _stress('100,000 shuffled values; select the middle rank without sorting', {'nums': values, 'k': 50000}, 0),
+            _stress('10,000 values with many duplicates', {'nums': [i%17 for i in range(10000)], 'k': 5000}, 8),
+            _stress('10,000 equal values', {'nums': [7]*10000, 'k': 5000}, 7),
+        ]
+        for case in fixtures:
+            n=len(case['input']['nums'])
+            case.update(workLimit=64*n+256, comparisonLimit=4*n*(case['input']['k']+1).bit_length(), complexity='O(n log(k + 1)) time or better; do not fully sort the input')
+        return fixtures
     if slug == 'k-closest-points-to-origin':
         return [_stress('10,000 points; select the closest half', {'points': [[i,0] for i in range(9999,-1,-1)], 'k': 5000}, [[i,0] for i in range(5000)])]
     if slug == 'merge-k-sorted-lists':
@@ -252,6 +266,8 @@ def _lap_stress_cases(slug):
 
 def _stress_work_spec(slug, case):
     if case['workLimit']:
+        if 'comparisonLimit' in case:
+            return case['workLimit'], case['complexity'], case['comparisonLimit']
         return case['workLimit'], case['complexity']
     x = case['input']
     def size(value):
@@ -287,6 +303,6 @@ def _stress_work_spec(slug, case):
         n = 36*3**8; target = 'backtracking with visited-cell pruning'
     elif slug in ('subsets','permutations','combination-sum','generate-parentheses'):
         n += size(case['expected']); target = 'output-sensitive backtracking'
-    elif slug in ('kth-largest-element-in-an-array','k-closest-points-to-origin','merge-k-sorted-lists','merge-intervals','non-overlapping-intervals'):
+    elif slug in ('k-closest-points-to-origin','merge-k-sorted-lists','merge-intervals','non-overlapping-intervals'):
         n *= max(1,n.bit_length()); target = 'O(n log n) work or better'
     return 64*n+256, target

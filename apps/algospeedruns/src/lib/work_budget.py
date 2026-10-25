@@ -1,6 +1,8 @@
 """Deterministic work guard for performance fixtures, not a formal Big-O proof."""
 import ast as _ast
 import operator as _operator
+import builtins as _builtins
+import types as _types
 
 
 class ComplexityLimitExceeded(Exception):
@@ -8,16 +10,86 @@ class ComplexityLimitExceeded(Exception):
 
 
 class _WorkBudget:
-    def __init__(self, limit, target):
+    def __init__(self, limit, target, comparison_limit=None):
         self.limit, self.target, self.used = limit, target, 0
         self.exceeded = False
+        self.comparison_limit, self.comparisons = comparison_limit, 0
+        self.reason = ''
+
+    def fail(self, reason):
+        self.exceeded, self.reason = True, reason
+        raise ComplexityLimitExceeded(reason)
 
     def tick(self, amount=1):
+        if self.exceeded:
+            raise ComplexityLimitExceeded(self.reason)
         self.used += amount
         if self.used > self.limit:
-            self.exceeded = True
-            raise ComplexityLimitExceeded(f'Exceeded the deterministic work budget ({self.limit:,} units). Expected {self.target}.')
+            self.fail(f'Exceeded the deterministic work budget ({self.limit:,} units). Expected {self.target}.')
         return True
+
+    def compare(self):
+        if self.exceeded:
+            raise ComplexityLimitExceeded(self.reason)
+        self.comparisons += 1
+        if self.comparison_limit is not None and self.comparisons > self.comparison_limit:
+            self.fail(f'Exceeded the comparison budget ({self.comparison_limit:,} comparisons). Expected {self.target}.')
+
+    def guard_call(self, function):
+        # Return other callables unchanged: globals(), locals(), super(), etc.
+        # must still execute in the original solution frame.
+        is_list_sort = (
+            isinstance(function, _types.BuiltinMethodType)
+            and isinstance(function.__self__, list) and function.__name__ == 'sort'
+        ) or getattr(function, '__func__', None) is _WorkList.sort
+        if function is not _builtins.sorted and function is not list.sort and not is_list_sort:
+            return function
+        def sort(*args, **kwargs):
+            key = kwargs.get('key')
+            kwargs['key'] = lambda value: _SortKey(value if key is None else key(value), self)
+            return function(*args, **kwargs)
+        return sort
+
+
+class _ComparisonInt(int):
+    """Count ordering work even inside native heaps and copied input lists."""
+    def __new__(cls, value, budget):
+        result = int.__new__(cls, value)
+        result._budget = budget
+        return result
+
+    def __lt__(self, other):
+        self._budget.compare()
+        return int.__lt__(self, other)
+
+    def __le__(self, other):
+        self._budget.compare()
+        return int.__le__(self, other)
+
+    def __gt__(self, other):
+        self._budget.compare()
+        return int.__gt__(self, other)
+
+    def __ge__(self, other):
+        self._budget.compare()
+        return int.__ge__(self, other)
+
+
+def _plain_sort_key(value):
+    # Sort keys have their own probe; do not double-count tagged input integers.
+    if isinstance(value, _ComparisonInt): return int(value)
+    if isinstance(value, tuple): return tuple(_plain_sort_key(v) for v in value)
+    if isinstance(value, list): return [_plain_sort_key(v) for v in value]
+    return value
+
+
+class _SortKey:
+    def __init__(self, value, budget):
+        self.value, self.budget = _plain_sort_key(value), budget
+
+    def __lt__(self, other):
+        self.budget.compare()
+        return self.value < other.value
 
 
 class _WorkList(list):
@@ -112,11 +184,22 @@ class _WorkList(list):
 def _track_input(value, budget):
     if isinstance(value,list):
         return _WorkList([_track_input(v,budget) for v in value],budget)
+    if type(value) is int and budget.comparison_limit is not None:
+        return _ComparisonInt(value,budget)
     return value
 
 
 class _CountWork(_ast.NodeTransformer):
     # Loop iterations and calls are stable across whitespace / one-line formatting.
+    def __init__(self, count_ordering=False):
+        self.count_ordering = count_ordering
+
+    def visit_Call(self, node):
+        self.generic_visit(node)
+        if self.count_ordering:
+            node.func = _ast.copy_location(_ast.Call(func=_ast.Name(id='__algo_speedruns_guard_call__',ctx=_ast.Load()),args=[node.func],keywords=[]),node.func)
+        return node
+
     def _call(self, node):
         return _ast.copy_location(_ast.Call(func=_ast.Name(id='__algo_speedruns_tick__',ctx=_ast.Load()),args=[],keywords=[]),node)
 
@@ -143,6 +226,6 @@ class _CountWork(_ast.NodeTransformer):
         return node
 
 
-def _compile_counted(code):
-    tree = _CountWork().visit(_ast.parse(code,filename='<solution>',mode='exec'))
+def _compile_counted(code, count_ordering=False):
+    tree = _CountWork(count_ordering).visit(_ast.parse(code,filename='<solution>',mode='exec'))
     return compile(_ast.fix_missing_locations(tree),'<solution>','exec')

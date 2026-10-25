@@ -185,7 +185,7 @@ def _lap_judge(payload):
         if index == len(regular):
             if passed_count != len(regular): break
             correctness_passed = True
-            counted = _compile_counted(data['code'])
+            counted = _compile_counted(data['code'], any(c.get('comparisonLimit') is not None for c in stress))
         if case.get('stress') and '_lap_progress' in globals():
             _lap_progress(case['stress'], len(cases), passed_count)
         budget = _WorkBudget(*_stress_work_spec(problem['slug'], case)) if case.get('stress') else None
@@ -194,7 +194,9 @@ def _lap_judge(payload):
         try:
             namespace = {'ListNode': ListNode, 'TreeNode': TreeNode, '__name__': '__solution__'}
             exec(_PRELUDE, namespace)
-            if budget: namespace['__algo_speedruns_tick__'] = budget.tick
+            if budget:
+                namespace['__algo_speedruns_tick__'] = budget.tick
+                namespace['__algo_speedruns_guard_call__'] = budget.guard_call
             raw = case['input']
             inputs = _json.loads(_json.dumps(raw))
             with _contextlib.redirect_stdout(output), _contextlib.redirect_stderr(output):
@@ -248,6 +250,8 @@ def _lap_judge(payload):
             row = {'passed': passed, 'input': raw, 'expected': case['expected'], 'actual': actual, 'error': error, 'hidden': case['hidden'], 'stdout': output.getvalue()}
             if case.get('stress'):
                 row.update({'stress': case['stress'], 'workUsed': budget.used, 'workLimit': budget.limit, 'input': _preview(raw), 'expected': _preview(case['expected']), 'actual': _preview(actual)})
+                if budget.comparison_limit is not None:
+                    row.update({'comparisonsUsed': budget.comparisons, 'comparisonLimit': budget.comparison_limit})
             results.append(row)
             if case['hidden']:
                 first_hidden_failure = True

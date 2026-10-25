@@ -11,6 +11,8 @@ Every one of the 90 problems has at least one performance fixture. The generator
 
 The performance compiler counts loop iterations, comprehension iterations, and calls to user-defined functions, including recursion and helpers. It preserves original source line numbers and function docstrings. Input lists additionally count element access, traversal, slicing, copying, searching, and common mutations, including operations performed by built-ins. Budgets reset for each performance fixture. Catching a budget exception does not turn a rejected solution into acceptance.
 
+Kth Largest Element additionally has an O(n log(k + 1)) comparison budget. Numeric input probes count ordering comparisons, including comparisons inside native heaps. Runtime call guards count the comparisons inside `sorted()` and `list.sort()` even on copied or transformed arrays, through aliases, or with a key function. This measures executed work rather than banning sort syntax: Quickselect can still sort small pivot samples and base cases. A fixed shuffled 100,000-element case with k = 5 distinguishes full sorting from a bounded heap. Middle-rank, duplicate-heavy, and all-equal cases also run. Both the standard size-k heap and Quickselect are accepted; the statement and hints explain this requirement.
+
 Budgets follow the expected interview algorithm, with generous constants for implementation differences:
 
 | Pattern | Expected work |
@@ -23,7 +25,8 @@ Budgets follow the expected interview algorithm, with generous constants for imp
 | Partition equal subset sum | O(n × target sum) |
 | Palindromic substrings and longest palindrome | O(n²); Manacher's algorithm is not required |
 | 3Sum | O(n²) |
-| Heap and interval problems | O(n log n) or better |
+| Kth Largest Element | O(n log(k + 1)) heap work or better, with a separate comparison budget |
+| Other heap and interval problems | O(n log n) or better |
 | Subsets, permutations, parentheses, combination sum | Output-sensitive backtracking |
 | Word search | Backtracking with visited-cell pruning |
 
@@ -31,7 +34,7 @@ The five-second watchdog is independent of cooperative work counting. It termina
 
 ## What this does and does not establish
 
-This is a practical complexity check, not a proof of asymptotic optimality. A finite suite cannot establish Big-O behavior for all possible inputs. Work counters do not model every native-library operation, integer bit operation, allocation, or memory cost. Some faster nonoptimal approaches may still fit the budget. The watchdog is hardware-dependent, which is why deterministic limits and generous timing headroom are both used. Inputs remain compatible with normal Python list operations, but performance-stage lists are instrumented subclasses; code that requires `type(nums) is list` is not supported.
+This is a practical complexity check, not a proof of asymptotic optimality. A finite suite cannot establish Big-O behavior for all possible inputs. Work counters do not model every native-library operation, integer bit operation, allocation, or memory cost. Some faster nonoptimal approaches may still fit the budget. The watchdog is hardware-dependent, which is why deterministic limits and generous timing headroom are both used. Inputs remain compatible with normal Python list operations, but performance-stage lists are instrumented subclasses; Kth Largest's integers are also instrumented subclasses. Exact-type checks such as `type(nums) is list` or `type(nums[0]) is int` are not supported there. Randomized algorithms can still exceed a finite budget after sufficiently unlucky pivots; regression coverage includes several fixed seeds and partition styles.
 
 The app remains a personal practice tool, not a tamper-proof contest judge. It does not attempt to prevent malicious code from inspecting or bypassing the instrumentation. It also does not enforce space complexity or non-complexity instructions such as “do not use division.”
 

@@ -3245,7 +3245,8 @@
     "description": [
       "You are given an integer array `nums` and an integer `k`. Return the kth largest element, counting every occurrence separately.",
       "The rank is one-based: `k = 1` asks for the largest element. Imagine ordering all input elements from largest to smallest; the requested value is the element in position `k` of that ordering.",
-      "Repeated values occupy separate positions. For example, in `[5, 5, 3]`, the second largest element is `5`. The input need not be sorted, and `k` is guaranteed to be valid. Return the value itself, not its original index."
+      "Repeated values occupy separate positions. For example, in `[5, 5, 3]`, the second largest element is `5`. The input need not be sorted, and `k` is guaranteed to be valid. Return the value itself, not its original index.",
+      "Find the answer without fully sorting the input. Use O(n log(k + 1)) time or better for this speedrun, where n is the number of elements; k may be much smaller than n. You may modify nums."
     ],
     "hints": [
       "Maintain only the largest k values seen so far.",
@@ -3288,6 +3289,7 @@
     ],
     "constraints": [
       "1 ≤ k ≤ len(nums) ≤ 100,000",
+      "−10,000 ≤ nums[i] ≤ 10,000",
       "Duplicates count as separate elements."
     ]
   },

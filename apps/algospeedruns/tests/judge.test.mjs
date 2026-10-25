@@ -243,3 +243,41 @@ _json.dumps([
 ])`));
   assert.deepEqual(result[0],result[1]);
 });
+
+test('native sort probes preserve key calls, stability, reverse, and sort return values',()=>{
+  const value=JSON.parse(runtime.runPython(`
+_budget=_WorkBudget(10000,'test',10000)
+_namespace={'__algo_speedruns_tick__':_budget.tick,'__algo_speedruns_guard_call__':_budget.guard_call}
+exec(_compile_counted('''
+calls=[]
+values=[(2,'a'),(1,'b'),(2,'c')]
+def key(value):
+    calls.append(value)
+    return value[0]
+ordered=sorted(values,key=key,reverse=True)
+returned=values.sort(key=lambda value:value[0])
+answer=[ordered,values,returned,len(calls)]
+''',True),_namespace)
+_json.dumps([_namespace['answer'],_budget.comparisons])`));
+  assert.deepEqual(value[0],[[[2,'a'],[2,'c'],[1,'b']],[[1,'b'],[2,'a'],[2,'c']],null,3]);
+  assert.ok(value[1]>0);
+});
+
+test('call guards preserve caller-sensitive built-ins and custom methods named sort',()=>{
+  const value=JSON.parse(runtime.runPython(`
+_budget=_WorkBudget(10000,'test',10000)
+_namespace={'__algo_speedruns_tick__':_budget.tick,'__algo_speedruns_guard_call__':_budget.guard_call}
+exec(_compile_counted('''
+class Base:
+    def sort(self): return 7
+class Child(Base):
+    def sort(self): return super().sort()+1
+def check():
+    local=4
+    return [locals()['local'],eval('local'),globals() is namespace]
+namespace=globals()
+answer=[Child().sort(),check()]
+''',True),_namespace)
+_json.dumps(_namespace['answer'])`));
+  assert.deepEqual(value,[8,[4,4,true]]);
+});

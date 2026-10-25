@@ -348,7 +348,22 @@ def construct_binary_tree_from_traversals(preorder,inorder):
         return TreeNode(value,build(lo,mid),build(mid+1,hi))
     return build(0,len(inorder))
 
-def kth_largest_element_in_an_array(nums,k): return sorted(nums,reverse=True)[k-1]
+def kth_largest_element_in_an_array(nums,k):
+    from random import Random
+    rng=Random(215)
+    target=len(nums)-k; left,right=0,len(nums)-1
+    while left<=right:
+        pivot=nums[rng.randrange(left,right+1)]
+        low,i,high=left,left,right
+        while i<=high:
+            if nums[i]<pivot:
+                nums[low],nums[i]=nums[i],nums[low]; low+=1; i+=1
+            elif nums[i]>pivot:
+                nums[high],nums[i]=nums[i],nums[high]; high-=1
+            else: i+=1
+        if target<low: right=low-1
+        elif target>high: left=high+1
+        else: return pivot
 def k_closest_points_to_origin(points,k): return sorted(points,key=lambda p:p[0]**2+p[1]**2)[:k]
 def merge_k_sorted_lists(lists):
     heap=[]; sequence=0

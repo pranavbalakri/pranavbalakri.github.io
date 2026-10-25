@@ -20,6 +20,7 @@ export type CaseResult = {
   passed: boolean; input?: Record<string, unknown>; expected?: unknown; actual?: unknown;
   error?: string; hidden: boolean; stdout: string;
   stress?: string; workUsed?: number; workLimit?: number;
+  comparisonsUsed?: number; comparisonLimit?: number;
 };
 export type JudgeResult = {
   passed: boolean; total: number; passedCount: number; duration: number;
